@@ -1,0 +1,79 @@
+{
+  "rows": [
+    {
+      "case": "S1-短",
+      "prompt_chars": 33,
+      "prompt_tokens": 51,
+      "gen_tokens": 48,
+      "guest_infer_s": 6.649,
+      "e2e_rtt_s": 6.655,
+      "crypto_overhead_ms": 0.241,
+      "tpot_ms": 138.5,
+      "answer_preview": "同态加密是一种基于数学原理的加密技术，它允许在不改变原始数据的情况下进行计算和操作。这种加密方式使得数据处理过程中的某些"
+    },
+    {
+      "case": "S2-短",
+      "prompt_chars": 35,
+      "prompt_tokens": 52,
+      "gen_tokens": 64,
+      "guest_infer_s": 8.793,
+      "e2e_rtt_s": 8.795,
+      "crypto_overhead_ms": 0.175,
+      "tpot_ms": 137.4,
+      "answer_preview": "对称加密算法是使用相同的密钥进行加密和解密的算法。以下是三种常见的对称加密算法：  1. **AES（Advanced "
+    },
+    {
+      "case": "M1-中",
+      "prompt_chars": 60,
+      "prompt_tokens": 67,
+      "gen_tokens": 64,
+      "guest_infer_s": 8.932,
+      "e2e_rtt_s": 8.934,
+      "crypto_overhead_ms": 0.152,
+      "tpot_ms": 139.6,
+      "answer_preview": "可信执行环境（Trustworthy Execution Environment, TEE）和虚拟化隔离是两种不同的技术"
+    },
+    {
+      "case": "M2-中",
+      "prompt_chars": 70,
+      "prompt_tokens": 78,
+      "gen_tokens": 64,
+      "guest_infer_s": 9.008,
+      "e2e_rtt_s": 9.01,
+      "crypto_overhead_ms": 0.208,
+      "tpot_ms": 140.8,
+      "answer_preview": "国密SM4算法和AES（高级加密标准）的主要区别在于：  1. **分组长度**：SM4使用64位的分组长度，而AES则"
+    },
+    {
+      "case": "L1-长",
+      "prompt_chars": 117,
+      "prompt_tokens": 99,
+      "gen_tokens": 64,
+      "guest_infer_s": 11.338,
+      "e2e_rtt_s": 11.341,
+      "crypto_overhead_ms": 0.172,
+      "tpot_ms": 177.2,
+      "answer_preview": "在处理金融行业中的风控模型部署到第三方算力平台时，我们需要采取一系列措施来确保数据的安全性和隐私性。以下是针对每项需求的"
+    },
+    {
+      "case": "L2-长",
+      "prompt_chars": 113,
+      "prompt_tokens": 100,
+      "gen_tokens": 64,
+      "guest_infer_s": 11.693,
+      "e2e_rtt_s": 11.695,
+      "crypto_overhead_ms": 0.161,
+      "tpot_ms": 182.7,
+      "answer_preview": "在处理涉及敏感信息的医疗数据时，确保数据的安全性和隐私保护至关重要。以下是从数据最小化、传输加密、运行时保护和审计留痕四"
+    }
+  ],
+  "summary": {
+    "cases": 6,
+    "total_gen_tokens": 368,
+    "mean_e2e_s": 9.405,
+    "mean_tpot_ms": 152.7,
+    "mean_crypto_overhead_ms": 0.185,
+    "crypto_share_of_e2e_pct": 0.0021,
+    "wire_bytes_total": 5685
+  }
+}

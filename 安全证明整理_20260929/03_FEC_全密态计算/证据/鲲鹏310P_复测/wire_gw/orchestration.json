@@ -1,0 +1,33 @@
+{
+  "started_ns": 1789727503095361800,
+  "scope": "gateway 8000; client is host, two distinct capture locations only",
+  "remote_identity": "existing SSH credentials; host key not independently verified",
+  "remote_dirs": {
+    "host": "/tmp/otp-security-wire-20260916.paIAjc",
+    "cvm": "/tmp/otp-security-wire-20260916.xblxe1"
+  },
+  "flow_selection": {
+    "ready": true,
+    "peer": "192.168.122.1",
+    "ports": [
+      44789,
+      56563,
+      37841,
+      40025,
+      49323,
+      58817
+    ]
+  },
+  "client_stdout": "{\"finished\": true, \"tests\": [{\"name\": \"healthy_idle_before\", \"passed\": true}, {\"name\": \"encrypted_inference_authenticated_response\", \"passed\": true}, {\"name\": \"wire_response_envelope_only\", \"passed\": true}, {\"name\": \"exact_replay_rejected\", \"passed\": true}, {\"name\": \"fresh_ciphertext_tamper_rejected\", \"passed\": true}, {\"name\": \"healthy_idle_after\", \"passed\": true}], \"error_type\": null}\n",
+  "client_stderr": "",
+  "client_exit": 0,
+  "cvm_stdout": "{\"packets_saved\": 67, \"capture_error\": null, \"socket_received_all_traffic\": 105, \"socket_drops_all_traffic\": 0, \"filter\": {\"peer\": \"192.168.122.1\", \"server\": \"192.168.122.143\", \"client_ports\": [37841, 40025, 44789, 49323, 56563, 58817], \"server_port\": 8000}, \"timestamp_source\": \"userspace receive time\", \"pcap_sha256\": \"b7e1b7be3c423e0570b17c62807d0f1e14895836a4769bf2b16bf94c5e8da8c5\"}\n",
+  "cvm_stderr": "Warning: Permanently added '192.168.122.143' (ED25519) to the list of known hosts.\r\n\nAuthorized users only. All activities may be monitored and reported.\n",
+  "cvm_exit": 0,
+  "finished_ns": 1789727513670982200,
+  "script_hashes": {
+    "security_run_wire_probe.py": "87666d7c7a56fc7e98d95502bac1a023e805747d0ca6b81da71698c838d096de",
+    "security_wire_probe.py": "ae1bbe6597a7c2b94d9ff00dfa30d2510bda0b8a0b59cc336abdda23d42a3765",
+    "tee_crypto.py": "d461f18cb52c576af0d38bb35fad287f7a11ee5e08309611eb473f7a0920417a"
+  }
+}

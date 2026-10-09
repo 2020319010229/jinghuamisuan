@@ -1,0 +1,138 @@
+﻿== 设备映射(取正确 card id) ==
+	NPU ID                         Chip ID                        Chip Logic ID                  Chip Name                     
+	768                            0                              0                              Ascend 310P3
+	768                            1                              -                              Mcu                           
+	1024                           0                              1                              Ascend 310P3
+	1024                           1                              -                              Mcu                           
+card ids: 768
+1024
+
+################ card 768 ################
+### -t board
+    	NPU ID                         : 768
+    	Product Name                   : IT21PDDC02
+    	Model                          : NA
+    	Manufacturer                   : Huawei
+    	Serial Number                  : 2106030636ZENB001047
+    	Software Version               : 25.2.0
+    	Firmware Version               : 7.8.0.7.220
+    	Compatibility                  : OK
+    	Board ID                       : 0xaf
+    	PCB ID                         : B
+### -t common
+    	NPU ID                         : 768
+    	Chip Count                     : 1
+    
+    	Chip ID                        : 0
+    	Memory Usage Rate(%)           : 50
+    	Aicore Usage Rate(%)           : 0
+    	Aicore Freq(MHZ)               : 1080
+    	Aicore curFreq(MHZ)            : 960
+    	Temperature(C)                 : 35
+### -t product
+    	NPU ID                         : 768
+    	Chip Count                     : 1
+    
+    	Product Type                   : Atlas 300V Pro
+    	Chip ID                        : 0
+### -t work-mode
+    This device does not support querying work-mode.
+### -t key-manage
+    	service auto startup           : Disable
+    	service running status         : Stop
+### -t rootkey
+    This device does not support querying rootkey.
+### -t pkcs-enable
+    This command cannot be executed on a VM or container.
+### -t tls-cert
+    This device does not support querying tls-cert.
+### -t tls-cert-period
+    This device does not support querying tls-cert-period.
+### -t device-share
+    	NPU ID                         : 768
+    	Chip Count                     : 1
+    
+    	Device-share Status            : False
+    	Chip ID                        : 0
+### -t vnpu-mode
+    This command cannot be executed on a VM or container.
+### -t info-vnpu
+    Must input parameter of chip id.
+    Usage: npu-smi info <watch|proc|-h|-m|-l|-t type> [Options...]
+    
+    Commands:
+           watch          Show all device's status in scrolling format
+           proc           Show device's matrix process status in scrolling format
+           -h, --help     Show this help text and exit
+           -m             Show all device's mapping information
+           -l             Show all device's topology information
+           -t type        Show information for type
+### -t ecc-enable
+    	DDR ECC-Enable Status          : True
+### -t license
+    This device does not support querying license.
+################ card 1024 ################
+### -t board
+    	NPU ID                         : 1024
+    	Product Name                   : IT21PDDA012
+    	Model                          : NA
+    	Manufacturer                   : Huawei
+    	Serial Number                  : 2106030729ZEQC000588
+    	Software Version               : 25.2.0
+    	Firmware Version               : 7.8.0.7.220
+    	Compatibility                  : OK
+    	Board ID                       : 0xaf
+    	PCB ID                         : B
+### -t common
+    	NPU ID                         : 1024
+    	Chip Count                     : 1
+    
+    	Chip ID                        : 0
+    	Memory Usage Rate(%)           : 39
+    	Aicore Usage Rate(%)           : 0
+    	Aicore Freq(MHZ)               : 1080
+    	Aicore curFreq(MHZ)            : 960
+    	Temperature(C)                 : 37
+### -t product
+    	NPU ID                         : 1024
+    	Chip Count                     : 1
+    
+    	Product Type                   : Atlas 300V Pro
+    	Chip ID                        : 0
+### -t work-mode
+    This device does not support querying work-mode.
+### -t key-manage
+    	service auto startup           : Disable
+    	service running status         : Stop
+### -t rootkey
+    This device does not support querying rootkey.
+### -t pkcs-enable
+    This command cannot be executed on a VM or container.
+### -t tls-cert
+    This device does not support querying tls-cert.
+### -t tls-cert-period
+    This device does not support querying tls-cert-period.
+### -t device-share
+    	NPU ID                         : 1024
+    	Chip Count                     : 1
+    
+    	Device-share Status            : False
+    	Chip ID                        : 0
+### -t vnpu-mode
+    This command cannot be executed on a VM or container.
+### -t info-vnpu
+    Must input parameter of chip id.
+    Usage: npu-smi info <watch|proc|-h|-m|-l|-t type> [Options...]
+    
+    Commands:
+           watch          Show all device's status in scrolling format
+           proc           Show device's matrix process status in scrolling format
+           -h, --help     Show this help text and exit
+           -m             Show all device's mapping information
+           -l             Show all device's topology information
+           -t type        Show information for type
+### -t ecc-enable
+    	DDR ECC-Enable Status          : True
+### -t license
+    This device does not support querying license.
+DONE

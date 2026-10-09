@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FEC 安全证明报告</title>
+<style>
+:root{
+  --ink:#16181d; --ink2:#3d434e; --ink3:#6b7280;
+  --line:#e3e6ea; --bg:#ffffff; --box:#f7f8fa;
+  --pass:#1d7a46; --cond:#9a6700; --todo:#6b3fa0; --fail:#b3261e; --accent:#1a4fa0;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:"Source Han Sans SC","Noto Sans CJK SC","Microsoft YaHei","PingFang SC",-apple-system,"Segoe UI",sans-serif;
+  font-size:15.5px;line-height:1.85}
+.wrap{max-width:1040px;margin:0 auto;padding:0 28px 110px}
+header.top{border-bottom:3px solid var(--ink);padding:46px 0 20px}
+header.top h1{font-size:29px;margin:0 0 8px;letter-spacing:.5px}
+header.top .sub{color:var(--ink2);font-size:14.5px}
+header.top .meta{margin-top:14px;color:var(--ink3);font-size:13.5px;border-top:1px solid var(--line);padding-top:12px}
+h2{font-size:21px;margin:52px 0 6px;padding-bottom:9px;border-bottom:2px solid var(--ink)}
+h3{font-size:17px;margin:30px 0 6px}
+h3 .id{font-family:"Cascadia Mono",Consolas,monospace;color:var(--accent);margin-right:10px}
+p{margin:10px 0}
+code,.mono{font-family:"Cascadia Mono",Consolas,monospace;font-size:13px;background:#eef1f4;
+  padding:1px 5px;border-radius:3px;color:#24303f}
+.lead{font-size:16px;color:var(--ink2)}
+.v{display:inline-block;font-size:12.5px;font-weight:700;padding:2px 10px;border-radius:12px;color:#fff;margin-right:8px;vertical-align:2px}
+.v-pass{background:var(--pass)} .v-cond{background:var(--cond)} .v-todo{background:var(--todo)} .v-fail{background:var(--fail)}
+.data{margin:14px 0;border:1px solid var(--line);border-radius:5px;overflow:hidden}
+.data .row{display:flex;border-bottom:1px solid #eef1f4;font-size:14.3px}
+.data .row:last-child{border-bottom:0}
+.data .row>div{padding:7px 12px}
+.data .row>div:first-child{flex:0 0 250px;background:#f7f9fb;color:#3d434e;border-right:1px solid #eef1f4}
+.data .row>div:last-child{flex:1}
+.data .row.h>div{background:#eef2f6;font-weight:700;color:#24303f}
+.box{background:var(--box);border-left:4px solid #c3c9d2;padding:12px 16px;margin:14px 0;border-radius:0 4px 4px 0}
+.box.warn{background:#fdf6ec;border-left-color:#b3801e}
+.box.bad{background:#fdf1f0;border-left-color:#b3261e}
+.box.good{background:#f2f8f5;border-left-color:#2f7d54}
+.box b.t{display:block;margin-bottom:4px}
+.num{font-family:"Cascadia Mono",Consolas,monospace;font-weight:600}
+.ok{color:var(--pass);font-weight:700} .no{color:var(--fail);font-weight:700}
+ul{margin:10px 0 10px 22px;padding:0} li{margin:5px 0}
+figure{margin:24px 0;text-align:center} figcaption{font-size:13px;color:var(--ink3);margin-top:8px}
+.note{font-size:14px;color:var(--ink3);border-top:1px solid var(--line);margin-top:30px;padding-top:12px}
+pre.idx{background:#f7f9fb;border:1px solid var(--line);border-radius:5px;padding:12px 14px;
+  font-family:"Cascadia Mono",Consolas,monospace;font-size:12.5px;line-height:1.7;overflow-x:auto;color:#24303f}
+@media print{body{font-size:11.5pt}.data,.box,figure{break-inside:avoid}h2{break-after:avoid}.wrap{max-width:none;padding:0}}
+@media (max-width:760px){.data .row{flex-direction:column}.data .row>div:first-child{flex:none;border-right:0}.wrap{padding:0 16px 70px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <h1>《FEC 安全证明报告》</h1>
+  <div class="sub">方案三 · 全密态计算（Fully-Encrypted Computing）· 计划书 FEC-01 ~ FEC-09 独立结论</div>
+  <div class="meta">
+    2026-09-18 ·
+    鲲鹏 920 + virtCCA 机密虚机 + 双 Ascend 310P（Atlas 300V Pro，固件 7.8.0.7.220）·
+    Qwen3.5-35B-A3B W8A8 ·
+    引擎 <span class="mono">e015292c…</span> ·
+    证据批次 <span class="mono">results/security_full_20260918/</span>
+  </div>
+</header>
+
+<h2>一、结论</h2>
+
+<p class="lead"><b>方案三 FEC 通过。</b>九项证明任务中七项通过、一项条件通过、一项待补证；核心安全主张——"数据离开 CPU-TEE 前完成 OTP 密态转换、加速卡侧接收计算返回的均为密态、密钥始终与加速卡及宿主侧隔离"——三条均有动态与反向双类证据支撑。</p>
+
+<div class="data">
+  <div class="row h"><div>任务</div><div>判定与关键实测</div></div>
+  <div class="row"><div>FEC-01 CPU-TEE 与处理边界</div><div><span class="v v-pass">通过</span>证明负例 7/7；解密、分词、embedding、解盲、非线性均在已证明 CVM 实例内</div></div>
+  <div class="row"><div>FEC-02 OTP 密钥全生命周期</div><div><span class="v v-pass">通过（计算安全）</span>4096 掩码全唯一；两模域各 104 万样本方差比 1.0008 / 0.9996；zeroize PASS</div></div>
+  <div class="row"><div>FEC-03 客户端密态转换</div><div><span class="v v-pass">通过</span>客户自验独立执行 10/10；同输入两次 H2D 指纹不同</div></div>
+  <div class="row"><div>FEC-04 网络传输密态</div><div><span class="v v-pass">通过</span>两入口双点抓包 23/23、11/11；篡改与重放 17/17</div></div>
+  <div class="row"><div>FEC-05 加速卡接口密态</div><div><span class="v v-pass">通过</span>独立合成算例 96/96；设备内存跨进程读回全零</div></div>
+  <div class="row"><div>FEC-06 密态计算正确性</div><div><span class="v v-pass">通过</span>算子级零差异；明密文双入口输出 SHA256 逐轮相同</div></div>
+  <div class="row"><div>FEC-07 线性/非线性边界</div><div><span class="v v-pass">通过</span>7 种降级字段全部无效；静态确认请求体无解析路径</div></div>
+  <div class="row"><div>FEC-08 异常处理与安全回退</div><div><span class="v v-cond">条件通过</span>本轮新增故障注入 10/10：可发现的异常一律中止（含随机源失效）；<b>但设备静默算错在批次路径不被检出</b>，详见第九节</div></div>
+  <div class="row"><div>FEC-09 报告编制</div><div><span class="v v-pass">本报告</span></div></div>
+</div>
+
+<div class="box warn">
+<b class="t">OTP 安全前提（计划书要求必须写明，放在结论之前）</b>
+计划书规定"信息论安全"须以<b>密钥真随机、长度满足要求、严格一次一密、保密存储、安全销毁</b>五个前提为条件。本部署满足后四条，<b>第一条不满足</b>：随机源是操作系统 CSPRNG（<span class="mono">getrandom</span> + 拒绝采样），不是物理真随机源。<br>
+因此本报告全部结论按<b>计算安全</b>模型陈述，<b>不宣称信息论意义上的一次一密</b>。对外材料中"提供信息论安全防护能力"一类表述超出本报告证据范围。
+</div>
+
+<h2>二、保护对象与可信边界</h2>
+
+<p>FEC 的可信边界是<b>虚拟机级</b>的：CVM 内部是可信域，宿主机、管理面、加速卡、网络链路全部视为不可信。</p>
+
+<figure>
+<svg viewBox="0 0 900 300" width="100%" style="max-width:900px" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="FEC 可信边界示意">
+  <rect x="0" y="0" width="900" height="300" fill="#ffffff"/>
+  <g font-family="'Microsoft YaHei',sans-serif" font-size="13">
+    <!-- trusted -->
+    <rect x="16" y="34" width="430" height="200" fill="#f2f8f5" stroke="#2f7d54" stroke-width="2" rx="6"/>
+    <text x="30" y="56" fill="#1d5c3c" font-weight="700" font-size="14">可信域：virtCCA 机密虚机（CVM）</text>
+    <text x="30" y="80" fill="#24303f">· 解密请求、分词、embedding</text>
+    <text x="30" y="102" fill="#24303f">· 生成 OTP 掩码（CSPRNG，一次一密）</text>
+    <text x="30" y="124" fill="#24303f">· 激活量化 + 掩码 → RNS 密文分量</text>
+    <text x="30" y="146" fill="#24303f">· 归一化、激活、softmax、采样</text>
+    <text x="30" y="168" fill="#24303f">· <tspan font-weight="700">解盲（CRT 精确重建）</tspan></text>
+    <text x="30" y="196" fill="#8a5d00" font-size="12.5">注：此域内是明文的——这不是"全程无明文"</text>
+    <text x="30" y="216" fill="#1d5c3c" font-size="12.5" font-weight="700">密钥/掩码从不离开此框</text>
+
+    <!-- arrows -->
+    <line x1="452" y1="105" x2="556" y2="105" stroke="#1a4fa0" stroke-width="2" marker-end="url(#a)"/>
+    <text x="458" y="98" fill="#1a4fa0" font-size="12">int8 密文分量</text>
+    <line x1="556" y1="150" x2="452" y2="150" stroke="#1a4fa0" stroke-width="2" marker-end="url(#a)"/>
+    <text x="458" y="168" fill="#1a4fa0" font-size="12">密态结果分量</text>
+    <defs><marker id="a" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 z" fill="#1a4fa0"/></marker></defs>
+
+    <!-- untrusted -->
+    <rect x="560" y="34" width="324" height="120" fill="#fdf1f0" stroke="#b3261e" stroke-width="2" rx="6"/>
+    <text x="574" y="56" fill="#93231c" font-weight="700" font-size="14">不可信：双 Ascend 310P</text>
+    <text x="574" y="80" fill="#24303f">· 只做 int8 Cube matmul</text>
+    <text x="574" y="102" fill="#24303f">· 不持有任何密钥</text>
+    <text x="574" y="124" fill="#24303f">· 无 TEE / 无 GPU-CC 能力</text>
+
+    <rect x="560" y="166" width="324" height="68" fill="#fdf1f0" stroke="#b3261e" stroke-width="2" rx="6"/>
+    <text x="574" y="188" fill="#93231c" font-weight="700" font-size="14">不可信：宿主机与管理面</text>
+    <text x="574" y="212" fill="#24303f">本轮实读 130 GB guest 内存，0 命中</text>
+
+    <text x="16" y="266" fill="#6b7280" font-size="12.5">攻击者模型：宿主管理员、云平台、网络监听者、加速卡侧均视为不可信；CVM 内部不设二次防护。</text>
+    <text x="16" y="286" fill="#6b7280" font-size="12.5">FEC 不以 GPU-TEE 为必要条件——恰恰相反，它的前提就是"加速卡没有 TEE、也不持有密钥"。</text>
+  </g>
+</svg>
+<figcaption>FEC 可信边界。密钥与解盲都在 CVM 内，卡上只有密文分量</figcaption>
+</figure>
+
+<h2>三、FEC-01　CPU-TEE 可信状态与处理边界</h2>
+<h3><span class="id">判定</span><span class="v v-pass">通过</span></h3>
+<div class="data">
+  <div class="row h"><div>检查项</div><div>实测</div></div>
+  <div class="row"><div>CPU 可信空间</div><div>virtCCA 机密虚机（qemu 实证 <span class="mono">kvm-type=cvm</span> + <span class="mono">tmm-guest</span>，<span class="mono">dump-guest-core=off</span>）；远程证明全程开启</div></div>
+  <div class="row"><div>证明有效性（负例）</div><div><span class="num">7/7</span>：错误 challenge、错误测量值、签名篡改、缺设备证书全部拒绝</div></div>
+  <div class="row"><div>明文处理位置</div><div>解密、分词、embedding 在 CVM 内已证明实例；<b>运行进程</b> <span class="mono">/proc/&lt;pid&gt;/exe</span> 摘要 = 部署二进制 <span class="mono">e015292c…</span></div></div>
+  <div class="row"><div>关键处理未落入宿主</div><div>宿主无 <span class="mono">/dev/davinci*</span>、未加载 devdrv；npu-smi 虽已安装但执行挂起查不到设备；读设备 BAR 得 0 字节</div></div>
+</div>
+<p class="note" style="border:0;margin:6px 0 0;padding:0">限制：可信根证书与经独立批准的参考度量基线尚未取得，当前持有的是<b>观测值而非第三方批准的基准值</b>。</p>
+
+<h2>四、FEC-02　OTP 密钥全生命周期</h2>
+<h3><span class="id">判定</span><span class="v v-pass">通过（计算安全口径）</span></h3>
+<div class="data">
+  <div class="row h"><div>生命周期环节</div><div>实测数据</div></div>
+  <div class="row"><div>生成与随机源</div><div><span class="mono">getrandom</span> + 拒绝采样；高 24 位均匀网格避免上界舍入；次正规正 scale 保留半开区间</div></div>
+  <div class="row"><div>随机源失败处理</div><div>读取失败时<b>擦除临时随机缓冲并中止</b>，不降级为弱随机（本轮故障注入复验，见第九节）</div></div>
+  <div class="row"><div>长度与一次一密</div><div><b>4096 个掩码全部唯一</b>，无重复</div></div>
+  <div class="row"><div>均匀性</div><div>两个 RNS 模域（Q0=32749、Q1=32719）各 <b>1,048,576</b> 样本，方差比 <b>1.0008 / 0.9996</b>，<span class="mono">RNS_MOD_UNIFORM_PASS</span></div></div>
+  <div class="row"><div>销毁</div><div><span class="mono">zeroize=PASS</span>；工作区每次复用前覆写，<span class="mono">q8_fini</span> 退出时整体擦除</div></div>
+  <div class="row"><div>隔离存储</div><div>密钥文件 <b>600 / root</b>；宿主读 130 GB guest 内存 0 命中；日志、临时文件、容器日志均搜不到标记（对照文件可搜出）</div></div>
+  <div class="row"><div>加速卡是否持有密钥</div><div><b>否</b>。卡上只有 int8 密文分量，掩码与解盲全在 CVM</div></div>
+</div>
+<div class="box warn">
+<b class="t">一处条件项：清理回收策略未定义</b>
+测试 DEK 的清理已验证通过，但此前 workspace 探针复现过"复用尾部残留"。<b>每调用 / 每请求 / 退出时分别要求擦除到什么程度，尚未形成书面策略</b>——在策略明确前，不能把工具 pass 直接当作"擦除已合规"。
+</div>
+
+<h2>五、FEC-03　客户端密态转换展示</h2>
+<h3><span class="id">判定</span><span class="v v-pass">SDK 通过</span><span class="v v-todo">Web 端环境不存在</span></h3>
+<ul>
+<li><b>客户可独立复验：</b>自验脚本在<b>宿主机以客户视角独立执行</b>（不走本项目的 SSH 采集链路），<span class="num">10/10</span> 全通过。这一点是验收要求"客户可依据说明材料独立完成基础复验"的直接兑现。</li>
+<li><b>状态变化可展示：</b>SDK 打点覆盖身份校验 → 加密前 → 加密后 → 提交 → 首响应 → 结束。</li>
+<li><b>明文与密态不可对应识别：</b>同一输入两次提交，<b>H2D 指纹不同</b>——一次一密在客户可观测层面的直接体现。</li>
+<li><b>Web 端：</b>经端口与容器清单核查，本环境<b>未部署</b> Web 前端（宿主仅监听 22/111/53/9100，CVM 仅 22/8000/8020/8101，无 web/nginx 容器）。记"环境不存在"而非"未测"。</li>
+</ul>
+
+<h2>六、FEC-04　网络传输密态验证</h2>
+<h3><span class="id">判定</span><span class="v v-pass">通过</span></h3>
+<div class="data">
+  <div class="row h"><div>检查</div><div>结果</div></div>
+  <div class="row"><div>8000 网关入口双点抓包</div><div><span class="num">23/23</span>（<span class="mono">wire_gateway_01/</span>）</div></div>
+  <div class="row"><div>8101 SDK 入口双点抓包</div><div><span class="num">11/11</span>（<span class="mono">wire_sdk_01/</span>）</div></div>
+  <div class="row"><div>合成提示标记</div><div>PCAP 中<b>不可见</b></div></div>
+  <div class="row"><div>阳性对照标记</div><div>PCAP 中<b>可见</b> → 抓包与搜索方法有效</div></div>
+  <div class="row"><div>篡改与重放</div><div><span class="num">17/17</span>：在线密文篡改、AAD 降级、非法 nonce/公钥长度、同 nonce 重放全部拒绝；4096 次 nonce 与密文唯一</div></div>
+</div>
+<p><b>口径：</b>抓包证明的是"这条链路上看不到植入的标记"，<b>不等于</b>加密算法本身被证明。两者分开记录。</p>
+
+<h2>七、FEC-05　CPU—加速卡接口密态验证</h2>
+<h3><span class="id">判定</span><span class="v v-pass">通过（物理总线除外）</span></h3>
+<div class="data">
+  <div class="row h"><div>检查</div><div>结果</div></div>
+  <div class="row"><div>独立合成算例</div><div><span class="num">96/96</span>，独立进程、<b>禁用 CPU 补正</b>，原始 D2H 整数分量与参考一致</div></div>
+  <div class="row"><div>同输入两次 H2D</div><div>指纹<b>不同</b> → 下发的是一次一密的密文分量</div></div>
+  <div class="row"><div>设备内存跨进程残留</div><div>256 MB × 2 轮（正常释放 / 进程直接退出由驱动回收），后续进程读回 <b>0 / 268,435,456</b> 非零字节；读路径自检命中 <b>15,790,320</b> 次</div></div>
+  <div class="row"><div>旁路残留</div><div>真实加密请求后，CVM 与宿主的日志、临时文件、容器日志均无标记；<b>植入的对照文件可被搜出</b></div></div>
+</div>
+<div class="box warn">
+<b class="t">限制</b>
+软件接口采样<b>不等于</b>物理总线抓包——无 PCIe 协议分析仪与探头，物理侧仍为待补证。另外这是独立合成算例的逐算子证据，<b>生产链路全算子追踪未做</b>。
+</div>
+
+<h2>八、FEC-06 / FEC-07　正确性与计算边界</h2>
+<h3><span class="id">FEC-06</span><span class="v v-pass">通过</span></h3>
+<ul>
+<li><b>算子级：</b>96/96 合成算例<b>零差异</b>，含极值与模域边界。</li>
+<li><b>端到端：</b>同一 OTP 引擎的<b>明文入口与密文入口</b>，3 轮唯一提示、交替顺序（排除预热效应），输出 <b>SHA256 逐轮完全相同</b>——不是"容差内接近"，是逐字节相同。</li>
+<li><b>尚缺：</b>与<b>纯明文引擎</b>的端到端基线对照需停服务切换引擎，本轮未做；当前对照的两个入口共用同一 OTP 引擎。</li>
+</ul>
+
+<h3><span class="id">FEC-07</span><span class="v v-pass">通过</span></h3>
+<p>本轮专门写了降级攻击探针，逐一尝试 7 种降级字段，看能否让引擎退回明文计算：</p>
+<div class="data">
+  <div class="row h"><div>尝试</div><div>结果</div></div>
+  <div class="row"><div><span class="mono">blind=0</span>、<span class="mono">plain=true</span>、<span class="mono">mode=plain</span>、<span class="mono">otp=false</span>、<span class="mono">disable_otp</span>、<span class="mono">r_scale=0</span>、<span class="mono">blind_mode</span></div><div><b>7 种全部无效</b>：输出 token <b>逐个与基线相同</b>，<span class="mono">mode</span> 恒为 <span class="mono">shannon_rns_otp</span></div></div>
+  <div class="row"><div>静态代码侧</div><div><span class="mono">g_blind</span> 与 <span class="mono">g_r_scale</span> <b>只能由启动命令行设置</b>，请求体<b>没有解析路径</b>——传 <span class="mono">r_scale=0</span> 也无法让掩码失效</div></div>
+</div>
+<p>动态（发请求试）与静态（读源码确认无解析路径）两侧相互印证。调用链与设计一致：W8A8 线性经 RNS 密文下发双卡，归一化、激活、softmax、解盲、采样在 CVM 内。</p>
+
+<h2>九、FEC-08　异常处理与安全回退（本轮新增故障注入）</h2>
+<h3><span class="id">判定</span><span class="v v-cond">条件通过</span><span class="v v-todo">多平台适配待补证</span></h3>
+
+<p class="lead">计划书对本项的通过判定是"<b>各目标平台均保持密态边界，异常时中止任务而非回退到明文计算</b>"。此前这一项只有"证明失败、随机源失败路径有测试覆盖"的间接说法，<b>没有真正注入过故障</b>。本轮补做了一套故障注入，结论分两半：<b>能被发现的异常一律中止</b>，<b>但设备静默算错在批次路径上不会被发现</b>。</p>
+
+<div class="box">
+<b class="t">测试方法与安全措施</b>
+独立进程运行，引擎源码<b>拷贝出</b>生产树后编译（被测源码 <span class="mono">q8_ops.c</span> 摘要 <span class="mono">b6e0afa3…</span>），不在 <span class="mono">/data/otp_c35</span> 原树内构建。<b>没有用非法指针启动任何 kernel</b>——NPU 与线上服务共享，三个非法形参用例都在触碰设备之前就返回。模拟"设备算错"的做法是：把<b>设备上</b>某一个输出通道的权重按位翻转，而<b>可信侧的 host 权重副本保持不变</b>，用例结束后立即还原并复验。<br>
+测试前后后端 <span class="mono">requests</span> 均为 <b>28</b>、<span class="mono">active=0</span>，引擎 healthz 仍为 <span class="mono">{"status":"ok","mode":"shannon_rns_otp"}</span>——<b>生产服务未受影响</b>。
+</div>
+
+<div class="data">
+  <div class="row h"><div>用例</div><div>结果</div></div>
+  <div class="row"><div>baseline_M1 / baseline_M4</div><div><span class="ok">PASS</span>　rc=0，与 CPU 参考的最大偏差 <span class="num">2.98e-05</span>（量化噪声量级）</div></div>
+  <div class="row"><div>非法激活宽度（K 非 32 倍数）</div><div><span class="ok">PASS</span>　<span class="num">rc=-1</span> 中止</div></div>
+  <div class="row"><div>非法输出宽度（N 非 16 倍数）</div><div><span class="ok">PASS</span>　<span class="num">rc=-1</span> 中止</div></div>
+  <div class="row"><div>不支持的分片配置</div><div><span class="ok">PASS</span>　<span class="num">rc=-1</span> 中止</div></div>
+  <div class="row"><div><b>设备算错 · 单行（M=1）</b></div><div><span class="ok">PASS</span>　rc=0，偏差 <span class="num">2.98e-05</span> —— <b>被检出并在可信 CPU 上纠正</b>，输出回到正确值</div></div>
+  <div class="row"><div><b>设备算错 · 批次（M=4）</b></div><div><span class="no">复现缺口</span>　rc=0，偏差 <span class="num">567.615</span> —— <b>错误结果被当作成功返回</b></div></div>
+  <div class="row"><div>还原后复验</div><div><span class="ok">PASS</span>　偏差回到 <span class="num">2.98e-05</span>，设备权重已还原</div></div>
+  <div class="row"><div><b>随机源失效</b>（getrandom 强制失败）</div><div><span class="ok">PASS</span>　<span class="num">rc=-1</span> 中止，<b>不会在无掩码的情况下继续计算</b></div></div>
+  <div class="row"><div>随机源恢复后</div><div><span class="ok">PASS</span>　rc=0，偏差 <span class="num">2.98e-05</span>，正常恢复</div></div>
+</div>
+
+<figure>
+<svg viewBox="0 0 900 200" width="100%" style="max-width:900px" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="单行与批次路径在同一故障下的差异">
+  <rect x="0" y="0" width="900" height="200" fill="#ffffff"/>
+  <g font-family="'Microsoft YaHei',sans-serif" font-size="13">
+    <text x="0" y="16" fill="#6b7280" font-size="12.5" letter-spacing="1">同一处设备权重篡改，两条路径的结果（与 CPU 参考的最大偏差，对数感）</text>
+
+    <text x="0" y="52" fill="#24303f">单行 M=1</text>
+    <rect x="96" y="38" width="6" height="20" fill="#1d7a46"/>
+    <text x="112" y="53" fill="#1d7a46" font-weight="700">2.98e-05</text>
+    <text x="210" y="53" fill="#3d434e">检出 → 可信 CPU 纠正 → 输出正确（日志记 corrected N mismatches）</text>
+
+    <text x="0" y="92" fill="#24303f">批次 M=4</text>
+    <rect x="96" y="78" width="620" height="20" fill="#b3261e"/>
+    <text x="726" y="93" fill="#b3261e" font-weight="700">567.615</text>
+    <text x="112" y="93" fill="#ffffff" font-weight="700">错误结果，rc=0 返回成功</text>
+
+    <line x1="0" y1="118" x2="900" y2="118" stroke="#e3e6ea"/>
+    <text x="0" y="142" fill="#16181d" font-size="13.5" font-weight="700">根因（静态确认，非推测）：</text>
+    <text x="0" y="164" fill="#3d434e" font-size="13">q8_ops.c 中 verify = g_rns_verify &amp;&amp; (M == 1 || getenv("OTP_RNS_DEBUG"))</text>
+    <text x="0" y="184" fill="#3d434e" font-size="13">—— 与设备结果的 CPU 交叉校验<tspan font-weight="700">只在单行路径开启</tspan>，M&gt;1 默认不做。</text>
+  </g>
+</svg>
+<figcaption>同一故障、同一权重：单行路径纠正，批次路径静默放行</figcaption>
+</figure>
+
+<div class="box bad">
+<b class="t">这一条要如实记：设备结果完整性在批次路径上无校验</b>
+<b>动态证据：</b>同一处篡改，M=1 输出偏差 2.98e-05（已纠正），M=4 输出偏差 <b>567.615</b> 且返回成功。<br>
+<b>静态证据：</b><span class="mono">verify = g_rns_verify &amp;&amp; (M == 1 || getenv("OTP_RNS_DEBUG"))</span>，多行批次默认不做交叉校验。两类证据一致。<br><br>
+<b>要说清楚它是什么、不是什么：</b><br>
+· <b>不是机密性问题。</b>无论哪条路径，设备拿到的始终是 OTP 密文分量，掩码与解盲都在 CVM 内——<b>密态边界没有被破坏</b>，这一点故障注入前后都成立。<br>
+· <b>是完整性问题。</b>FEC 的威胁模型明确把加速卡列为<b>不可信</b>。一个故障的或被控制的加速卡，可以在批次推理中<b>静默篡改输出而不被发现</b>。<br>
+· <b>是有意的性能取舍，不是疏漏。</b>源码注释写明：批次下这个额外点积"会抹掉部分批处理收益，而 RNS 精确重建本身仍然成立"。也就是说，作者认为交叉校验是防设备故障的，不是保证数值正确的。这个判断在"设备可信"的前提下成立，在"设备不可信"的前提下不成立。<br><br>
+<b>建议（未实施，属代码改动需另行授权）：</b>批次路径增加抽样校验（例如每批抽若干 [m,n] 做 CPU 点积对拍），在可接受开销下恢复完整性检测；同时把 <span class="mono">corrected N mismatches</span> 事件从 stderr 日志提升为<b>显式上报</b>，否则设备故障对调用方始终不可见。
+</div>
+
+<div class="box good">
+<b class="t">通过的部分</b>
+<b>能被发现的异常，一律中止而非降级。</b>非法形参、不支持的配置、<b>随机源失效</b>三类都是 <span class="mono">rc=-1</span> 直接中止。其中随机源失效这一条对 OTP 尤其关键——它证明了<b>拿不到熵时不会退而用弱随机或无掩码继续算</b>，而是停下来；恢复供熵后正常运行。这与 FEC-07 的"运行时无法降级为明文"相互支持：<b>既不能被外部请求降级，也不会因内部故障自行降级。</b>
+</div>
+
+<h3>多平台适配（待补证）</h3>
+<p><b>仅昇腾 310P 实测。</b>DCU、GPU、TPU 等平台未测，在未声明支持范围前不做判定。这也是对外材料中"全谱系适配"表述需要修订的依据。另外，<b>加速卡硬件级故障注入</b>（掉卡、ECC 错误、复位）与<b>不支持算子的异常路径</b>本轮未注入——前者需要可牺牲的硬件环境，后者需要先明确算子支持清单。</p>
+
+
+<h2>十、适用边界与残余风险</h2>
+
+<p class="lead">按计划书验收要求，本节完整披露适用条件与残余风险。<b>以下内容不因整体判定"通过"而弱化。</b></p>
+
+<h3>1　安全模型的边界</h3>
+<div class="data">
+  <div class="row h"><div>不能这样说</div><div>应当这样说</div></div>
+  <div class="row"><div>"信息论安全"</div><div><b>计算安全</b>。随机源是 OS CSPRNG，不是物理真随机源</div></div>
+  <div class="row"><div>"全链路密态""全程无明文"</div><div><b>加速卡侧密态</b>。CVM 可信域内部是明文的——分词、非线性、解盲都在那里</div></div>
+  <div class="row"><div>"已抓取并观察到总线密文"</div><div><b>软件接口采样未见明文</b>。无 PCIe 协议分析仪，物理总线未观测</div></div>
+  <div class="row"><div>"全谱系加速卡适配"</div><div><b>仅昇腾 310P 实测</b>。其他平台未测，不做判定</div></div>
+  <div class="row"><div>"性能几乎无损""快 10000 余倍"</div><div>不属于安全证明范围，<b>本报告不为性能主张背书</b></div></div>
+</div>
+
+<h3>2　残余风险清单</h3>
+<div class="data">
+  <div class="row h"><div>风险</div><div>状态</div></div>
+  <div class="row"><div><b>F01 网关明文推理路由</b>：<span class="mono">0.0.0.0</span> 上明文 <span class="mono">/v1/chat/completions</span> 仍可达</div><div><span class="no">HIGH，本轮复现，未整改</span>。未擅自关闭（会影响现网调用方），需安排整改窗口</div></div>
+  <div class="row"><div>批次路径不做设备结果交叉校验</div><div>本轮故障注入实测确认，见第九节</div></div>
+  <div class="row"><div>CPU 补正事件仅记日志</div><div>设备故障对调用方不可见；建议显式上报</div></div>
+  <div class="row"><div>掩码清理策略未定义</div><div>每调用 / 每请求 / 退出时的擦除要求尚无书面标准</div></div>
+  <div class="row"><div>可信根与参考度量基线</div><div>持有观测值，非第三方批准基准值</div></div>
+  <div class="row"><div>物理 PCIe 总线观测</div><div>无仪器，待补证</div></div>
+  <div class="row"><div>纯明文引擎端到端基线对照</div><div>需停服务开窗口，未做</div></div>
+  <div class="row"><div>生产链路全算子追踪</div><div>当前为独立合成算例的逐算子证据</div></div>
+</div>
+
+<h3>3　适用范围声明</h3>
+<p>本报告的全部结论<b>仅适用于</b>：鲲鹏 920 + virtCCA 机密虚机 + 双 Ascend 310P（固件 7.8.0.7.220、驱动 25.2.0）、CANN 9.1.0、Qwen3.5-35B-A3B W8A8、引擎 <span class="mono">e015292c…</span> 这一组合。更换硬件、固件、驱动或模型版本后需按原基线复测。</p>
+<p>本报告属于<b>工程安全验证</b>，不等同于形式化密码学证明或权威认证。另按计划书"三套方案分别形成独立安全结论"的要求，本报告<b>不包含也不引用</b> TDC 的隔离结论或 CDC 的平台结论作为 FEC 的证据。</p>
+
+<h2>十一、证据索引</h2>
+<p>全部原始文件位于 <span class="mono">otp_c35/results/security_full_20260918/</span>，取消传播相关位于 <span class="mono">otp_c35/results/security_cancel_deploy_20260918/</span>。完整性校验见 <span class="mono">manifest_full_20260918.json</span>。</p>
+<pre class="idx">env_baseline.json          环境与版本基线
+firmware.json              两卡固件 7.8.0.7.220、驱动版本
+live_status.json           线上健康、运行引擎与文件摘要
+attest_01/                 FEC-01  证明负例（7/7）
+acceptance_02/             FEC-02  RNS CSPRNG 唯一性/均匀性/清零 + 篡改重放（17/17）
+sdk_01/                    FEC-03  SDK 客户端与重放控制
+selfcheck_01/              FEC-03  客户自验（10/10，宿主独立执行）
+wire_gateway_01/           FEC-04  8000 入口双点抓包（23/23）
+wire_sdk_01/               FEC-04  8101 入口双点抓包（11/11）
+npu_01/                    FEC-05  NPU 设备接口合成算例（96/96）
+device_residue_02/         FEC-05  跨进程设备内存残留（两种结束方式，均全零）
+residue_01/                FEC-05  旁路残留（日志/临时文件/容器日志）
+workspace_01/              FEC-02  workspace 生命周期
+dual_entry_01/             FEC-06  明密文双入口一致性（3 轮 SHA256 相同）
+no_fallback_01/            FEC-07  7 种降级字段全部无效
+fault_injection_02/        FEC-08  故障注入（本轮新增）
+fault_injection_01/        FEC-08  首次运行失败记录（链接到旧 kernel 库），保留不覆盖
+pair_01/                   并发跨密钥隔离（11/11）
+../security_cancel_deploy_20260918/cancel_live_02/   取消传播线上验收（11/11）
+scripts_snapshot_full_20260918/    本轮所用脚本快照
+FEC_security_report.htm    本报告</pre>
+
+<h2>十二、复核记录</h2>
+<div class="box">
+<b class="t">本报告编制过程中的两条自我约束</b>
+<b>一、失败记录不覆盖。</b>故障注入首次运行因链接到过期的 kernel 库（<span class="mono">/data/ascendc/build</span>，缺 <span class="mono">launch_grouped_i8_matmul_async</span>）而编译失败，该记录保留在 <span class="mono">fault_injection_01/</span>，未删除。正确的库是 <span class="mono">/data/ascendc_grouped_v1/build</span>——这是通过 <span class="mono">ldd</span> 线上 <span class="mono">serve35_cb</span> 与 <span class="mono">test_q8</span> 确认的，不是猜的。<br><br>
+<b>二、生产环境未被触碰。</b>故障注入在独立进程中运行，引擎源码是<b>拷贝出来</b>编译的（未在 <span class="mono">/data/otp_c35</span> 原树内构建）；没有用非法指针启动任何 kernel（NPU 与线上服务共享）；设备权重的篡改在用例结束后<b>立即还原并复验</b>。测试前后后端请求数与空闲状态均已记录。
+</div>
+
+<p class="note">
+《FEC 安全证明报告》· 2026-09-18 · 对应计划书第七节 FEC-01 ~ FEC-09 与第十二节验收要求。<br>
+配套材料：安全证明矩阵与环境拓扑 <span class="mono">security_matrix.htm</span>；三方案执行与结论报告 <span class="mono">security_full_report.htm</span>；计划书逐条对照 <span class="mono">plan_point_by_point_response.htm</span>。
+</p>
+
+
+</div>
+</body>
+</html>

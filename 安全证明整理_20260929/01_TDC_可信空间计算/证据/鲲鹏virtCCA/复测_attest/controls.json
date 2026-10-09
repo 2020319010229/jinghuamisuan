@@ -1,0 +1,66 @@
+{
+  "scope": "offline verification controls only, not a hardware quote authenticity verdict",
+  "input_sha256": "a3ec1cb79795b5e09d3cfea3502af7599a4d5a8f73368a09320fcbde616153dd",
+  "token_sha256": "1cb9ae19b7c363d9fa0e3f13acea46ee624cbcb15560044309e013fed542fe7d",
+  "current_require_cose": "0",
+  "platform_token_present": true,
+  "device_certificate_present": true,
+  "tests": [
+    {
+      "name": "captured_token_current_policy",
+      "accepted": true,
+      "expected_accept": true,
+      "passed": true,
+      "reason": null
+    },
+    {
+      "name": "wrong_fresh_challenge_rejected",
+      "accepted": false,
+      "expected_accept": false,
+      "passed": true,
+      "reason": "CVM token challenge does not match certificate binding"
+    },
+    {
+      "name": "wrong_measurement_rejected",
+      "accepted": false,
+      "expected_accept": false,
+      "passed": true,
+      "reason": "CVM RIM does not match KUNPENG_CVM_MEASUREMENT"
+    },
+    {
+      "name": "captured_token_strict_cose",
+      "accepted": true,
+      "expected_accept": true,
+      "passed": true,
+      "reason": null
+    },
+    {
+      "name": "tampered_cvm_signature_rejected_current_policy",
+      "accepted": false,
+      "expected_accept": false,
+      "passed": true,
+      "reason": "CVM token COSE_Sign1 verification failed"
+    },
+    {
+      "name": "tampered_cvm_signature_rejected_strict_cose",
+      "accepted": false,
+      "expected_accept": false,
+      "passed": true,
+      "reason": "CVM token COSE_Sign1 verification failed"
+    },
+    {
+      "name": "missing_device_certificate_rejected",
+      "accepted": false,
+      "expected_accept": false,
+      "passed": true,
+      "reason": "kunpeng device certificate is required"
+    }
+  ],
+  "tamper": {
+    "location": "last byte of CVM COSE signature",
+    "byte_offset": 1424,
+    "sha256": "4ecbb943e3c0411e8054269da08285e05dc6fbb10dddfa9702c31cee909b44c6"
+  },
+  "passed": 7,
+  "total": 7
+}

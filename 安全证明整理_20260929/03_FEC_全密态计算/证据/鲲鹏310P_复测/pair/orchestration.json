@@ -1,0 +1,8 @@
+{
+  "directory": "/tmp/otp-security-pair-20260916.CqYqk4",
+  "execution": {
+    "exit_code": 0,
+    "stdout": "/tmp/tmp38d4asna.der.pem: OK\n/tmp/tmpvkofmukr.der.pem: OK\n{\"tests\": [{\"name\": \"all_four_streams_done_and_decrypted\", \"passed\": true}, {\"name\": \"client_0_concurrent_matches_serial\", \"passed\": true}, {\"name\": \"serial_client_0_response_rejects_other_key\", \"passed\": true}, {\"name\": \"concurrent_client_0_response_rejects_other_key\", \"passed\": true}, {\"name\": \"client_1_concurrent_matches_serial\", \"passed\": true}, {\"name\": \"serial_client_1_response_rejects_other_key\", \"passed\": true}, {\"name\": \"concurrent_client_1_response_rejects_other_key\", \"passed\": true}, {\"name\": \"reference_outputs_distinguishable\", \"passed\": true}, {\"name\": \"client_request_intervals_overlap\", \"passed\": true}, {\"name\": \"exactly_four_backend_requests\", \"passed\": true}, {\"name\": \"backend_idle_after\", \"passed\": true}], \"error_type\": null}\n",
+    "stderr": ""
+  }
+}

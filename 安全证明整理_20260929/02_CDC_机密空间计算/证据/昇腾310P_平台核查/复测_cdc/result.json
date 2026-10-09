@@ -1,0 +1,40 @@
+{
+  "started_ns": 1789727033994132000,
+  "passed": true,
+  "task": "CDC-01/03 加速卡机密计算能力核查（只读）",
+  "scope": "read-only npu-smi interrogation inside the CVM",
+  "exit_code": 0,
+  "summary": {
+    "cards": [
+      "Ascend 310P3",
+      "Ascend 310P3"
+    ],
+    "capabilities": {
+      "work-mode": {
+        "state": "unsupported",
+        "text": "This device does not support querying work-mode."
+      },
+      "rootkey": {
+        "state": "unsupported",
+        "text": "This device does not support querying rootkey."
+      },
+      "tls-cert": {
+        "state": "unsupported",
+        "text": "This device does not support querying tls-cert."
+      },
+      "tls-cert-period": {
+        "state": "unsupported",
+        "text": "This device does not support querying tls-cert-period."
+      },
+      "license": {
+        "state": "unsupported",
+        "text": "This device does not support querying license."
+      }
+    },
+    "key_manage": "service auto startup           : Disable\n    \tservice running status         : Stop",
+    "device_share": "False",
+    "cdc_capable": false
+  },
+  "conclusion": "平台不具备 CDC 所需能力：设备不提供工作模式/根密钥/证书查询",
+  "finished_ns": 1789727050528606800
+}

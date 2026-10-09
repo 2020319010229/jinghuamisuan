@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>G-05 既有第三方材料标准化与映射 · 2026-09-18</title>
+<style>
+ *{box-sizing:border-box}
+ body{margin:0;background:#fff;color:#1b1b1b;font:15px/1.8 "Segoe UI","Microsoft YaHei",system-ui,sans-serif}
+ .wrap{max-width:1040px;margin:0 auto;padding:32px 26px 90px}
+ h1{font-size:23px;margin:0 0 6px}
+ .sub{color:#666;font-size:13.4px;margin-bottom:22px}
+ h2{font-size:18px;margin:32px 0 12px;padding-bottom:6px;border-bottom:2px solid #1b1b1b}
+ h3{font-size:15.3px;margin:22px 0 8px;color:#123d6b}
+ table{border-collapse:collapse;width:100%;margin:14px 0;font-size:13.4px}
+ th,td{border:1px solid #d8d8d8;padding:7px 10px;text-align:left;vertical-align:top}
+ th{background:#f3f5f7;font-weight:600}
+ code{background:#f1f2f4;padding:1px 5px;border-radius:3px;font:12.5px Consolas,monospace}
+ .lead{background:#eef5ff;border-left:4px solid #2a6fb5;padding:13px 16px;margin:18px 0;border-radius:0 5px 5px 0}
+ .warn{background:#fff7e8;border-left:4px solid #d08700;padding:13px 16px;margin:18px 0;border-radius:0 5px 5px 0}
+ .y{color:#0a6b33;font-weight:600}
+ .n{color:#a51d2d;font-weight:600}
+ .p{color:#a06000;font-weight:600}
+ ul{margin:10px 0;padding-left:22px} li{margin:5px 0}
+ @media print{.wrap{max-width:none;padding:0} body{font-size:12pt}}
+</style>
+</head>
+<body><div class="wrap">
+
+<h1>G-05 既有第三方材料标准化与映射</h1>
+<div class="sub">2026-09-18 · 把既有测试材料映射到 TDC / CDC / FEC 三方案安全主张，并标明可继承边界</div>
+
+<div class="lead">
+<p>手上的既有材料来自 <strong>release_v3 项目</strong>（Intel SGX 进程级 TEE + H200 GPU 加性盲化 + 词表置换，SGLang 跑 Qwen3-14B），以及它对《私密计算环境下数据流通安全测试例——信通院》42 个测试例的对照评估。</p>
+<p>核心判断：<strong>技术路线同源，硬件平台不同。</strong>release_v3 与本项目走的都是"CPU-TEE + 通用加速卡盲化"即 FEC 路线，因此<strong>测试方法可复用</strong>；但计划书明确"不同机器、版本不能直接继承通过结论"，所以 release_v3 的任何通过结论都<strong>不计入</strong>本项目验收，本轮相应主张一律在鲲鹏 + 昇腾环境重新实测。</p>
+</div>
+
+<h2>一、材料清单</h2>
+<table>
+<tr><th>材料</th><th>内容</th><th>与本项目的关系</th></tr>
+<tr><td>《私密计算环境下数据流通安全测试例——信通院》</td><td>九大领域 42 个测试例</td><td>外部测试例集，可作为本项目测试项的交叉参照</td></tr>
+<tr><td>release_v3 信通院测试例对照评估</td><td>按 A/B/C 三档评估 42 例：A 档 7 条、B 档 16 条、C 档 19 条</td><td>同路线不同硬件，方法可借鉴，结论不继承</td></tr>
+<tr><td>release_v3_H200 安全测试报告</td><td>H200 平台密态推理安全测试</td><td>不同 CPU-TEE（SGX vs virtCCA）、不同加速卡（H200 vs 310P）</td></tr>
+<tr><td>release_v3_B300_14B 安全测速报告 / mitai_7B 延迟测速报告</td><td>性能类材料</td><td>性能主张不属于安全证明范围，不纳入</td></tr>
+</table>
+
+<h2>二、信通院测试例到三方案的映射</h2>
+<p>只映射与本计划书三方案安全主张相关的测试例；其余属于机密计算云平台的其他模块，见第四节。</p>
+
+<table>
+<tr><th style="width:20%">信通院测试例</th><th style="width:12%">对应方案</th><th style="width:34%">本项目 2026-09-18 实测证据</th><th style="width:16%">release_v3 原结论</th><th style="width:18%">可继承性</th></tr>
+
+<tr><td>5.1.1 异构 TEE 协同 · GPU 可信运行验证</td><td>CDC</td><td>实测 Ascend 310P3 不支持 <code>rootkey</code> / <code>tls-cert</code> / <code>work-mode</code> 查询，无 GPU-CC 能力</td><td>路线差异，不满足（GPU 不可信 + 盲化）</td><td class="y">结论一致，互相印证：两个项目都不走 GPU-CC 路线</td></tr>
+
+<tr><td>5.1.2 CPU 机密计算 · 隔离能力验证</td><td>TDC-03</td><td>宿主读 <code>/proc/&lt;qemu&gt;/mem</code>，运行时内存标记与磁盘 I/O 标记均 0 命中，两个阳性对照成立</td><td>SGX enclave 隔离，通过</td><td class="p">方法可复用；CPU-TEE 实现不同（SGX 进程级 vs virtCCA 虚机级），结论须本机验证，已做</td></tr>
+
+<tr><td>5.1.3 TEE 与传统设备协同 · 加噪数据传输</td><td class="y">FEC 核心</td><td>NPU 独立合成算例 96/96，禁 CPU 补正，原始 D2H 整数分量与参考一致；同输入两次 H2D 指纹不同</td><td>A 档「完美命中」</td><td class="p">同一范式，硬件不同；本轮已在昇腾平台独立验证</td></tr>
+
+<tr><td>5.3.1 根密钥安全防护 · 硬件级保护</td><td>FEC-02</td><td>取消密钥与 X25519 私钥 600 权限、root 属主；掩码 4096 个全唯一、用后清零</td><td>SGX sealing key 封装，通过</td><td class="n">不可继承：无 SGX sealing 等价机制，本项目密钥保护依赖 virtCCA 内存隔离，属不同机制</td></tr>
+
+<tr><td>5.3.3 数据密态传输与流转</td><td>FEC-04</td><td>两处入口双点抓包 23/23、11/11，合成提示标记不可见，阳性对照可见</td><td>A 档通过</td><td class="p">方法一致，本轮已独立实测</td></tr>
+
+<tr><td>5.4.3 应用层完整性度量</td><td>TDC-02</td><td>运行进程 <code>/proc/exe</code> 摘要等于部署二进制；冻结源码重建 baseline 与线上字节一致</td><td>MRENCLAVE 度量，通过</td><td class="n">不可继承：SGX 的 MRENCLAVE 是硬件度量，本项目是文件与进程摘要比对，强度不同</td></tr>
+
+<tr><td>5.4.6 重放攻击防护（nonce）</td><td>FEC / 公共</td><td>4096 次 nonce 与密文唯一；同 nonce 重放拒绝；换 request_id 重放在 2026-09-17 修复后拒绝且后端增量 0</td><td>B 档，需确认</td><td class="y">本项目已完成且强于原评估状态</td></tr>
+
+<tr><td>5.6.3 请求安全加密保护（信封加密）</td><td>FEC-04</td><td>X25519 + HKDF-SHA256 + AES-GCM，加密入口验收 17/17，含降级与非法参数拒绝</td><td>A 档可过</td><td class="p">协议不同（ECDH/AES-GCM vs X25519/AES-GCM），本轮已独立实测</td></tr>
+
+<tr><td>5.7.5 推理数据全链路保护（Prompt 加密 / Response 解密）</td><td class="y">FEC 核心</td><td>明文入口与密文入口 3 轮输出 SHA256 逐轮完全相同；抓包无明文；日志与临时文件无残留</td><td>A 档「完美命中」，核心 demo</td><td class="p">同一主张，本轮在昇腾平台独立复现</td></tr>
+
+<tr><td>5.7.6 明密文统一推理接口</td><td>FEC-06</td><td>明文 <code>/v1/chat/completions</code> 与密文 <code>/v1/encrypted/chat/completions</code> 均可用且结果一致</td><td>B 档，接口不全</td><td class="y">本项目两类接口均已实测</td></tr>
+
+<tr><td>5.2.3 系统安全加固 · TEE 内部防护</td><td>TDC</td><td>宿主无设备节点与驱动、读 BAR 得 0 字节；CVM 内非特权用户被拒</td><td>B 档，缺加固环境</td><td class="p">本轮补充了非授权侧访问测试，但未做渗透测试</td></tr>
+</table>
+
+<h2>三、两个项目结论互相印证的一点</h2>
+<div class="warn">
+<p>release_v3 的评估写明：信通院 5.1.1 默认"GPU 也是 TEE"（GPU-CC 路线），而 release_v3 走的是"GPU 不可信 + 加性盲化"，因此 <strong>5.1.1 不满足、应引导到 5.1.3</strong>。</p>
+<p>本轮在鲲鹏 + 昇腾平台实测得到<strong>同方向的结论</strong>：310P3 不提供设备证明材料，无 GPU-CC 能力，CDC 不具备执行条件；而 FEC 盲化路线的对应项（5.1.3 / 5.7.5）全部实测通过。</p>
+<p>这说明两套部署在技术路线上是一致的：<strong>不依赖加速卡可信，改以密态外包实现</strong>。对外沟通时应主动说明这一路线选择，避免在 GPU-CC 类测试项上被误判。</p>
+</div>
+
+<h2>四、无法映射的内容</h2>
+<p>信通院测试例中约 19 条属于完整机密计算云平台的其他模块，与本计划书三方案的安全主张没有对应关系，按计划书要求单独标注、不硬凑：</p>
+<ul>
+<li><strong>云原生机密容器</strong>（多云互联、RunC/RunV、弹性伸缩、滚动升级、监控日志）</li>
+<li><strong>透明可信存证</strong>（区块链基线防篡改、基线配置管理、一致性校验）</li>
+<li><strong>端侧可信环境</strong>（VBS / TrustZone）</li>
+<li><strong>RAG 安全</strong>（embedding 加密防 vec2text、密态检索）——本项目部署明确无 RAG</li>
+<li><strong>智能体安全管控</strong>（策略权限、高危行为监测）</li>
+<li><strong>服务高可用与故障转移</strong>、<strong>模型全生命周期管理</strong>、<strong>分布式 Prefill/Decode 分离</strong></li>
+</ul>
+
+<h2>五、结论与使用限制</h2>
+<ul>
+<li>既有材料<strong>可用于</strong>：测试方法借鉴、测试例交叉参照、对外沟通时的路线说明。</li>
+<li>既有材料<strong>不可用于</strong>：替代本项目的任何验收结论。SGX 与 virtCCA 是不同的 CPU-TEE 实现，H200 与 310P 是不同的加速卡，密钥保护机制（sealing key vs 虚机内存隔离）与完整性度量机制（MRENCLAVE vs 文件进程摘要）均不等价。</li>
+<li>性能类材料（B300/mitai 测速报告）按计划书第一节不纳入安全证明。</li>
+<li>本映射只覆盖与三方案安全主张相关的测试例，不构成对信通院测试例的完整应答。</li>
+</ul>
+
+<p style="margin-top:22px;color:#666;font-size:12.6px">被映射材料存放于微信文件目录与 <code>D:\python_code\清华服务器\release_v3_密态推理文档\</code>；本轮证据见同级 <code>security_full_20260918/</code>。</p>
+
+</div></body></html>

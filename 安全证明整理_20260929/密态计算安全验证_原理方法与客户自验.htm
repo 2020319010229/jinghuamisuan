@@ -1,0 +1,484 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>密态计算安全验证 · 原理、方法与客户自验</title>
+<style>
+:root{
+  --bg:#f5f7fa; --card:#ffffff; --ink:#1b2430; --sub:#5b6776; --line:#e3e8ef;
+  --navy:#12305a; --teal:#0f8b7e; --teal-soft:#e4f4f1; --amber:#b86e00; --amber-soft:#fdf2e0;
+  --blue:#2458b8; --blue-soft:#e8effb; --violet:#6a3fb5; --violet-soft:#f0eafa;
+  --ok:#1d8a4a; --ok-soft:#e5f5eb;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.75 "PingFang SC","Microsoft YaHei","Noto Sans SC",system-ui,sans-serif}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px 64px}
+header.hero{background:linear-gradient(135deg,#0d2446 0%,#12305a 55%,#0f5c63 100%);color:#fff;padding:52px 0 44px}
+header.hero .wrap{padding-bottom:0}
+.hero .kicker{font-size:13px;letter-spacing:.12em;opacity:.75}
+.hero h1{margin:8px 0 12px;font-size:32px;line-height:1.3;font-weight:700}
+.hero p{margin:0;max-width:760px;opacity:.9}
+.hero .meta{margin-top:18px;font-size:13px;opacity:.7}
+nav.toc{position:sticky;top:0;z-index:5;background:rgba(255,255,255,.95);backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
+nav.toc .wrap{display:flex;gap:4px;flex-wrap:wrap;padding:8px 20px}
+nav.toc a{font-size:13px;color:var(--sub);text-decoration:none;padding:5px 10px;border-radius:6px}
+nav.toc a:hover{background:var(--blue-soft);color:var(--blue)}
+section{margin-top:40px}
+h2{font-size:22px;margin:0 0 6px;color:var(--navy)}
+h2 .no{display:inline-block;min-width:34px;color:var(--teal)}
+.lead{color:var(--sub);margin:0 0 18px}
+h3{font-size:17px;margin:22px 0 10px;color:var(--navy)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px 22px}
+.grid{display:grid;gap:14px}
+.g3{grid-template-columns:repeat(3,1fr)} .g4{grid-template-columns:repeat(4,1fr)} .g2{grid-template-columns:repeat(2,1fr)}
+@media (max-width:860px){.g3,.g4,.g2{grid-template-columns:1fr 1fr}}
+@media (max-width:560px){.g3,.g4,.g2{grid-template-columns:1fr}.hero h1{font-size:25px}}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px}
+.stat .v{font-size:28px;font-weight:700;color:var(--navy);line-height:1.2;font-variant-numeric:tabular-nums}
+.stat .v small{font-size:15px;color:var(--sub);font-weight:500}
+.stat .k{font-size:13px;color:var(--sub);margin-top:4px}
+.stat .tag{display:inline-block;font-size:11px;padding:1px 7px;border-radius:10px;margin-bottom:6px}
+.t-tdc{background:var(--blue-soft);color:var(--blue)} .t-cdc{background:var(--violet-soft);color:var(--violet)} .t-fec{background:var(--teal-soft);color:var(--teal)} .t-all{background:#eef1f5;color:#44505f}
+.scheme{border-top:4px solid var(--blue)}
+.scheme.cdc{border-top-color:var(--violet)} .scheme.fec{border-top-color:var(--teal)}
+.scheme h3{margin-top:0}
+.scheme .one{font-weight:600;margin:0 0 8px}
+.scheme ul{margin:0;padding-left:18px;color:var(--sub);font-size:14px}
+table{width:100%;border-collapse:collapse;font-size:14px;background:var(--card)}
+th,td{padding:10px 12px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{background:#f0f3f8;color:#3a4656;font-weight:600;white-space:nowrap}
+.tbl{border:1px solid var(--line);border-radius:12px;overflow:auto}
+.pass{display:inline-block;background:var(--ok-soft);color:var(--ok);font-weight:600;font-size:12px;padding:1px 8px;border-radius:10px;white-space:nowrap}
+.who{display:inline-block;font-size:12px;padding:1px 8px;border-radius:10px;white-space:nowrap;font-weight:600}
+.who.self{background:var(--teal-soft);color:var(--teal)} .who.watch{background:var(--amber-soft);color:var(--amber)}
+code{font-family:"JetBrains Mono",Consolas,monospace;font-size:12.5px;background:#eef1f5;padding:1px 5px;border-radius:4px}
+.callout{border-left:4px solid var(--teal);background:var(--teal-soft);padding:14px 18px;border-radius:0 10px 10px 0;margin:16px 0}
+.callout.q{border-left-color:var(--amber);background:var(--amber-soft)}
+.callout b{color:var(--navy)}
+/* flow */
+.flow{display:grid;grid-template-columns:repeat(5,1fr);gap:0;margin:8px 0 4px}
+@media (max-width:860px){.flow{grid-template-columns:1fr}}
+.node{position:relative;background:var(--card);border:1px solid var(--line);padding:14px 14px 12px;min-height:150px}
+.node:first-child{border-radius:12px 0 0 12px}.node:last-child{border-radius:0 12px 12px 0}
+@media (max-width:860px){.node{border-radius:0!important;min-height:0}.node:first-child{border-radius:12px 12px 0 0!important}.node:last-child{border-radius:0 0 12px 12px!important}}
+.node .n{font-size:12px;color:var(--sub)}
+.node .t{font-weight:700;color:var(--navy);margin:2px 0 6px}
+.node .d{font-size:13px;color:var(--sub);line-height:1.6}
+.node .st{margin-top:8px;font-size:12px;font-weight:600}
+.node.tee{background:#f3faf8}
+.node.acc{background:#f6f8fc}
+.lock{color:var(--teal)} .lock2{color:var(--blue)}
+.lanes{margin-top:14px}
+.lane{display:grid;grid-template-columns:120px 1fr;gap:12px;align-items:start;padding:12px 0;border-top:1px dashed var(--line)}
+.lane .nm{font-weight:700}
+.lane .nm.tdc{color:var(--blue)} .lane .nm.cdc{color:var(--violet)} .lane .nm.fec{color:var(--teal)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:12.5px;padding:3px 10px;border-radius:14px;border:1px solid var(--line);background:#fff}
+.chip.a{border-color:#b9e0d9;background:var(--teal-soft)} .chip.b{border-color:#c6d6f3;background:var(--blue-soft)} .chip.c{border-color:#d9cdef;background:var(--violet-soft)}
+.track{background:var(--card);border:1px solid var(--line);border-left:6px solid var(--blue);border-radius:12px;padding:18px 20px 20px;margin-top:18px}
+.track.cdc{border-left-color:var(--violet)} .track.fec{border-left-color:var(--teal)}
+.track-h{display:flex;gap:12px;align-items:center}
+.track-tag{font-weight:700;font-size:14px;padding:4px 10px;border-radius:8px}
+.track-t{font-size:18px;font-weight:700;color:var(--navy)}
+.track-a{font-size:13px;color:var(--sub)}
+.track-core{margin:12px 0 12px;font-size:14px;background:#f7f9fc;border-radius:8px;padding:10px 14px}
+.track .flow{margin:0}
+.lockc{color:var(--violet)} .lockt{color:var(--teal)}
+.track .term{margin:0}
+/* steps */
+.steps{counter-reset:s;display:grid;gap:14px}
+.step{display:grid;grid-template-columns:56px 1fr;gap:14px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px}
+.step .num{counter-increment:s;width:44px;height:44px;border-radius:50%;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:18px}
+.step .num::before{content:counter(s)}
+.step h4{margin:0 0 4px;font-size:16px;color:var(--navy)}
+.step .row{display:grid;grid-template-columns:118px 1fr;gap:6px 10px;font-size:14px;margin-top:8px}
+.step .row .l{color:var(--sub)}
+.why{font-size:13px;color:var(--sub);margin-top:8px;padding-top:8px;border-top:1px dashed var(--line)}
+.term{background:#0f1b2d;color:#d6e2f0;border-radius:10px;padding:14px 16px;font:12.5px/1.7 "JetBrains Mono",Consolas,monospace;overflow:auto;white-space:pre}
+.term .c{color:#7fa7d8}.term .g{color:#6fd3a6}
+footer{margin-top:48px;color:var(--sub);font-size:13px;border-top:1px solid var(--line);padding-top:16px}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="kicker">荆华密算 · 三类密态计算方案</div>
+    <h1>密态计算安全验证<br>原理、方法与客户自验</h1>
+    <p>数据从客户手里出发，到可信环境计算、再回到客户手里，每一段是什么状态、靠什么保护、我们怎样验证，以及哪些验证客户可以亲手完成。</p>
+    <div class="meta">验证时间 2026-09-16 ~ 09-24 · 平台：鲲鹏 920 virtCCA + 昇腾 310P / Intel TDX + NVIDIA B200 / 海光 C86</div>
+  </div>
+</header>
+
+<nav class="toc"><div class="wrap">
+  <a href="#s1">一页看懂</a><a href="#s2">原理</a><a href="#s3">验证方法与工具</a><a href="#s4">客户自验</a><a href="#s5">参考 Tinfoil</a><a href="#s6">实测结果</a>
+</div></nav>
+
+<div class="wrap">
+
+<!-- 1 -->
+<section id="s1">
+  <h2><span class="no">01</span>一页看懂</h2>
+  <p class="lead">三套方案保护的位置不同，所以验证的重点也不同。</p>
+  <div class="grid g3">
+    <div class="card scheme">
+      <h3>TDC 可信空间计算</h3>
+      <p class="one">CPU 机密虚机 + 加速卡独占直通</p>
+      <ul>
+        <li>数据在 CPU 机密虚机中处理，宿主管理员读不到</li>
+        <li>加速卡整卡直通给这台虚机独占使用</li>
+      </ul>
+    </div>
+    <div class="card scheme cdc">
+      <h3>CDC 机密空间计算</h3>
+      <p class="one">CPU 机密虚机 + GPU 机密计算模式</p>
+      <ul>
+        <li>CPU 内存由 Intel TDX 硬件加密</li>
+        <li>GPU 显存处于 CC 保护模式，GPU 身份可由 NVIDIA 官方远程证明</li>
+      </ul>
+    </div>
+    <div class="card scheme fec">
+      <h3>FEC 全密态计算</h3>
+      <p class="one">CPU 机密虚机 + 任意加速卡，卡上只见密文</p>
+      <ul>
+        <li>数据送往加速卡前，在 CPU 机密虚机内用一次性掩码（OTP）变成密态分量</li>
+        <li>加速卡不持有密钥，只算密态分量</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>关键实测数据</h3>
+  <div class="grid g4">
+    <div class="stat"><span class="tag t-all">公共</span><div class="v">7<small> / 7</small></div><div class="k">伪造、篡改的远程证明全部被拒绝</div></div>
+    <div class="stat"><span class="tag t-all">公共</span><div class="v">0<small> 命中</small></div><div class="k">网络抓包中搜索业务标记（网关 23/23、SDK 11/11 项检查）</div></div>
+    <div class="stat"><span class="tag t-tdc">TDC</span><div class="v">0<small> / 130 GB</small></div><div class="k">宿主以 root 读机密虚机内存，业务标记命中数</div></div>
+    <div class="stat"><span class="tag t-cdc">CDC</span><div class="v">0<small> / 16.66 GB</small></div><div class="k">宿主以 root 扫机密虚机内存，Guest 内 24,102 份标记命中数</div></div>
+    <div class="stat"><span class="tag t-cdc">CDC</span><div class="v">177<small> GB</small></div><div class="k">GPU 受保护显存，未保护显存 0；CC 环境 PRODUCTION</div></div>
+    <div class="stat"><span class="tag t-fec">FEC</span><div class="v">96<small> / 96</small></div><div class="k">加速卡接口处截取的都是密态分量，解密结果与参考一致</div></div>
+    <div class="stat"><span class="tag t-fec">FEC</span><div class="v">4096<small> / 4096</small></div><div class="k">一次性掩码全部唯一，用后清零</div></div>
+    <div class="stat"><span class="tag t-fec">FEC</span><div class="v">3<small> / 3 轮</small></div><div class="k">密态计算结果与明文基线 SHA-256 逐轮相同</div></div>
+  </div>
+</section>
+
+<!-- 2 -->
+<section id="s2">
+  <h2><span class="no">02</span>原理：三条独立的加密路线</h2>
+  <p class="lead">TDC、CDC、FEC 是三种<b>各自独立</b>的方案，适合不同的硬件条件。三条路线的第 ①②⑤ 段都用传输加密；区别在第 ③④ 段，也就是数据在服务器内部靠什么保护。</p>
+
+  <div class="track tdc">
+    <div class="track-h"><span class="track-tag t-tdc">TDC</span><div><div class="track-t">可信空间计算</div><div class="track-a">鲲鹏 920 virtCCA 机密虚机 + 昇腾 310P 独占直通</div></div></div>
+    <div class="track-core"><b>核心机制：</b>把整个计算放进 CPU 机密虚机这间“保密房间”，加速卡整卡直通给这台虚机独占。靠硬件隔离，宿主管理员进不了房间，也拿不到卡。</div>
+    <div class="flow">
+      <div class="node ">
+        <div class="n">①&nbsp;客户端</div>
+        <div class="t">验证后加密</div>
+        <div class="d">先核对服务器的硬件证明报告，通过后在本地加密请求。</div>
+        <div class="st lock">传输加密</div>
+      </div>
+      <div class="node ">
+        <div class="n">②&nbsp;网络</div>
+        <div class="t">只有密文</div>
+        <div class="d">抓包看不到请求内容，篡改、重放被拒绝。</div>
+        <div class="st lock">传输加密</div>
+      </div>
+      <div class="node tee">
+        <div class="n">③&nbsp;CPU 可信环境</div>
+        <div class="t">机密虚机内处理</div>
+        <div class="d">解密、分词和全部模型计算的调度都在机密虚机内完成；宿主以 root 读不到虚机内存。</div>
+        <div class="st lock2">CPU 机密虚机隔离</div>
+      </div>
+      <div class="node acc">
+        <div class="n">④&nbsp;加速卡</div>
+        <div class="t">独占直通</div>
+        <div class="d">加速卡通过 vfio 整卡直通给该虚机；宿主上没有这张卡的设备节点，其他进程无法使用。</div>
+        <div class="st lock2">设备独占隔离</div>
+      </div>
+      <div class="node ">
+        <div class="n">⑤&nbsp;返回客户端</div>
+        <div class="t">加密回传</div>
+        <div class="d">结果在虚机内加密后返回，客户端认证后解密。</div>
+        <div class="st lock">传输加密</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="track cdc">
+    <div class="track-h"><span class="track-tag t-cdc">CDC</span><div><div class="track-t">机密空间计算</div><div class="track-a">Intel TDX 机密虚机 + NVIDIA B200（CC 模式）</div></div></div>
+    <div class="track-core"><b>核心机制：</b>CPU 和 GPU 两端都由硬件做机密计算：CPU 内存由 TDX 加密，GPU 显存处于 CC 保护模式；GPU 的身份和状态由 NVIDIA 官方服务远程证明。</div>
+    <div class="flow">
+      <div class="node ">
+        <div class="n">①&nbsp;客户端</div>
+        <div class="t">验证后加密</div>
+        <div class="d">核对服务器证明，并可独立验证 NVIDIA 签发的 GPU 证明，通过后在本地加密请求。</div>
+        <div class="st lock">传输加密</div>
+      </div>
+      <div class="node ">
+        <div class="n">②&nbsp;网络</div>
+        <div class="t">只有密文</div>
+        <div class="d">抓包看不到请求内容。</div>
+        <div class="st lock">传输加密</div>
+      </div>
+      <div class="node tee">
+        <div class="n">③&nbsp;CPU 可信环境</div>
+        <div class="t">TDX 加密内存</div>
+        <div class="d">机密虚机内存由 CPU 硬件加密，宿主以 root 扫描读不到虚机私有内存。</div>
+        <div class="st lock2">Intel TDX 内存加密</div>
+      </div>
+      <div class="node acc">
+        <div class="n">④&nbsp;加速卡</div>
+        <div class="t">GPU 机密模式</div>
+        <div class="d">B200 以 CC 模式运行（PRODUCTION），177 GB 显存全部处于受保护状态。</div>
+        <div class="st lockc">NVIDIA GPU-CC 显存保护</div>
+      </div>
+      <div class="node ">
+        <div class="n">⑤&nbsp;返回客户端</div>
+        <div class="t">加密回传</div>
+        <div class="d">结果加密后返回客户端。</div>
+        <div class="st lock">传输加密</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="track fec">
+    <div class="track-h"><span class="track-tag t-fec">FEC</span><div><div class="track-t">全密态计算</div><div class="track-a">鲲鹏 920 virtCCA 机密虚机 + 任意加速卡（本次为昇腾 310P）</div></div></div>
+    <div class="track-core"><b>核心机制：</b>不要求加速卡有任何安全能力。数据送往加速卡之前，先在 CPU 机密虚机内加上一次性随机掩码（OTP），变成密态分量；加速卡只算密态分量，结果回到虚机内再去掉掩码。</div>
+    <div class="flow">
+      <div class="node ">
+        <div class="n">①&nbsp;客户端</div>
+        <div class="t">验证后加密</div>
+        <div class="d">核对服务器证明后在本地加密请求。客户端不做 OTP。</div>
+        <div class="st lock">传输加密</div>
+      </div>
+      <div class="node ">
+        <div class="n">②&nbsp;网络</div>
+        <div class="t">只有密文</div>
+        <div class="d">抓包看不到请求内容，4096 次请求随机数与密文全部唯一。</div>
+        <div class="st lock">传输加密</div>
+      </div>
+      <div class="node tee">
+        <div class="n">③&nbsp;CPU 可信环境</div>
+        <div class="t">加 OTP 掩码</div>
+        <div class="d">在虚机内解密后，线性层输入先量化、加一次性掩码、按两个模数拆成密态分量；非线性计算留在虚机内。</div>
+        <div class="st lockt">OTP 密态转换</div>
+      </div>
+      <div class="node acc">
+        <div class="n">④&nbsp;加速卡</div>
+        <div class="t">只算密态分量</div>
+        <div class="d">加速卡收到、计算、返回的都是密态分量；卡上没有掩码也没有密钥。</div>
+        <div class="st lockt">OTP 密态计算</div>
+      </div>
+      <div class="node ">
+        <div class="n">⑤&nbsp;返回客户端</div>
+        <div class="t">去掩码后回传</div>
+        <div class="d">虚机内去掉掩码、完成非线性计算和采样，加密后返回客户端。</div>
+        <div class="st lock">传输加密</div>
+      </div>
+    </div>
+    <h3>一次矩阵乘里的 OTP 掩码</h3>
+    <div class="grid g2">
+    <div class="term"><span class="c"># CPU 可信环境内</span>
+xq      = quantize(x)            <span class="c"># 量化成整数</span>
+r0, r1  = fresh_random_masks()   <span class="c"># 每次新生成的一次性掩码</span>
+c0      = (xq + r0) mod q0       <span class="c"># 加掩码，按两个模数拆分</span>
+c1      = (xq + r1) mod q1
+send_to_accelerator(c0, c1)      <span class="c"># 送出去的只有 c0、c1</span>
+
+<span class="c"># 加速卡上</span>
+y0 = MatMul(c0, W) mod q0
+y1 = MatMul(c1, W) mod q1        <span class="c"># 只算密态分量</span>
+
+<span class="c"># 回到 CPU 可信环境</span>
+y  = unmask(y0, y1, r0, r1)      <span class="c"># 去掉掩码，合并得到结果</span>
+wipe(r0, r1)                     <span class="c"># 掩码用完即清零</span></div>
+    <div class="card">
+      <p style="margin-top:0"><b>为什么加速卡看不出原始数据</b></p>
+      <p style="color:var(--sub);font-size:14px">每次计算都用新生成的随机掩码，同一个输入两次送到卡上的数据完全不同。掩码只存在于 CPU 可信环境，卡上既没有掩码也没有密钥。</p>
+      <p><b>为什么结果不受影响</b></p>
+      <p style="color:var(--sub);font-size:14px">矩阵乘是线性运算，掩码带来的部分可以在 CPU 可信环境里精确扣除。实测：明文基线与密态计算结果逐字节相同。</p>
+      <p><b>安全口径</b></p>
+      <p style="color:var(--sub);font-size:14px;margin-bottom:0">掩码由操作系统密码学安全随机数生成器（getrandom）产生、严格一次一密、用后清零，按<b>计算安全</b>表述。</p>
+    </div>
+  </div>
+  </div>
+
+  <div class="callout q">
+    <b>常见误解：客户端做了 OTP 吗？</b>没有。三条路线里客户端都只做<b>传输加密</b>。OTP 只属于 FEC 路线，是在服务器的 <b>CPU 可信环境内部</b>、数据送往加速卡之前才加上的。
+  </div>
+
+  <h3>三条路线对比</h3>
+  <div class="tbl"><table>
+    <tr><th></th><th>TDC 可信空间计算</th><th>CDC 机密空间计算</th><th>FEC 全密态计算</th></tr>
+    <tr><td>服务器内核心保护</td><td>CPU 机密虚机隔离 + 加速卡独占</td><td>CPU 内存硬件加密 + GPU 显存硬件保护</td><td>加速卡前做 OTP 密态转换</td></tr>
+    <tr><td>对加速卡的要求</td><td>支持直通即可</td><td>需支持机密计算模式（如 B200）</td><td>无特殊要求</td></tr>
+    <tr><td>密钥在哪里</td><td>CPU 机密虚机内</td><td>CPU 机密虚机与 GPU 机密域内</td><td>只在 CPU 机密虚机内，加速卡不持有</td></tr>
+    <tr><td>本次验证平台</td><td>鲲鹏 virtCCA + 昇腾 310P；海光 C86</td><td>Intel TDX + NVIDIA B200</td><td>鲲鹏 virtCCA + 昇腾 310P</td></tr>
+  </table></div>
+</section>
+
+<!-- 3 -->
+<section id="s3">
+  <h2><span class="no">03</span>我们怎样验证：方法与工具</h2>
+  <p class="lead">每项验证都遵循同一个原则：<b>既要证明“看不到”，也要证明“能看到的方法本身有效”</b>。所以抓包和内存扫描都放了一个故意可见的对照标记，对照能搜到、业务标记搜不到，结论才成立。</p>
+  <div class="tbl">
+  <table>
+    <tr><th>验证什么</th><th>方法</th><th>工具</th><th>方案</th><th>结果</th></tr>
+    <tr><td>服务器是不是真的可信环境</td><td>客户端发新鲜随机数（challenge），服务器返回硬件签名的证明报告；再故意构造错误 challenge、错误度量值、篡改签名、缺设备证书</td><td>SDK 证明校验、<code>security_attestation_controls.py</code></td><td>TDC / FEC</td><td><span class="pass">7/7 拒绝</span></td></tr>
+    <tr><td>GPU 是不是正版且处于机密模式</td><td>在机密虚机内向 NVIDIA 官方证明服务 NRAS 发起 GPU 证明，核对签名、证书链、nonce、驱动与 VBIOS 度量</td><td>nv-attestation-sdk、<code>cdc_attest.py</code></td><td>CDC</td><td><span class="pass">全部为 true</span></td></tr>
+    <tr><td>网络上有没有明文</td><td>请求中放唯一业务标记，头部放对照标记；宿主和虚机两处同时抓包，重组后检索</td><td>tcpdump / pcap、<code>security_wire_probe.py</code></td><td>全部</td><td><span class="pass">23/23 · 11/11</span></td></tr>
+    <tr><td>篡改、重放能否被拦下</td><td>篡改密文与认证标签、降级协议版本、非法 nonce / 公钥、重放同一请求</td><td><code>run_security_acceptance_20260828.py</code></td><td>全部</td><td><span class="pass">17/17</span></td></tr>
+    <tr><td>宿主管理员能否读到虚机内存</td><td>虚机内常驻随机标记；宿主以 root 读取虚机进程全部内存检索；宿主对照进程与虚机自扫必须命中</td><td><code>security_tdc_memory_isolation.py</code>、<code>cdc_mem_forensics.py</code></td><td>TDC / CDC</td><td><span class="pass">0 命中</span></td></tr>
+    <tr><td>加速卡是否被独占</td><td>宿主查设备节点、读设备 BAR、核对 IOMMU 分组；虚机内非特权用户访问设备</td><td><code>security_tdc_access_check.py</code>、npu-smi</td><td>TDC</td><td><span class="pass">8/8</span></td></tr>
+    <tr><td>卡上会不会残留上个任务的数据</td><td>写进程填满 256 MB 标记后退出，读进程申请同样大小不初始化直接读回</td><td><code>security_device_memory_residue.cpp</code></td><td>TDC</td><td><span class="pass">残留 0 字节</span></td></tr>
+    <tr><td>加速卡上是不是只有密态分量</td><td>96 个合成算例，在 H2D / D2H 接口截取原始整数分量，关闭 CPU 补正后与参考比对</td><td><code>security_npu_extended_probe.cpp</code></td><td>FEC</td><td><span class="pass">96/96</span></td></tr>
+    <tr><td>一次性掩码是否真的一次一密</td><td>生成 4096 个掩码统计唯一性；两个模域各 1,048,576 个样本检验均匀性；验证清零</td><td>引擎 CSPRNG / RNS 实现</td><td>FEC</td><td><span class="pass">全部唯一 · 清零通过</span></td></tr>
+    <tr><td>密态计算结果对不对</td><td>同一问题分别走密文入口与明文基线，顺序逐轮交替，比较输出 SHA-256</td><td><code>security_fec_dual_entry.py</code></td><td>FEC</td><td><span class="pass">3/3 相同</span></td></tr>
+    <tr><td>能否被“关掉加密”</td><td>请求中注入 7 种降级字段（如 <code>plain:true</code>、<code>otp:false</code>）</td><td><code>security_fec_no_fallback.py</code></td><td>FEC</td><td><span class="pass">7/7 无效</span></td></tr>
+    <tr><td>异常时会不会退回明文计算</td><td>构造非法形参、不支持的配置，并让随机数源强制失效</td><td><code>security_fault_injection.c</code>、<code>security_fault_getrandom.c</code></td><td>FEC</td><td><span class="pass">全部中止</span></td></tr>
+    <tr><td>日志和临时文件里有没有明文</td><td>发送带标记的请求后，全盘与容器日志检索；放置对照文件确认搜索有效</td><td><code>security_fec_residue.py</code></td><td>FEC</td><td><span class="pass">0 命中</span></td></tr>
+  </table>
+  </div>
+</section>
+
+<!-- 4 -->
+<section id="s4">
+  <h2><span class="no">04</span>客户自验：你可以亲手做的验证</h2>
+  <p class="lead">目标是让客户<b>自己出题、自己验证、自己留证据</b>，而不是只看我们给的结论截图。</p>
+
+  <div class="callout">
+    <b>客户是在验证服务器端的可信环境吗？</b>是的。客户端在发送任何数据之前，先生成一个只有自己知道的随机数（challenge）发给服务器，服务器的可信环境用硬件密钥签出一份包含这个随机数的证明报告。客户端核对签名、设备证书和随机数都正确，才会继续建立密钥、发送数据。随机数每次不同，所以旧报告无法冒用。
+  </div>
+
+  <p style="margin:18px 0 10px"><span class="who self">客户独立完成</span>&nbsp;在客户自己的电脑上，用交付的 SDK 自验工具和通用抓包软件即可完成，不依赖我们的任何采集链路。</p>
+
+  <div class="steps">
+    <div class="step"><div class="num"></div><div>
+      <h4>自己出题</h4>
+      <div class="row"><span class="l">你做什么</span><span>写一段测试内容，在里面放一个只有你知道的随机标记，例如 <code>CUST-7F3A9E21B4C8</code>。</span></div>
+      <div class="row"><span class="l">为什么</span><span>标记由你决定，后面在抓包里搜它，结论才是你自己的。</span></div>
+    </div></div>
+
+    <div class="step"><div class="num"></div><div>
+      <h4>先验证服务器身份（远程证明）</h4>
+      <div class="row"><span class="l">你做什么</span><span>运行 SDK 自验工具 <code>security_customer_selfcheck.py</code>，它会自动生成新鲜 challenge 并核验服务器返回的证明报告。</span></div>
+      <div class="row"><span class="l">看到什么算通过</span><span>报告中 <code>attestation_enabled</code>、<code>fresh_challenge</code>、<code>initialized</code> 均为 <code>true</code>。</span></div>
+      <div class="why">原理：证明报告由服务器芯片内的硬件密钥签名，包含本次 challenge。我们实测过：错误 challenge、篡改签名、缺设备证书都会被拒绝（7/7）。</div>
+    </div></div>
+
+    <div class="step"><div class="num"></div><div>
+      <h4>发送请求，同时自己抓包</h4>
+      <div class="row"><span class="l">你做什么</span><span>打开 Wireshark 或 <code>tcpdump -i any port 8101 -w my.pcap</code>，然后用 SDK 发送第 1 步的测试内容。</span></div>
+      <div class="row"><span class="l">看到什么算通过</span><span>在抓包文件中搜索你的标记和问题原文：<b>都搜不到</b>。</span></div>
+      <div class="why">可选对照：同一内容再发一次，两次抓到的密文完全不同，说明每次加密都使用新的随机数。</div>
+    </div></div>
+
+    <div class="step"><div class="num"></div><div>
+      <h4>核对返回结果</h4>
+      <div class="row"><span class="l">你做什么</span><span>查看 SDK 解密后的回答，以及自验工具的事件记录。</span></div>
+      <div class="row"><span class="l">看到什么算通过</span><span>回答正常可读；流式返回的每一段都经过认证解密（<code>four_authenticated_deltas: true</code>），并正常结束（<code>done: true</code>）。</span></div>
+      <div class="why">原理：每段返回都带认证标签，途中被改动一个字节，客户端就会解密失败，而不会得到被篡改的结果。</div>
+    </div></div>
+
+    <div class="step"><div class="num"></div><div>
+      <h4>确认密钥已清理，保存证据</h4>
+      <div class="row"><span class="l">你做什么</span><span>保存自验工具输出的 JSON 报告和你的抓包文件，用 <code>sha256sum</code> 记录摘要。</span></div>
+      <div class="row"><span class="l">看到什么算通过</span><span>报告 10 项检查全部通过，其中 <code>test_dek_removed: true</code> 表示本次测试使用的数据密钥已删除。</span></div>
+      <div class="why">SDK 文件（<code>client.py</code>、<code>crypto_utils.py</code> 等）随交付清单附 SHA-256，客户可先核对自己拿到的 SDK 与交付版本一致。</div>
+    </div></div>
+  </div>
+
+  <h3>CDC 客户可额外做：GPU 远程证明</h3>
+  <div class="card">
+    <p style="margin-top:0">在机密虚机内运行 <code>cdc_attest.py</code>，向 NVIDIA 官方证明服务 NRAS 发起证明。返回的 EAT token 由 NVIDIA 签名，客户可以用 NVIDIA 公开的证书<b>独立验签</b>，不需要信任我们。</p>
+    <div class="grid g2" style="margin-top:6px">
+      <div class="term">x-nvidia-overall-att-result                       : <span class="g">true</span>
+x-nvidia-gpu-attestation-report-signature-verified: <span class="g">true</span>
+x-nvidia-gpu-attestation-report-cert-chain-validated: <span class="g">true</span>
+x-nvidia-gpu-attestation-report-nonce-match       : <span class="g">true</span>
+x-nvidia-gpu-driver-rim-signature-verified        : <span class="g">true</span>
+x-nvidia-gpu-vbios-rim-signature-verified         : <span class="g">true</span>
+x-nvidia-gpu-driver-version : 610.57.04
+x-nvidia-gpu-vbios-version  : 97.00.D9.00.35</div>
+      <div style="font-size:14px;color:var(--sub)">
+        <p style="margin-top:0"><b style="color:var(--ink)">每一行的含义</b></p>
+        <p>签名、证书链通过：这份报告确实出自一块真实的 NVIDIA GPU。</p>
+        <p>nonce 匹配：报告是针对这一次请求新生成的，不是旧报告重放。</p>
+        <p style="margin-bottom:0">驱动与 VBIOS 度量签名通过：GPU 上运行的是正版、未被篡改的驱动和固件。</p>
+      </div>
+    </div>
+  </div>
+
+  <h3>客户在场见证的验证</h3>
+  <p style="margin:0 0 10px"><span class="who watch">客户在场见证</span>&nbsp;以下验证需要服务器管理员权限，由我们现场操作，客户可以指定标记内容、旁观全过程并带走原始输出。</p>
+  <div class="tbl">
+  <table>
+    <tr><th>见证项</th><th>客户可以参与的部分</th><th>实测结果</th></tr>
+    <tr><td>宿主以 root 扫描机密虚机内存</td><td>客户指定标记；先看对照进程被扫到、虚机内自扫被扫到，再看目标虚机</td><td>TDC 130 GB 0 命中；CDC 16.66 GB 0 命中（对照 24,105 命中）</td></tr>
+    <tr><td>加速卡接口截取密态分量</td><td>客户指定输入；同一输入发送两次，比较卡上数据指纹</td><td>96/96，两次指纹不同</td></tr>
+    <tr><td>尝试“关掉加密”</td><td>客户自己在请求中写入降级字段</td><td>7/7 无效，模式恒为 <code>shannon_rns_otp</code></td></tr>
+    <tr><td>GPU 机密模式状态</td><td>客户在虚机内和宿主上各看一次 <code>nvidia-smi conf-compute</code></td><td>虚机内 CC=ON、PRODUCTION、177 GB 受保护显存</td></tr>
+  </table>
+  </div>
+</section>
+
+<!-- 5 -->
+<section id="s5">
+  <h2><span class="no">05</span>参考 Tinfoil 的客户验证思路</h2>
+  <p class="lead"><a href="https://tinfoil.sh/" target="_blank" rel="noopener">Tinfoil</a> 是一个机密计算 AI 推理服务，特点是客户端开源、每次连接都由客户端自动验证服务端的硬件证明。它的核心思路是：<b>验证在客户手里完成，而不是由服务方出具结论</b>。我们的自验设计借鉴了这一点。</p>
+  <div class="tbl">
+  <table>
+    <tr><th>Tinfoil 的做法</th><th>作用</th><th>我们的对应做法</th></tr>
+    <tr><td>客户端开源，验证逻辑公开</td><td>客户能看清验证了什么</td><td>自验工具随 SDK 以源码交付，客户可以逐行阅读</td></tr>
+    <tr><td>每次连接都自动做远程证明</td><td>不依赖某一次的截图</td><td>SDK 每次初始化都用新鲜 challenge 做远程证明，通过后才建立会话</td></tr>
+    <tr><td>证明报告由硬件签名</td><td>不需要信任服务方</td><td>鲲鹏 virtCCA 证明报告由硬件签名；B200 由 NVIDIA 官方 NRAS 签发</td></tr>
+    <tr><td>公布软件版本摘要供比对</td><td>客户知道运行的是哪个版本</td><td>交付清单列出 SDK 各文件的 SHA-256，客户可自行核对</td></tr>
+  </table>
+  </div>
+</section>
+
+<!-- 6 -->
+<section id="s6">
+  <h2><span class="no">06</span>实测结果汇总</h2>
+  <p class="lead">对照《三类密态计算解决方案安全证明任务计划书》的条目编号。</p>
+
+  <h3 style="color:var(--blue)">TDC 可信空间计算 · 鲲鹏 920 virtCCA + 2 × 昇腾 310P；海光 C86 Guest</h3>
+  <div class="tbl"><table>
+    <tr><th>条目</th><th>结果</th><th>关键数据</th></tr>
+    <tr><td>TDC-01 架构与可信边界</td><td><span class="pass">通过</span></td><td>机密虚机参数 <code>kvm-type=cvm</code> + <code>tmm-guest</code>；两卡 vfio-pci 直通</td></tr>
+    <tr><td>TDC-02 可信状态与远程证明</td><td><span class="pass">通过</span></td><td>异常证明 7/7 被拒绝</td></tr>
+    <tr><td>TDC-03 内存隔离</td><td><span class="pass">通过</span></td><td>宿主读取 130.39 GB（97.16%），运行时业务标记 0 命中</td></tr>
+    <tr><td>TDC-04 非授权访问</td><td><span class="pass">通过</span></td><td>宿主无设备节点、读 BAR 0 字节；虚机内非特权用户被拒</td></tr>
+    <tr><td>TDC-05 直通独占与清理</td><td><span class="pass">通过</span></td><td>每个 IOMMU 组 1 个设备；256 MB 残留 0 字节</td></tr>
+    <tr><td>TDC-06 数据路径</td><td><span class="pass">通过</span></td><td>海光 Guest 内完整推理，信道 1039 字节明文 0 命中；加解密开销平均 0.185 ms，占端到端 0.0021%</td></tr>
+  </table></div>
+
+  <h3 style="color:var(--violet)">CDC 机密空间计算 · Intel TDX + NVIDIA B200（CC 模式）</h3>
+  <div class="tbl"><table>
+    <tr><th>条目</th><th>结果</th><th>关键数据</th></tr>
+    <tr><td>CDC-01 GPU 机密计算正式模式</td><td><span class="pass">通过</span></td><td>CC State ON，CC Environment PRODUCTION，GPU Ready</td></tr>
+    <tr><td>CDC-02 CPU 机密计算状态</td><td><span class="pass">通过</span></td><td><code>tdx: Guest detected</code>；<code>Memory Encryption Features active: Intel TDX</code></td></tr>
+    <tr><td>CDC-03 GPU 远程证明</td><td><span class="pass">通过</span></td><td>NVIDIA NRAS：签名、证书链、nonce、驱动与 VBIOS 度量全部为 true</td></tr>
+    <tr><td>CDC-05 内存与显存保护</td><td><span class="pass">通过</span></td><td>宿主扫描 16.66 GB 0 命中（对照 24,105）；受保护显存 177 GB，未保护 0</td></tr>
+  </table></div>
+
+  <h3 style="color:var(--teal)">FEC 全密态计算 · 鲲鹏 920 virtCCA + 2 × 昇腾 310P · Qwen3.5-35B-A3B</h3>
+  <div class="tbl"><table>
+    <tr><th>条目</th><th>结果</th><th>关键数据</th></tr>
+    <tr><td>FEC-01 CPU 可信环境与处理边界</td><td><span class="pass">通过</span></td><td>异常证明 7/7 被拒绝；解密与非线性计算在机密虚机内</td></tr>
+    <tr><td>FEC-02 OTP 密钥全生命周期</td><td><span class="pass">通过</span></td><td>4096 个掩码全部唯一；均匀性方差比 0.999964 / 1.001224；清零通过；私钥文件权限 0600</td></tr>
+    <tr><td>FEC-03 客户端展示</td><td><span class="pass">通过</span></td><td>客户自验 10/10</td></tr>
+    <tr><td>FEC-04 网络传输</td><td><span class="pass">通过</span></td><td>网关 23/23、SDK 11/11；4096 次请求 nonce 与密文唯一</td></tr>
+    <tr><td>FEC-05 加速卡接口密态</td><td><span class="pass">通过</span></td><td>96/96，D2H 原始分量与参考 0 差异</td></tr>
+    <tr><td>FEC-06 计算正确性</td><td><span class="pass">通过</span></td><td>与明文基线 3 轮 SHA-256 逐轮相同</td></tr>
+    <tr><td>FEC-07 线性 / 非线性边界</td><td><span class="pass">通过</span></td><td>7 种降级字段全部无效</td></tr>
+    <tr><td>FEC-08 异常时安全处理</td><td><span class="pass">通过</span></td><td>非法形参、不支持配置、随机源失效全部中止，不在无掩码状态下计算</td></tr>
+  </table></div>
+</section>
+
+<footer>
+  本文为针对实际部署状态的工程安全验证，结论适用于文中列出的硬件、固件、驱动与软件版本。完整实验记录与原始证据见 <a href="00_总结报告.md">00_总结报告.md</a> 及三个方案目录。
+</footer>
+
+</div>
+</body>
+</html>

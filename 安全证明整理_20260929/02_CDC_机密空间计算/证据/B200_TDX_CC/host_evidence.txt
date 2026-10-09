@@ -1,0 +1,52 @@
+### collected_at: 2026-09-23T08:08:13+00:00
+### hostname: gpuhost
+### kernel: 7.0.0-31-generic
+### cpu: INTEL(R) XEON(R) PLATINUM 8568Y+
+### HOST nvidia-smi -L
+GPU 0: NVIDIA B200 (UUID: GPU-9bb7e513-1286-5f77-8e41-2f8b385d00a3)
+GPU 1: NVIDIA B200 (UUID: GPU-a4246f41-8842-4081-f452-65e7f58bdf0b)
+GPU 2: NVIDIA B200 (UUID: GPU-43303de7-9c69-e443-7f09-e7267ae5d05f)
+GPU 3: NVIDIA B200 (UUID: GPU-727b5cfa-f60b-3570-36fa-a48fc0d54946)
+GPU 4: NVIDIA B200 (UUID: GPU-39687416-f4b3-06d0-1e68-7c0ce1d84246)
+GPU 5: NVIDIA B200 (UUID: GPU-44849639-4afb-89bb-1fa5-792b24cfdd2a)
+GPU 6: NVIDIA B200 (UUID: GPU-c8ed8375-7218-1146-9f1d-44db46c9109a)
+### HOST conf-compute -q
+
+==============NVSMI CONF-COMPUTE LOG==============
+
+    CC State                   : OFF
+    Multi-GPU Mode             : None
+    CPU CC Capabilities        : None
+    GPU CC Capabilities        : CC Capable
+    CC GPUs Ready State        : Not Ready
+
+### HOST GPU0 vfio binding
+18:00.0 3D controller [0302]: NVIDIA Corporation GB100 [B200] [10de:2901] (rev a1)
+	Subsystem: NVIDIA Corporation Device [10de:1999]
+	Kernel driver in use: vfio-pci
+	Kernel modules: nvidiafb, nouveau, nvidia_drm, nvidia
+### HOST tdx dmesg
+[    0.000000] x86/mktme: BIOS enabled: x86_phys_bits reduced by 6
+[    9.414655] virt/tdx: BIOS enabled: private KeyID range [32, 64)
+[    9.414659] virt/tdx: Disable ACPI S3. Turn off TDX in the BIOS to use ACPI S3.
+[   47.852521] virt/tdx: 7879732 KB allocated for PAMT
+[   47.852529] virt/tdx: module initialized
+### HOST kvm_intel.tdx
+Y
+### HOST cmdline
+BOOT_IMAGE=/vmlinuz-7.0.0-31-generic root=/dev/mapper/ubuntu--vg-ubuntu--lv ro nohibernate kvm_intel.tdx=1 intel_iommu=on iommu=pt crashkernel=2G-4G:320M,4G-32G:512M,32G-64G:1024M,64G-128G:2048M,128G-:4096M
+### HOST dma_entry_limit
+16777216
+### HOST qemu
+QEMU emulator version 10.2.1 (Debian 1:10.2.1+ds-1ubuntu3.2)
+### HOST ovmf
+/usr/share/ovmf/OVMF.inteltdx.ms.fd
+### HOST libvirt launchSecurity
+    <launchSecurity supported='yes'>
+      <enum name='sectype'>
+        <value>tdx</value>
+      </enum>
+    </launchSecurity>
+  </features>
+</domainCapabilities>
+

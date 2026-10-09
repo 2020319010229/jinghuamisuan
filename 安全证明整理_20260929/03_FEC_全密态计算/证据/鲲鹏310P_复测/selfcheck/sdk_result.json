@@ -1,0 +1,194 @@
+{
+  "run_id": "a8723004d88615e282404caa",
+  "events": [
+    {
+      "name": "identity_verification_start",
+      "utc_ns": 1789728539938165592,
+      "monotonic_ns": 705818016372812
+    },
+    {
+      "name": "certificate_http_submit",
+      "utc_ns": 1789728539953260954,
+      "monotonic_ns": 705818031467844,
+      "body_bytes": 0,
+      "body_sha256": null
+    },
+    {
+      "name": "certificate_http_headers",
+      "utc_ns": 1789728540002167358,
+      "monotonic_ns": 705818080374258,
+      "http_status": 200
+    },
+    {
+      "name": "certificate_received",
+      "utc_ns": 1789728540002348260,
+      "monotonic_ns": 705818080554960,
+      "http_status": 200,
+      "bytes": 4510
+    },
+    {
+      "name": "identity_verification_end",
+      "utc_ns": 1789728540152963275,
+      "monotonic_ns": 705818231170315
+    },
+    {
+      "name": "prompt_encrypt_start",
+      "utc_ns": 1789728540153061096,
+      "monotonic_ns": 705818231267726
+    },
+    {
+      "name": "prompt_encrypt_end",
+      "utc_ns": 1789728540153918818,
+      "monotonic_ns": 705818232125488
+    },
+    {
+      "name": "generation_prepare_start",
+      "utc_ns": 1789728540153920988,
+      "monotonic_ns": 705818232127648
+    },
+    {
+      "name": "stream_iteration_start",
+      "utc_ns": 1789728540191013024,
+      "monotonic_ns": 705818269219724
+    },
+    {
+      "name": "generation_http_submit",
+      "utc_ns": 1789728540204628366,
+      "monotonic_ns": 705818282835086,
+      "body_bytes": 1204,
+      "body_sha256": "8931c7d1e2901e9557487344b3f080bccf4e81afb9b1b4be55df501ba2275719"
+    },
+    {
+      "name": "generation_http_headers",
+      "utc_ns": 1789728540228869860,
+      "monotonic_ns": 705818307076560,
+      "http_status": 200
+    },
+    {
+      "name": "encrypted_delta_received",
+      "utc_ns": 1789728546332807724,
+      "monotonic_ns": 705824411014494,
+      "index": 0,
+      "wire_sha256": "4f9ea3d099ed5389e554aadd8497b41ea939ba67c14256fa1553d5055d1fd288"
+    },
+    {
+      "name": "delta_decrypted",
+      "utc_ns": 1789728546333380951,
+      "monotonic_ns": 705824411587741,
+      "index": 0
+    },
+    {
+      "name": "encrypted_delta_received",
+      "utc_ns": 1789728546759973147,
+      "monotonic_ns": 705824838179817,
+      "index": 1,
+      "wire_sha256": "369418bb929bfbfb548f0befc410c15e6380b23b18109287338486c0b8ac13b2"
+    },
+    {
+      "name": "delta_decrypted",
+      "utc_ns": 1789728546760499974,
+      "monotonic_ns": 705824838706564,
+      "index": 1
+    },
+    {
+      "name": "encrypted_delta_received",
+      "utc_ns": 1789728547192270039,
+      "monotonic_ns": 705825270476599,
+      "index": 2,
+      "wire_sha256": "92114b6f375a1bbc34106722394459b2fb935cfab6627cfa5c89849d3b8d26eb"
+    },
+    {
+      "name": "delta_decrypted",
+      "utc_ns": 1789728547192815657,
+      "monotonic_ns": 705825271022207,
+      "index": 2
+    },
+    {
+      "name": "encrypted_delta_received",
+      "utc_ns": 1789728547620591118,
+      "monotonic_ns": 705825698797828,
+      "index": 3,
+      "wire_sha256": "0ae65728a33599282515d404d392f800c3f274405152fb8791fc889ffa3c4666"
+    },
+    {
+      "name": "delta_decrypted",
+      "utc_ns": 1789728547621093665,
+      "monotonic_ns": 705825699300265,
+      "index": 3
+    },
+    {
+      "name": "done_received",
+      "utc_ns": 1789728547623415536,
+      "monotonic_ns": 705825701622086
+    },
+    {
+      "name": "client_closed",
+      "utc_ns": 1789728547623529528,
+      "monotonic_ns": 705825701736068
+    }
+  ],
+  "scope": "current SDK policy with fresh challenge; not independent complete TEE validation",
+  "policy": {
+    "remote_attestation_enabled": true,
+    "tee_type": "kunpeng",
+    "KUNPENG_ROOT_CERT": {
+      "configured": false,
+      "file_exists": false
+    },
+    "KUNPENG_SUB_CERT": {
+      "configured": false,
+      "file_exists": false
+    },
+    "KUNPENG_IMAGE_REF_JSON": {
+      "configured": false,
+      "file_exists": false
+    },
+    "KUNPENG_SOFTWARE_COMPONENTS_JSON": {
+      "configured": false,
+      "file_exists": false
+    },
+    "measurement_reference_configured": false,
+    "KUNPENG_REQUIRE_COSE": "0"
+  },
+  "sdk_hashes": {
+    "client.py": "c91ffba22ac2a12cd8f164027b94550f7f900ea07e8d0ca204a9d0543c5c782f",
+    "utils/kunpeng_attestation.py": "c83604c68e1ba22e4de6fb5c14eacd68a3b3fa7723255c9d9706ad62e485c9ea",
+    "utils/request_auth.py": "a68505bc0d47b6bf42e3f7543802005ce4311d0a218e2b9ec27fc3f9f191189c",
+    "utils/crypto_utils.py": "b0a44e7b2781c11a2b2ec71f24ad5a64373bfe0da083ddba4431a27f868db8a5",
+    "utils/gm_crypto.py": "91a880405ad8d29e978bc6d962192efe23fb424961ce773db959ddf1a6f34db2",
+    "http_auth.py": "095018917110f6d42728879af2572f1a36c7ace1501c632d13aa65cc57fb1f0b"
+  },
+  "auth_header_configured": false,
+  "fresh_challenge_hex": "7aab40a62888944893feb8f8698bcb75eca0a4f4330156b8532eccbf2a26cb15",
+  "public_attestation_response": {
+    "certificate_pem": "-----BEGIN CERTIFICATE-----\nMIIBgTCCASagAwIBAgIUY3ZBnQrv8BKz7Bz058oN7avB3K8wCgYIKoEcz1UBg3Uw\nFTETMBEGA1UEAwwKVERYIFNlcnZlcjAeFw0yNjA4MTkwOTE2MzZaFw0yNzA4MTkw\nOTE2MzZaMBUxEzARBgNVBAMMClREWCBTZXJ2ZXIwWjAUBggqgRzPVQGCLQYIKoEc\nz1UBgi0DQgAEWsYGQ1cfh6SRFqYuDcPBZqbZdyW4t9rOANTA3ro/drVgQZw8jxbi\nsEy/y4TsCd9NP8VLPHuUy0unQiB/a/puW6NTMFEwHQYDVR0OBBYEFGzjl2upjIg1\naKRmYRSnUWxRX3dkMB8GA1UdIwQYMBaAFGzjl2upjIg1aKRmYRSnUWxRX3dkMA8G\nA1UdEwEB/wQFMAMBAf8wCgYIKoEcz1UBg3UDSQAwRgIhAMIxcIScnNUPAzgQfPsS\nqtC8Nkla0mnKszwHzl52dGsKAiEApPdFueIJM3bpww7Y4rf8H+IwCk44zVmoBIGt\nU4+qEwY=\n-----END CERTIFICATE-----\n",
+    "kunpeng_token": "2QGPohmsylkDE9KERKEBOCOgWQKCqRkBCWAKWCA8BdMVyKS0kFsSIy1ZifqS25Bu5SF9cQoT9r2IXm6/0RkJXFgg4Xy7Fmw7b97R0Cbe33FSMDd62tZxmTAzzDrkjkgfDEgZAQBYIQGAZXPCbvdu4ko1wCAwe4Bh1Vnktvgf3rq5eTtrpoUrcBkJYUAZCVsZMAAZCV+GpQFwaXB1AAAAAAAAAAAAAAAAAAJYIEtrWb/n+IF+3E7YEq8r6n5kQSCl0nxTw7+KBkQncKVzBHAyMS41Mi4wAAAAAAAAAAAABUAGZ3NoYS0yNTalAXBpbXUAAAAAAAAAAAAAAAAAAlggVx0TsicPzb03lx6hH5gSgOiRGeIAyPfKSy3KEn/ry2cEcDIxLjUyLjAAAAAAAAAAAAAFQAZnc2hhLTI1NqUBcGltZl9hcAAAAAAAAAAAAAACWCC3ZEFQyJmfvYkVdQoMa2p3sbXH7j91n8O830QwLJFsCQRwMjEuNTIuMAAAAAAAAAAAAAVABmdzaGEtMjU2pQFwdGZfYmwyAAAAAAAAAAAAAAJYIJ3gidT6UZMBK2zJWwGza64ZCiQRtfhEvUcPz/dv0EHBBHAyMS41Mi4wAAAAAAAAAAAABUAGZ3NoYS0yNTalAXB1ZWZpAAAAAAAAAAAAAAAAAlgg4aJHG2pcb3O7LezqUr5e/rwBX4oAdjWFOSjCJd9Ql/0EcDIxLjUyLjAAAAAAAAAAAAAFQAZnc2hhLTI1NqUBcHRlZQAAAAAAAAAAAAAAAAACWCBI5rKTu+EqyetQVLn5Y7up7aZic4/K+0xMYh/tXlFDPQRwMS43AAAAAAAAAAAAAAAAAAVABmdzaGEtMjU2GQlgYBkJYmdzaGEtMjU2WIQB92YipguS1XLJRiCv7/Bd87667LbrLRvVaeORas+/Hj2DMjm8MGq7MNmsvZ4nd6OtUPT05Dkqrrh7PygDOt/RaooBjvV9DlMBjtzrYWye2pwmMxXIe3ZC+uSi1JzFuNO2WtDZzo2JL9Mn+m6iywyo4IlEu+gUrIBvFRUfYD1+d8SNivcZrNFZAm7ShEShATgjoFkB3VkB2qcKWEAq+QKyXFuCmZ4N+qYxE3J4HaKw0G5zrYfaSQT7y+bUanqrQKYoiJRIk/64+GmLy3XsoKT0MwFWuFMuzL8qJssVGazLWEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGazNWIUEABzwFHDBOHQJU3HhrlVFMQlIC48Q/LmYOV3Ys7MhwHy39rEWyPaAUqzKRaB2OTfMGU1jqbrI738EVVLz9HxssiDIAJRX0AhvGv4nm1J8iRkyoVBje9IWPCGrXZNdz0zs8ligZOX3pyysiajFXDQYV7rPJVoeU1Fin0lu/n9sn7jlx9xuGazMZ3NoYS0yNTYZrNBnc2hhLTI1Nhmszlgge+EYOMIegYut+fObNrfVCN219H7qhQrQoqAIgzxBp5kZrM+EWCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFggAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABYIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFiEAfAoNMB5Jz1kkzY8+lt4RdSZbJ6gplorU67rQFcytgaaXCJ9FQTt6xlk1OWwM3nEpLXzOYFvbKs+TWP2R6rQkYTxAFX7Rl6QnMXgvnBgxyWrj86pD6ZMEy3a4vmlHUB4TVSQRRmE7dxkLQmOfAPSetg8bgv+DUjtRjWfIQSvTSpf1AMa",
+    "kunpeng_dev_cert": "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUNyRENDQWcyZ0F3SUJBZ0lSRWt1S0dvN2J0UVo1NkpDQUVDMmRxbnN3Q2dZSUtvWkl6ajBFQXdRd1JqRUwKTUFrR0ExVUVCaE1DUTA0eER6QU5CZ05WQkFvVEJraDFZWGRsYVRFbU1DUUdBMVVFQXhNZFNIVmhkMlZwSUVOdgpiWEIxZEdsdVp5QkZRME1nUTBOQklFTkJJREV3SUJjTk1qWXdOREV5TURVd01ESXpXaGdQTWpBM05EQXpNamN3Ck5UQXdNak5hTURVeEN6QUpCZ05WQkFZVEFrTk9NUTh3RFFZRFZRUUtFd1pJZFdGM1pXa3hGVEFUQmdOVkJBTVQKRERaU01qWXpNVEU1TlRBNU1UQ0JtekFRQmdjcWhrak9QUUlCQmdVcmdRUUFJd09CaGdBRUFaTmRRcFRNVjErTQpNTElXK1VjdWNZOW1TdFBtUVlhTDAxWHEybkNpWEVGdmJRUXlrNjFGd1lsVHpuVGI2Nmo0c0NYQzRZbFY4U3BwCmh1d09QSmtoQi9WVEFKRFRrdDhaUFg4d290eEU3NDRKSjAycjhCQW5yRTJZNk5aemdEKzZnVHlBQWw0SFgyZk4KdmxOK1J5d2s1cnZwU1B1QjhHMVBteExUeHhuQitXMEFOTzJUbzRHbk1JR2tNQjhHQTFVZEl3UVlNQmFBRklneApOck5sNXVXVlFaNjhIQkU4RzEvak4yTHRNQjBHQTFVZERnUVdCQlJVOVZOL1BaVEppWmVncm5kMlowSXdCOFNyCmNqQUpCZ05WSFJNRUFqQUFNRWNHQTFVZElBUkFNRDR3UEFZTUt3WUJCQUdQVzRGSkFRUUhNQ3d3S2dZSUt3WUIKQlFVSEFnRVdIbWgwZEhCek9pOHZjM1Z3Y0c5eWRDNW9kV0YzWldrdVkyOXRMM0JyYVRBT0JnTlZIUThCQWY4RQpCQU1DQnNBd0NnWUlLb1pJemowRUF3UURnWXdBTUlHSUFrSUJ1MHRoZGRFekpReUQ3MU1sSC8vYnd3SGVTSytUCmN1Z3BNc3BrRS9xdCtpbENHS1g5dXI1UGpNYXlVbVBTNHlMajVvS294Y2lLMzhDaVlnUm5lNGE5UEc0Q1FnRTUKTUFMRjc2WERTaUJJYmR2M1ZpTWVSeG1UWGJrUjVWYTcvQVUvS2wvck54NGhJZk1URmFTM0Q4c0VQNmhaY1dIWQpweEFrZFJiMUVPa1BsMnE1ZGFVNFRRPT0KLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQ=="
+  },
+  "initialization": {
+    "status": 0,
+    "connected": true,
+    "dek_created": true
+  },
+  "synthetic_prompt": "OTPSEC_SDK_a8723004d88615e282404caa Reply OK.",
+  "session_id": "security-a8723004d88615e282404caa_82bb8fea1befff848cdf3fe87193a83a",
+  "done": {
+    "event": "done",
+    "request_id": "60b0bf6a35f111327c3ba0a2",
+    "input_tokens": 38,
+    "output_tokens": 4,
+    "total_tokens": 42,
+    "encryption_generationdata_outputdata": "3jdvBj4vHKeMlvSlWVsa23fVJu77l61NfsT+Li5cDQBWMDdNzSjnJXDgiphOuTo=",
+    "encryption_generationdata_outputdata_len": 64,
+    "encrypted_reasoning": "",
+    "encrypted_reasoning_len": 0
+  },
+  "generation": {
+    "decrypted_delta_count": 4,
+    "done_received": true,
+    "synthetic_output": "Thinking Process:\n\n",
+    "passed": true
+  },
+  "test_dek_cleanup_return": 0,
+  "test_dek_absent_after_cleanup": true
+}

@@ -1,0 +1,13 @@
+{
+  "prompt": "请用一句话解释什么是可信执行环境。",
+  "answer": "可信执行环境是指一种能够确保应用程序在运行时符合其预期功能和安全策略的环境，它包括了对代码、数据、系统资源以及用户行为等进行严格控制和管理的机制。这种环境旨在保护应用程序的安全性和可靠性，防止恶意攻击和数据泄露等问题的发生。",
+  "stats": {
+    "prompt_tokens": 38,
+    "gen_tokens": 62,
+    "latency_s": 8.97
+  },
+  "rtt_s": 8.992,
+  "wire_request_ct_b64": "K+yqe8xwP2LhSkNYVu/nBUODB6Iih6+Ug7ofE+VlsL44Qxp9iBTYuXSH4+1LOfDqmmNKUO6ZwVRvgM243AD6/24shg==",
+  "wire_response_ct_b64": "iTjNW7O0b+Wj9Yudgv8z7R4m0LzqwXu+Swe9FMmslkP/qXY/ZbbCjFGnorrU2sqp/zzNZOK7eCvDPgbNAOtzAh+oTQRLgu+CMz9xZj59w+H95AU/gmoOsWtfJuTQze2PC81FihtrZKa4Vsb6thDUIEqHMiNQNCB5/WDRXR3oQ1bpZbDdjSPlwScMQTdD96bPt0IyvD7g0CkGPqKNOt+der6/raXrPbx2Ikez+pl9yOUebvGRrCFTPerSEJwqLNOHeOe0OUdLOh6O+Q+MRB6mVOYjM33HUntShCXU57fae3jmSAplsy76FhtDKwy1EjCpC22ziOc21lkbVN3lZ2Uve5daLK3M6wZvVyxOj+nYspU32Ktozp643YA9UaSmPtBxuddWq1DAgoaiMI67eSfU1yp/Of/82NwRur9b+mOyJeU/tTJvx8DqwlBJx5Qh7RbyoZnJWlvcsOslRMNu+Zm4DA==",
+  "guest_pub_b64": "PDXlQ2P4Ad/OXYC2uuzBz+TAAyTrFwTSquupH1mv3Cc="
+}

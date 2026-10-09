@@ -1,0 +1,27 @@
+{
+  "started_ns": 1789728539713061011,
+  "pass": true,
+  "scope": "customer SDK functional selfcheck; not formal security acceptance or complete trust-root validation",
+  "request_auth": {
+    "version": 2,
+    "local_sign_verify_pass": true,
+    "client_sha256": "c91ffba22ac2a12cd8f164027b94550f7f900ea07e8d0ca204a9d0543c5c782f",
+    "request_auth_sha256": "a68505bc0d47b6bf42e3f7543802005ce4311d0a218e2b9ec27fc3f9f191189c"
+  },
+  "entry_sha256": "6830f269a8fd0d34df4deb7f505d68c65759b65fd21234ec70ca93140535f119",
+  "probe_sha256": "534ca88ea3383f020ecf8118137bd1bcf456c13c86eec7f11ee17b99eda077a5",
+  "probe_exit": 0,
+  "checks": {
+    "no_block_or_error": true,
+    "attestation_enabled": true,
+    "fresh_challenge": true,
+    "initialized": true,
+    "four_authenticated_deltas": true,
+    "done": true,
+    "test_dek_removed": true,
+    "client_closed": true,
+    "no_capture_or_replay": true,
+    "event_order": true
+  },
+  "finished_ns": 1789728547680559821
+}

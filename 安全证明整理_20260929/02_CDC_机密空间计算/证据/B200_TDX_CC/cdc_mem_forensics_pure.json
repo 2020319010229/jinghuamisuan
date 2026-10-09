@@ -1,0 +1,42 @@
+{
+  "canary": "PURE-b68b40a0a0864d51b407bb42291ee4f6cf5606d8b31f968e",
+  "timestamp": "2026-09-24T12:05:13",
+  "control_pids": [
+    {
+      "pid": 504853,
+      "comm": "python3"
+    }
+  ],
+  "target_pids": [
+    {
+      "pid": 280990,
+      "comm": "qemu-system-x86"
+    }
+  ],
+  "running_as_root": true,
+  "guest_selfscan_hits": 24102,
+  "control": [
+    {
+      "pid": 504853,
+      "label": "positive_control",
+      "scanned_mb": 20.6,
+      "hits": {
+        "PURE-b68b40a0a0864d51b407bb42291ee4f6cf5606d8b31f968e": 24105
+      },
+      "regions": 46,
+      "error": null
+    }
+  ],
+  "target": [
+    {
+      "pid": 280990,
+      "label": "tdx_qemu",
+      "scanned_mb": 16659.8,
+      "hits": {},
+      "regions": 498,
+      "error": null
+    }
+  ],
+  "verdict": "PROTECTED",
+  "detail": "正控制命中而被测目标未命中：在扫描覆盖范围内，宿主无法从 QEMU 进程内存读到 Guest 明文"
+}

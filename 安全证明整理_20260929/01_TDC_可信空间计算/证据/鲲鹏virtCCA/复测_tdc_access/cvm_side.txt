@@ -1,0 +1,31 @@
+############ TDC-04 CVM 内非特权用户访问测试 ############
+== 设备节点权限 ==
+crw-rw---- 1 HwHiAiUser HwHiAiUser 240, 0 Sep 10 08:23 /dev/davinci0
+crw-rw---- 1 HwHiAiUser HwHiAiUser 240, 2 Sep 10 08:23 /dev/davinci2
+crw-rw---- 1 HwHiAiUser HwHiAiUser 241, 0 Sep 10 08:23 /dev/davinci_manager
+crw-rw---- 1 HwHiAiUser HwHiAiUser 239, 0 Sep 10 08:23 /dev/devmm_svm
+
+== 当前用户 ==
+uid=0(root) gid=0(root) groups=0(root)
+
+== 以 nobody 身份尝试读取设备节点 ==
+davinci0 exit=1
+devmm_svm exit=1
+davinci_manager exit=1
+(exit 非 0 表示被拒绝)
+
+== 以 nobody 身份尝试 npu-smi ==
+DrvMngGetConsoleLogLevel failed. (g_conLogLevel=3)
+dcmi module initialize failed. ret is -8005
+
+== 引擎容器与 cvm-server 容器是否共享设备 ==
+[{"PathOnHost":"/dev/tsi","PathInContainer":"/dev/tsi","CgroupPermissions":"rwm"}]
+
+== 当前占用 NPU 的进程（应仅引擎） ==
+| NPU     Chip                  | Process id      | Process name             | Process memory(MB)        |
++===============================+=================+======================================================+
+| 768     0                     | 2535674         | serve35_cb               | 20508                     |
++===============================+=================+======================================================+
+| 1024    0                     | 2535674         | serve35_cb               | 15729                     |
++===============================+=================+======================================================+
+DONE

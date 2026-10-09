@@ -1,0 +1,263 @@
+{
+  "run_id": "75ef4f7328454b17bad0968d",
+  "events": [
+    {
+      "name": "identity_verification_start",
+      "utc_ns": 1789727492258062833,
+      "monotonic_ns": 704770336270063
+    },
+    {
+      "name": "certificate_http_submit",
+      "utc_ns": 1789727492273331487,
+      "monotonic_ns": 704770351538287,
+      "body_bytes": 0,
+      "body_sha256": null
+    },
+    {
+      "name": "certificate_http_headers",
+      "utc_ns": 1789727492318000663,
+      "monotonic_ns": 704770396207523,
+      "http_status": 200
+    },
+    {
+      "name": "certificate_received",
+      "utc_ns": 1789727492318176756,
+      "monotonic_ns": 704770396383416,
+      "http_status": 200,
+      "bytes": 4510
+    },
+    {
+      "name": "identity_verification_end",
+      "utc_ns": 1789727492469233392,
+      "monotonic_ns": 704770547440402
+    },
+    {
+      "name": "prompt_encrypt_start",
+      "utc_ns": 1789727492469336143,
+      "monotonic_ns": 704770547542873
+    },
+    {
+      "name": "prompt_encrypt_end",
+      "utc_ns": 1789727492470174674,
+      "monotonic_ns": 704770548381324
+    },
+    {
+      "name": "generation_prepare_start",
+      "utc_ns": 1789727492470176714,
+      "monotonic_ns": 704770548383304
+    },
+    {
+      "name": "stream_iteration_start",
+      "utc_ns": 1789727492506462068,
+      "monotonic_ns": 704770584668828
+    },
+    {
+      "name": "generation_http_submit",
+      "utc_ns": 1789727492520303593,
+      "monotonic_ns": 704770598510653,
+      "body_bytes": 1203,
+      "body_sha256": "ed0cde580c6cd15181c68562cbfa90c46567afe88712048bd14e73566362a68b"
+    },
+    {
+      "name": "generation_http_headers",
+      "utc_ns": 1789727492545196955,
+      "monotonic_ns": 704770623403715,
+      "http_status": 200
+    },
+    {
+      "name": "encrypted_delta_received",
+      "utc_ns": 1789727496861333000,
+      "monotonic_ns": 704774939539580,
+      "index": 0,
+      "wire_sha256": "3d5f3f1805be847aa6f2938a68f3be18776d530025b0fe0ab5a289334063d302"
+    },
+    {
+      "name": "delta_decrypted",
+      "utc_ns": 1789727496861921697,
+      "monotonic_ns": 704774940128357,
+      "index": 0
+    },
+    {
+      "name": "encrypted_delta_received",
+      "utc_ns": 1789727497237954246,
+      "monotonic_ns": 704775316160906,
+      "index": 1,
+      "wire_sha256": "45d0e1786e37ea97b6a8253786a8039dcfdc426001d96fd3599db4790965a6a4"
+    },
+    {
+      "name": "delta_decrypted",
+      "utc_ns": 1789727497238456993,
+      "monotonic_ns": 704775316663543,
+      "index": 1
+    },
+    {
+      "name": "encrypted_delta_received",
+      "utc_ns": 1789727497624246542,
+      "monotonic_ns": 704775702453412,
+      "index": 2,
+      "wire_sha256": "7e4cfa658a1cfb33a5265566b4b26480b0eb9efd587cc135b9413cfdec73f9f2"
+    },
+    {
+      "name": "delta_decrypted",
+      "utc_ns": 1789727497624838040,
+      "monotonic_ns": 704775703045410,
+      "index": 2
+    },
+    {
+      "name": "encrypted_delta_received",
+      "utc_ns": 1789727498000918689,
+      "monotonic_ns": 704776079125279,
+      "index": 3,
+      "wire_sha256": "2e7474227be576aadb15f694fb1876c2c8033f7051ffac67f68335c96f52ab5d"
+    },
+    {
+      "name": "delta_decrypted",
+      "utc_ns": 1789727498001420716,
+      "monotonic_ns": 704776079627286,
+      "index": 3
+    },
+    {
+      "name": "done_received",
+      "utc_ns": 1789727498003544684,
+      "monotonic_ns": 704776081751274
+    },
+    {
+      "name": "client_closed",
+      "utc_ns": 1789727498093678487,
+      "monotonic_ns": 704776171885087
+    }
+  ],
+  "scope": "current SDK policy with fresh challenge; not independent complete TEE validation",
+  "policy": {
+    "remote_attestation_enabled": true,
+    "tee_type": "kunpeng",
+    "KUNPENG_ROOT_CERT": {
+      "configured": false,
+      "file_exists": false
+    },
+    "KUNPENG_SUB_CERT": {
+      "configured": false,
+      "file_exists": false
+    },
+    "KUNPENG_IMAGE_REF_JSON": {
+      "configured": false,
+      "file_exists": false
+    },
+    "KUNPENG_SOFTWARE_COMPONENTS_JSON": {
+      "configured": false,
+      "file_exists": false
+    },
+    "measurement_reference_configured": false,
+    "KUNPENG_REQUIRE_COSE": "0"
+  },
+  "sdk_hashes": {
+    "client.py": "c91ffba22ac2a12cd8f164027b94550f7f900ea07e8d0ca204a9d0543c5c782f",
+    "utils/kunpeng_attestation.py": "c83604c68e1ba22e4de6fb5c14eacd68a3b3fa7723255c9d9706ad62e485c9ea",
+    "utils/request_auth.py": "a68505bc0d47b6bf42e3f7543802005ce4311d0a218e2b9ec27fc3f9f191189c",
+    "utils/crypto_utils.py": "b0a44e7b2781c11a2b2ec71f24ad5a64373bfe0da083ddba4431a27f868db8a5",
+    "utils/gm_crypto.py": "91a880405ad8d29e978bc6d962192efe23fb424961ce773db959ddf1a6f34db2",
+    "http_auth.py": "095018917110f6d42728879af2572f1a36c7ace1501c632d13aa65cc57fb1f0b"
+  },
+  "auth_header_configured": false,
+  "fresh_challenge_hex": "ebbf06a7823364a0854c41f97c5b534afb2bce364a6b4dfee9325b3f80003f3e",
+  "public_attestation_response": {
+    "certificate_pem": "-----BEGIN CERTIFICATE-----\nMIIBgTCCASagAwIBAgIUY3ZBnQrv8BKz7Bz058oN7avB3K8wCgYIKoEcz1UBg3Uw\nFTETMBEGA1UEAwwKVERYIFNlcnZlcjAeFw0yNjA4MTkwOTE2MzZaFw0yNzA4MTkw\nOTE2MzZaMBUxEzARBgNVBAMMClREWCBTZXJ2ZXIwWjAUBggqgRzPVQGCLQYIKoEc\nz1UBgi0DQgAEWsYGQ1cfh6SRFqYuDcPBZqbZdyW4t9rOANTA3ro/drVgQZw8jxbi\nsEy/y4TsCd9NP8VLPHuUy0unQiB/a/puW6NTMFEwHQYDVR0OBBYEFGzjl2upjIg1\naKRmYRSnUWxRX3dkMB8GA1UdIwQYMBaAFGzjl2upjIg1aKRmYRSnUWxRX3dkMA8G\nA1UdEwEB/wQFMAMBAf8wCgYIKoEcz1UBg3UDSQAwRgIhAMIxcIScnNUPAzgQfPsS\nqtC8Nkla0mnKszwHzl52dGsKAiEApPdFueIJM3bpww7Y4rf8H+IwCk44zVmoBIGt\nU4+qEwY=\n-----END CERTIFICATE-----\n",
+    "kunpeng_token": "2QGPohmsylkDE9KERKEBOCOgWQKCqRkBCWAKWCA8BdMVyKS0kFsSIy1ZifqS25Bu5SF9cQoT9r2IXm6/0RkJXFgg4Xy7Fmw7b97R0Cbe33FSMDd62tZxmTAzzDrkjkgfDEgZAQBYIQGAZXPCbvdu4ko1wCAwe4Bh1Vnktvgf3rq5eTtrpoUrcBkJYUAZCVsZMAAZCV+GpQFwaXB1AAAAAAAAAAAAAAAAAAJYIEtrWb/n+IF+3E7YEq8r6n5kQSCl0nxTw7+KBkQncKVzBHAyMS41Mi4wAAAAAAAAAAAABUAGZ3NoYS0yNTalAXBpbXUAAAAAAAAAAAAAAAAAAlggVx0TsicPzb03lx6hH5gSgOiRGeIAyPfKSy3KEn/ry2cEcDIxLjUyLjAAAAAAAAAAAAAFQAZnc2hhLTI1NqUBcGltZl9hcAAAAAAAAAAAAAACWCC3ZEFQyJmfvYkVdQoMa2p3sbXH7j91n8O830QwLJFsCQRwMjEuNTIuMAAAAAAAAAAAAAVABmdzaGEtMjU2pQFwdGZfYmwyAAAAAAAAAAAAAAJYIJ3gidT6UZMBK2zJWwGza64ZCiQRtfhEvUcPz/dv0EHBBHAyMS41Mi4wAAAAAAAAAAAABUAGZ3NoYS0yNTalAXB1ZWZpAAAAAAAAAAAAAAAAAlgg4aJHG2pcb3O7LezqUr5e/rwBX4oAdjWFOSjCJd9Ql/0EcDIxLjUyLjAAAAAAAAAAAAAFQAZnc2hhLTI1NqUBcHRlZQAAAAAAAAAAAAAAAAACWCBI5rKTu+EqyetQVLn5Y7up7aZic4/K+0xMYh/tXlFDPQRwMS43AAAAAAAAAAAAAAAAAAVABmdzaGEtMjU2GQlgYBkJYmdzaGEtMjU2WIQB92YipguS1XLJRiCv7/Bd87667LbrLRvVaeORas+/Hj2DMjm8MGq7MNmsvZ4nd6OtUPT05Dkqrrh7PygDOt/RaooBjvV9DlMBjtzrYWye2pwmMxXIe3ZC+uSi1JzFuNO2WtDZzo2JL9Mn+m6iywyo4IlEu+gUrIBvFRUfYD1+d8SNivcZrNFZAm7ShEShATgjoFkB3VkB2qcKWEDHCUJAdctJqiiKzFdMpZ24/LfURXAJv9SqyLtmaYzvgeu/BqeCM2SghUxB+XxbU0r7K842SmtN/ukyWz+AAD8+GazLWEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGazNWIUEABzwFHDBOHQJU3HhrlVFMQlIC48Q/LmYOV3Ys7MhwHy39rEWyPaAUqzKRaB2OTfMGU1jqbrI738EVVLz9HxssiDIAJRX0AhvGv4nm1J8iRkyoVBje9IWPCGrXZNdz0zs8ligZOX3pyysiajFXDQYV7rPJVoeU1Fin0lu/n9sn7jlx9xuGazMZ3NoYS0yNTYZrNBnc2hhLTI1Nhmszlgge+EYOMIegYut+fObNrfVCN219H7qhQrQoqAIgzxBp5kZrM+EWCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFggAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABYIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFiEAYc/rQ3RzcBc9889X2XuRFPgRQRDwqX4NNclIw1aA/IZ7N7gJMkwX+61uTRhhnnyguPjLi2YWnQ09d4SukMxPYoYATHeHdFrO5u0suiFVvjjEhOw2+Qg32tnV8oBfAJXfOmpVbDo6+NImlU7A4Lq8qmBKsJtbNz+AROYulSM/8MFWwij",
+    "kunpeng_dev_cert": "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUNyRENDQWcyZ0F3SUJBZ0lSRWt1S0dvN2J0UVo1NkpDQUVDMmRxbnN3Q2dZSUtvWkl6ajBFQXdRd1JqRUwKTUFrR0ExVUVCaE1DUTA0eER6QU5CZ05WQkFvVEJraDFZWGRsYVRFbU1DUUdBMVVFQXhNZFNIVmhkMlZwSUVOdgpiWEIxZEdsdVp5QkZRME1nUTBOQklFTkJJREV3SUJjTk1qWXdOREV5TURVd01ESXpXaGdQTWpBM05EQXpNamN3Ck5UQXdNak5hTURVeEN6QUpCZ05WQkFZVEFrTk9NUTh3RFFZRFZRUUtFd1pJZFdGM1pXa3hGVEFUQmdOVkJBTVQKRERaU01qWXpNVEU1TlRBNU1UQ0JtekFRQmdjcWhrak9QUUlCQmdVcmdRUUFJd09CaGdBRUFaTmRRcFRNVjErTQpNTElXK1VjdWNZOW1TdFBtUVlhTDAxWHEybkNpWEVGdmJRUXlrNjFGd1lsVHpuVGI2Nmo0c0NYQzRZbFY4U3BwCmh1d09QSmtoQi9WVEFKRFRrdDhaUFg4d290eEU3NDRKSjAycjhCQW5yRTJZNk5aemdEKzZnVHlBQWw0SFgyZk4KdmxOK1J5d2s1cnZwU1B1QjhHMVBteExUeHhuQitXMEFOTzJUbzRHbk1JR2tNQjhHQTFVZEl3UVlNQmFBRklneApOck5sNXVXVlFaNjhIQkU4RzEvak4yTHRNQjBHQTFVZERnUVdCQlJVOVZOL1BaVEppWmVncm5kMlowSXdCOFNyCmNqQUpCZ05WSFJNRUFqQUFNRWNHQTFVZElBUkFNRDR3UEFZTUt3WUJCQUdQVzRGSkFRUUhNQ3d3S2dZSUt3WUIKQlFVSEFnRVdIbWgwZEhCek9pOHZjM1Z3Y0c5eWRDNW9kV0YzWldrdVkyOXRMM0JyYVRBT0JnTlZIUThCQWY4RQpCQU1DQnNBd0NnWUlLb1pJemowRUF3UURnWXdBTUlHSUFrSUJ1MHRoZGRFekpReUQ3MU1sSC8vYnd3SGVTSytUCmN1Z3BNc3BrRS9xdCtpbENHS1g5dXI1UGpNYXlVbVBTNHlMajVvS294Y2lLMzhDaVlnUm5lNGE5UEc0Q1FnRTUKTUFMRjc2WERTaUJJYmR2M1ZpTWVSeG1UWGJrUjVWYTcvQVUvS2wvck54NGhJZk1URmFTM0Q4c0VQNmhaY1dIWQpweEFrZFJiMUVPa1BsMnE1ZGFVNFRRPT0KLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQ=="
+  },
+  "initialization": {
+    "status": 0,
+    "connected": true,
+    "dek_created": true
+  },
+  "synthetic_prompt": "OTPSEC_SDK_75ef4f7328454b17bad0968d Reply OK.",
+  "session_id": "security-75ef4f7328454b17bad0968d_7f81f05abd79457fafd9991f47ef11ae",
+  "done": {
+    "event": "done",
+    "request_id": "ef9d1e615b39bed16dceae39",
+    "input_tokens": 38,
+    "output_tokens": 4,
+    "total_tokens": 42,
+    "encryption_generationdata_outputdata": "GlTL+T8/iFKLeW+L/7XocqNa3ZCJK8/umHP+9R2/FRHd3eQkHgU0I9HM",
+    "encryption_generationdata_outputdata_len": 56,
+    "encrypted_reasoning": "",
+    "encrypted_reasoning_len": 0
+  },
+  "generation": {
+    "decrypted_delta_count": 4,
+    "done_received": true,
+    "synthetic_output": "Okay, the user",
+    "passed": true
+  },
+  "saved_replay_request": "synthetic encrypted request only; no plaintext DEK or auth headers",
+  "replay_controls": [
+    {
+      "name": "exact_replay",
+      "http_status": 200,
+      "first_app_code": 5002,
+      "done_received": false,
+      "backend_request_delta": 0,
+      "elapsed_ms": 22.113755,
+      "params_unchanged": true,
+      "rejection_reason_category": "duplicate_cache",
+      "request_age_s_client_clock": 5.5206239223480225,
+      "response_sha256": "2b6ca50cb5ea5c7e5f4272daa997edd54ae6f17d927aab72c2cf3ee445d1929a",
+      "passed": true
+    },
+    {
+      "name": "same_ciphertext_changed_request_id",
+      "http_status": 200,
+      "first_app_code": 5001,
+      "done_received": false,
+      "backend_request_delta": 0,
+      "elapsed_ms": 16.48285,
+      "params_unchanged": true,
+      "rejection_reason_category": "authentication_rejected",
+      "request_age_s_client_clock": 5.537618160247803,
+      "response_sha256": "5eb7d5a79b99b7381663d48187e3d3435da596948fadd10b8edbf869b82f22ec",
+      "passed": true
+    },
+    {
+      "name": "changed_timestamp",
+      "http_status": 200,
+      "first_app_code": 5001,
+      "done_received": false,
+      "backend_request_delta": 0,
+      "elapsed_ms": 15.905352,
+      "params_unchanged": false,
+      "rejection_reason_category": "authentication_rejected",
+      "request_age_s_client_clock": 5.553990364074707,
+      "response_sha256": "53435777e8d6ec5922297a3ca0255c2fc77ac280858d62e8ced98d3bbf801886",
+      "passed": true
+    },
+    {
+      "name": "changed_stream_flag",
+      "http_status": 200,
+      "first_app_code": 5001,
+      "done_received": false,
+      "backend_request_delta": 0,
+      "elapsed_ms": 16.287217,
+      "params_unchanged": false,
+      "rejection_reason_category": "authentication_rejected",
+      "request_age_s_client_clock": 5.570772409439087,
+      "response_sha256": "53435777e8d6ec5922297a3ca0255c2fc77ac280858d62e8ced98d3bbf801886",
+      "passed": true
+    },
+    {
+      "name": "missing_authentication",
+      "http_status": 200,
+      "first_app_code": 5001,
+      "done_received": false,
+      "backend_request_delta": 0,
+      "elapsed_ms": 15.864292,
+      "params_unchanged": false,
+      "rejection_reason_category": "authentication_rejected",
+      "request_age_s_client_clock": 5.5870795249938965,
+      "response_sha256": "086535ffa84bd8dc48bf8d3c1aadb03cda11badf4fa63f8b865a8b352dc1561e",
+      "passed": true
+    }
+  ],
+  "request_auth_version": 2,
+  "test_dek_cleanup_return": 0,
+  "test_dek_absent_after_cleanup": true
+}

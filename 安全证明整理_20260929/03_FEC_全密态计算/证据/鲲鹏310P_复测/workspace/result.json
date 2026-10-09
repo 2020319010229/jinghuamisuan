@@ -1,0 +1,616 @@
+{
+  "started_ns": 1789727751379385600,
+  "scope": "own synthetic process; same-TU observer; no cross-process exploit claim; getrandom EIO only in error child executable",
+  "before": {
+    "requests": 53,
+    "active": 0,
+    "queued": 0,
+    "last_batch": 1,
+    "peak_batch": 2,
+    "batch_calls": 601,
+    "batch_rows": 629,
+    "mean_decode_batch": 1.047,
+    "scalar_decode_calls": 573,
+    "prefill_chunks": 55,
+    "prefill_batch_calls": 53,
+    "prefill_batch_rows": 55,
+    "prefill_tokens": 1252,
+    "mean_prefill_batch": 1.038,
+    "peak_prefill_batch": 2,
+    "scalar_prefill_calls": 51,
+    "ttft_ms": 2145.5,
+    "tpot_ms": 409.6
+  },
+  "staging": "/tmp/otp-security-workspace-stage.aRZuhW",
+  "container_directory": "/tmp/otp-security-workspace-probe.jjEkb3",
+  "source_sha256": {
+    "q8_ops.c": "2a28e79e146b595e6880370dbccb355efdc5d5e0452c551d758bd89c454f37de",
+    "q8_ops.h": "267d9d1cd0eb2f95917eef4e433764d7e4e76728440104c1f7f8d9484f808ae5",
+    "st35.c": "4a896469b2a7632a1a7e9692ccbb1c353bd3e94b816394aae48c62d6c32db807",
+    "st35.h": "1fd6965e6da912ce35a2e3773e4d6e62719dc1fa8f83fb3ca810feadc5cefd01",
+    "otp_rng.h": "618b8e5543ae4742d3a1e5ce9a39ae199885ada5f0e366970c8eca8dcbc39555",
+    "security_workspace_probe.cpp": "33bb63ab1b14a5cabb369191ad27fa2d82ad2fc213b87e3b5c30d3851dbd73d3"
+  },
+  "source_provenance": {
+    "q8_ops.c": "D:\\python_code\\清华服务器\\otp_c35\\delivery\\OTP35B_CB_V11_20260903\\q8_ops.c",
+    "q8_ops.h": "D:\\python_code\\清华服务器\\otp_c35\\delivery\\OTP35B_CB_V11_20260903\\q8_ops.h",
+    "st35.c": "D:\\python_code\\清华服务器\\otp_c35\\delivery\\OTP35B_CB_V11_20260903\\st35.c",
+    "st35.h": "D:\\python_code\\清华服务器\\otp_c35\\delivery\\OTP35B_CB_V11_20260903\\st35.h",
+    "otp_rng.h": "D:\\python_code\\清华服务器\\otp_c35\\otp_rng.h",
+    "security_workspace_probe.cpp": "D:\\python_code\\清华服务器\\otp_c35\\scripts\\security_workspace_probe.cpp"
+  },
+  "copy": {
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": "Warning: Permanently added '192.168.122.143' (ED25519) to the list of known hosts.\r\n\nAuthorized users only. All activities may be monitored and reported.\n"
+  },
+  "build_command": "cd /tmp/otp-security-workspace-probe.jjEkb3 && timeout -k 3 55 g++ -O2 -march=armv8.6-a+sve+i8mm+bf16 -std=c++17 -Wall -Wno-unused-function -Wno-deprecated-declarations -pthread -fopenmp -I/usr/local/Ascend/cann-9.1.0/aarch64-linux/include -x c++ security_workspace_probe.cpp st35.c -o probe -L/usr/local/Ascend/cann-9.1.0/aarch64-linux/lib64 -lascendcl -lnnopbase -lopapi -L/data/ascendc/build -lbdszblind -Wl,-rpath,/data/ascendc/build -Wl,--wrap=free -Wl,--wrap=getrandom -lm",
+  "compile": {
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": "Warning: Permanently added '192.168.122.143' (ED25519) to the list of known hosts.\r\n\nAuthorized users only. All activities may be monitored and reported.\nsecurity_workspace_probe.cpp: In function 'int main(int, char**)':\nsecurity_workspace_probe.cpp:52:9: warning: this 'if' clause does not guard... [-Wmisleading-indentation]\n   52 |         if(dw) aclrtFree(dw);q8_fini();return 4;\n      |         ^~\nsecurity_workspace_probe.cpp:52:30: note: ...this statement, but the latter is misleadingly indented as if it were guarded by the 'if'\n   52 |         if(dw) aclrtFree(dw);q8_fini();return 4;\n      |                              ^~~~~~~\n"
+  },
+  "identity": {
+    "exit_code": 0,
+    "stdout": "2a28e79e146b595e6880370dbccb355efdc5d5e0452c551d758bd89c454f37de  q8_ops.c\n267d9d1cd0eb2f95917eef4e433764d7e4e76728440104c1f7f8d9484f808ae5  q8_ops.h\n4a896469b2a7632a1a7e9692ccbb1c353bd3e94b816394aae48c62d6c32db807  st35.c\n1fd6965e6da912ce35a2e3773e4d6e62719dc1fa8f83fb3ca810feadc5cefd01  st35.h\n618b8e5543ae4742d3a1e5ce9a39ae199885ada5f0e366970c8eca8dcbc39555  otp_rng.h\n33bb63ab1b14a5cabb369191ad27fa2d82ad2fc213b87e3b5c30d3851dbd73d3  security_workspace_probe.cpp\n9e72d76ad23c4112f4c78532f09776c98471a0c9262e8230d1da66621a7ec76b  probe\nb7142b0851d553011b2272f4dd1261d24efdf9455f7b3e816b8155548b1daa3d  /data/ascendc/build/libbdszblind.so\n",
+    "stderr": "Warning: Permanently added '192.168.122.143' (ED25519) to the list of known hosts.\r\n\nAuthorized users only. All activities may be monitored and reported.\n"
+  },
+  "uploaded_hashes_match": true,
+  "runs": [
+    {
+      "error_mode": false,
+      "idle_before": {
+        "requests": 53,
+        "active": 0,
+        "queued": 0,
+        "last_batch": 1,
+        "peak_batch": 2,
+        "batch_calls": 601,
+        "batch_rows": 629,
+        "mean_decode_batch": 1.047,
+        "scalar_decode_calls": 573,
+        "prefill_chunks": 55,
+        "prefill_batch_calls": 53,
+        "prefill_batch_rows": 55,
+        "prefill_tokens": 1252,
+        "mean_prefill_batch": 1.038,
+        "peak_prefill_batch": 2,
+        "scalar_prefill_calls": 51,
+        "ttft_ms": 2145.5,
+        "tpot_ms": 409.6
+      },
+      "execution": {
+        "exit_code": 0,
+        "stdout": "{\"event\":\"scope\",\"same_process_test_observer\":true,\"production_memory_access\":false,\"cpu_correction\":false,\"rng_error_mode\":false}\n{\"event\":\"case\",\"step\":0,\"M\":2,\"rc\":0,\"output_mismatches\":0,\"injected_getrandom_EIO\":0,\"pass\":true}\n{\"event\":\"workspace\",\"phase\":\"first_success\",\"M\":2,\"mcap\":2,\"xq_matches_synthetic\":true,\"xq_nonzero\":64,\"r0_nonzero\":127,\"r1_nonzero\":126,\"limbs_nonzero\":254,\"mask_limbs_nonzero\":252,\"r0_fnv1a64\":\"19b03e30465ed523\",\"r1_fnv1a64\":\"909a07c0d4ffb8ad\"}\n{\"event\":\"case\",\"step\":1,\"M\":2,\"rc\":0,\"output_mismatches\":0,\"injected_getrandom_EIO\":0,\"pass\":true}\n{\"event\":\"workspace\",\"phase\":\"second_success\",\"M\":2,\"mcap\":2,\"xq_matches_synthetic\":true,\"xq_nonzero\":64,\"r0_nonzero\":128,\"r1_nonzero\":126,\"limbs_nonzero\":251,\"mask_limbs_nonzero\":254,\"r0_fnv1a64\":\"d992abed631bcc81\",\"r1_fnv1a64\":\"3aa60b77dfb348f7\"}\n{\"event\":\"fresh_masks\",\"r0_changed\":true,\"r1_changed\":true}\n{\"event\":\"case\",\"step\":2,\"M\":1,\"rc\":0,\"output_mismatches\":0,\"injected_getrandom_EIO\":0,\"pass\":true}\n{\"event\":\"workspace\",\"phase\":\"small_success\",\"M\":1,\"mcap\":2,\"xq_matches_synthetic\":true,\"xq_nonzero\":32,\"r0_nonzero\":63,\"r1_nonzero\":64,\"limbs_nonzero\":127,\"mask_limbs_nonzero\":128,\"r0_fnv1a64\":\"cb51759a0be98ba9\",\"r1_fnv1a64\":\"13b7f1d8778d0988\"}\n{\"event\":\"unused_tail\",\"buffer\":\"xq\",\"bytes\":32,\"unchanged\":true,\"nonzero_bytes\":32}\n{\"event\":\"unused_tail\",\"buffer\":\"r0\",\"bytes\":64,\"unchanged\":true,\"nonzero_bytes\":64}\n{\"event\":\"unused_tail\",\"buffer\":\"r1\",\"bytes\":64,\"unchanged\":true,\"nonzero_bytes\":63}\n{\"event\":\"unused_tail\",\"buffer\":\"limbs\",\"bytes\":128,\"unchanged\":true,\"nonzero_bytes\":125}\n{\"event\":\"unused_tail\",\"buffer\":\"mask_limbs\",\"bytes\":128,\"unchanged\":true,\"nonzero_bytes\":127}\n{\"event\":\"pre_free\",\"buffer\":\"xq\",\"bytes\":64,\"nonzero_bytes\":0}\n{\"event\":\"pre_free\",\"buffer\":\"r0\",\"bytes\":128,\"nonzero_bytes\":0}\n{\"event\":\"pre_free\",\"buffer\":\"r1\",\"bytes\":128,\"nonzero_bytes\":0}\n{\"event\":\"pre_free\",\"buffer\":\"limbs\",\"bytes\":256,\"nonzero_bytes\":0}\n{\"event\":\"pre_free\",\"buffer\":\"mask_limbs\",\"bytes\":256,\"nonzero_bytes\":0}\n{\"event\":\"pre_free\",\"buffer\":\"y\",\"bytes\":512,\"nonzero_bytes\":380}\n{\"event\":\"pre_free\",\"buffer\":\"xs\",\"bytes\":8,\"nonzero_bytes\":0}\n{\"event\":\"pre_free\",\"buffer\":\"plain\",\"bytes\":128,\"nonzero_bytes\":0}\n{\"event\":\"pre_free\",\"buffer\":\"corr0\",\"bytes\":256,\"nonzero_bytes\":0}\n{\"event\":\"pre_free\",\"buffer\":\"corr1\",\"bytes\":256,\"nonzero_bytes\":0}\n{\"event\":\"summary\",\"failed_cases_or_cleanup\":0,\"tracked_buffers\":10,\"observed_frees\":10,\"nonzero_at_free_buffers\":1,\"all_tracked_freed\":true,\"workspace_struct_zero\":true}\n",
+        "stderr": "Warning: Permanently added '192.168.122.143' (ED25519) to the list of known hosts.\r\n\nAuthorized users only. All activities may be monitored and reported.\nrns tiling: cores=1 M=1 N=16 Ka=32 Kb=32 single=(1,16,32) base=(16,32,32)\nrns tiling: cores=1 M=1 N=16 Ka=32 Kb=32 single=(1,16,32) base=(16,32,32)\n"
+      },
+      "semantic_validation": {
+        "checks": {
+          "exit_zero": true,
+          "three_expected_cases": true,
+          "real_npu_outputs_match": true,
+          "quantized_input_observed": true,
+          "fresh_masks_observed": true,
+          "tail_observation_complete": true,
+          "pre_free_observation_complete": true,
+          "normal_cleanup_complete": true,
+          "rng_injection_scope": true
+        },
+        "all_checks_pass": true,
+        "events": [
+          {
+            "event": "scope",
+            "same_process_test_observer": true,
+            "production_memory_access": false,
+            "cpu_correction": false,
+            "rng_error_mode": false
+          },
+          {
+            "event": "case",
+            "step": 0,
+            "M": 2,
+            "rc": 0,
+            "output_mismatches": 0,
+            "injected_getrandom_EIO": 0,
+            "pass": true
+          },
+          {
+            "event": "workspace",
+            "phase": "first_success",
+            "M": 2,
+            "mcap": 2,
+            "xq_matches_synthetic": true,
+            "xq_nonzero": 64,
+            "r0_nonzero": 127,
+            "r1_nonzero": 126,
+            "limbs_nonzero": 254,
+            "mask_limbs_nonzero": 252,
+            "r0_fnv1a64": "19b03e30465ed523",
+            "r1_fnv1a64": "909a07c0d4ffb8ad"
+          },
+          {
+            "event": "case",
+            "step": 1,
+            "M": 2,
+            "rc": 0,
+            "output_mismatches": 0,
+            "injected_getrandom_EIO": 0,
+            "pass": true
+          },
+          {
+            "event": "workspace",
+            "phase": "second_success",
+            "M": 2,
+            "mcap": 2,
+            "xq_matches_synthetic": true,
+            "xq_nonzero": 64,
+            "r0_nonzero": 128,
+            "r1_nonzero": 126,
+            "limbs_nonzero": 251,
+            "mask_limbs_nonzero": 254,
+            "r0_fnv1a64": "d992abed631bcc81",
+            "r1_fnv1a64": "3aa60b77dfb348f7"
+          },
+          {
+            "event": "fresh_masks",
+            "r0_changed": true,
+            "r1_changed": true
+          },
+          {
+            "event": "case",
+            "step": 2,
+            "M": 1,
+            "rc": 0,
+            "output_mismatches": 0,
+            "injected_getrandom_EIO": 0,
+            "pass": true
+          },
+          {
+            "event": "workspace",
+            "phase": "small_success",
+            "M": 1,
+            "mcap": 2,
+            "xq_matches_synthetic": true,
+            "xq_nonzero": 32,
+            "r0_nonzero": 63,
+            "r1_nonzero": 64,
+            "limbs_nonzero": 127,
+            "mask_limbs_nonzero": 128,
+            "r0_fnv1a64": "cb51759a0be98ba9",
+            "r1_fnv1a64": "13b7f1d8778d0988"
+          },
+          {
+            "event": "unused_tail",
+            "buffer": "xq",
+            "bytes": 32,
+            "unchanged": true,
+            "nonzero_bytes": 32
+          },
+          {
+            "event": "unused_tail",
+            "buffer": "r0",
+            "bytes": 64,
+            "unchanged": true,
+            "nonzero_bytes": 64
+          },
+          {
+            "event": "unused_tail",
+            "buffer": "r1",
+            "bytes": 64,
+            "unchanged": true,
+            "nonzero_bytes": 63
+          },
+          {
+            "event": "unused_tail",
+            "buffer": "limbs",
+            "bytes": 128,
+            "unchanged": true,
+            "nonzero_bytes": 125
+          },
+          {
+            "event": "unused_tail",
+            "buffer": "mask_limbs",
+            "bytes": 128,
+            "unchanged": true,
+            "nonzero_bytes": 127
+          },
+          {
+            "event": "pre_free",
+            "buffer": "xq",
+            "bytes": 64,
+            "nonzero_bytes": 0
+          },
+          {
+            "event": "pre_free",
+            "buffer": "r0",
+            "bytes": 128,
+            "nonzero_bytes": 0
+          },
+          {
+            "event": "pre_free",
+            "buffer": "r1",
+            "bytes": 128,
+            "nonzero_bytes": 0
+          },
+          {
+            "event": "pre_free",
+            "buffer": "limbs",
+            "bytes": 256,
+            "nonzero_bytes": 0
+          },
+          {
+            "event": "pre_free",
+            "buffer": "mask_limbs",
+            "bytes": 256,
+            "nonzero_bytes": 0
+          },
+          {
+            "event": "pre_free",
+            "buffer": "y",
+            "bytes": 512,
+            "nonzero_bytes": 380
+          },
+          {
+            "event": "pre_free",
+            "buffer": "xs",
+            "bytes": 8,
+            "nonzero_bytes": 0
+          },
+          {
+            "event": "pre_free",
+            "buffer": "plain",
+            "bytes": 128,
+            "nonzero_bytes": 0
+          },
+          {
+            "event": "pre_free",
+            "buffer": "corr0",
+            "bytes": 256,
+            "nonzero_bytes": 0
+          },
+          {
+            "event": "pre_free",
+            "buffer": "corr1",
+            "bytes": 256,
+            "nonzero_bytes": 0
+          },
+          {
+            "event": "summary",
+            "failed_cases_or_cleanup": 0,
+            "tracked_buffers": 10,
+            "observed_frees": 10,
+            "nonzero_at_free_buffers": 1,
+            "all_tracked_freed": true,
+            "workspace_struct_zero": true
+          }
+        ]
+      },
+      "idle_after": {
+        "requests": 53,
+        "active": 0,
+        "queued": 0,
+        "last_batch": 1,
+        "peak_batch": 2,
+        "batch_calls": 601,
+        "batch_rows": 629,
+        "mean_decode_batch": 1.047,
+        "scalar_decode_calls": 573,
+        "prefill_chunks": 55,
+        "prefill_batch_calls": 53,
+        "prefill_batch_rows": 55,
+        "prefill_tokens": 1252,
+        "mean_prefill_batch": 1.038,
+        "peak_prefill_batch": 2,
+        "scalar_prefill_calls": 51,
+        "ttft_ms": 2145.5,
+        "tpot_ms": 409.6
+      }
+    },
+    {
+      "error_mode": true,
+      "idle_before": {
+        "requests": 53,
+        "active": 0,
+        "queued": 0,
+        "last_batch": 1,
+        "peak_batch": 2,
+        "batch_calls": 601,
+        "batch_rows": 629,
+        "mean_decode_batch": 1.047,
+        "scalar_decode_calls": 573,
+        "prefill_chunks": 55,
+        "prefill_batch_calls": 53,
+        "prefill_batch_rows": 55,
+        "prefill_tokens": 1252,
+        "mean_prefill_batch": 1.038,
+        "peak_prefill_batch": 2,
+        "scalar_prefill_calls": 51,
+        "ttft_ms": 2145.5,
+        "tpot_ms": 409.6
+      },
+      "execution": {
+        "exit_code": 0,
+        "stdout": "{\"event\":\"scope\",\"same_process_test_observer\":true,\"production_memory_access\":false,\"cpu_correction\":false,\"rng_error_mode\":true}\n{\"event\":\"case\",\"step\":0,\"M\":2,\"rc\":0,\"output_mismatches\":0,\"injected_getrandom_EIO\":0,\"pass\":true}\n{\"event\":\"workspace\",\"phase\":\"first_success\",\"M\":2,\"mcap\":2,\"xq_matches_synthetic\":true,\"xq_nonzero\":64,\"r0_nonzero\":127,\"r1_nonzero\":128,\"limbs_nonzero\":252,\"mask_limbs_nonzero\":253,\"r0_fnv1a64\":\"4a13672863813ee6\",\"r1_fnv1a64\":\"585206b3cfa32e97\"}\n{\"event\":\"case\",\"step\":1,\"M\":2,\"rc\":0,\"output_mismatches\":0,\"injected_getrandom_EIO\":0,\"pass\":true}\n{\"event\":\"workspace\",\"phase\":\"second_success\",\"M\":2,\"mcap\":2,\"xq_matches_synthetic\":true,\"xq_nonzero\":64,\"r0_nonzero\":126,\"r1_nonzero\":127,\"limbs_nonzero\":253,\"mask_limbs_nonzero\":254,\"r0_fnv1a64\":\"735eacf8517ca276\",\"r1_fnv1a64\":\"4d281702a25bdde6\"}\n{\"event\":\"fresh_masks\",\"r0_changed\":true,\"r1_changed\":true}\n{\"event\":\"case\",\"step\":2,\"M\":1,\"rc\":-1,\"output_mismatches\":0,\"injected_getrandom_EIO\":1,\"pass\":true}\n{\"event\":\"workspace\",\"phase\":\"rng_error_return\",\"M\":1,\"mcap\":2,\"xq_matches_synthetic\":true,\"xq_nonzero\":32,\"r0_nonzero\":63,\"r1_nonzero\":63,\"limbs_nonzero\":127,\"mask_limbs_nonzero\":127,\"r0_fnv1a64\":\"6a76f83313bdee34\",\"r1_fnv1a64\":\"e8af7f354042074c\"}\n{\"event\":\"unused_tail\",\"buffer\":\"xq\",\"bytes\":32,\"unchanged\":true,\"nonzero_bytes\":32}\n{\"event\":\"unused_tail\",\"buffer\":\"r0\",\"bytes\":64,\"unchanged\":true,\"nonzero_bytes\":63}\n{\"event\":\"unused_tail\",\"buffer\":\"r1\",\"bytes\":64,\"unchanged\":true,\"nonzero_bytes\":64}\n{\"event\":\"unused_tail\",\"buffer\":\"limbs\",\"bytes\":128,\"unchanged\":true,\"nonzero_bytes\":126}\n{\"event\":\"unused_tail\",\"buffer\":\"mask_limbs\",\"bytes\":128,\"unchanged\":true,\"nonzero_bytes\":127}\n{\"event\":\"pre_free\",\"buffer\":\"xq\",\"bytes\":64,\"nonzero_bytes\":0}\n{\"event\":\"pre_free\",\"buffer\":\"r0\",\"bytes\":128,\"nonzero_bytes\":0}\n{\"event\":\"pre_free\",\"buffer\":\"r1\",\"bytes\":128,\"nonzero_bytes\":0}\n{\"event\":\"pre_free\",\"buffer\":\"limbs\",\"bytes\":256,\"nonzero_bytes\":0}\n{\"event\":\"pre_free\",\"buffer\":\"mask_limbs\",\"bytes\":256,\"nonzero_bytes\":0}\n{\"event\":\"pre_free\",\"buffer\":\"y\",\"bytes\":512,\"nonzero_bytes\":382}\n{\"event\":\"pre_free\",\"buffer\":\"xs\",\"bytes\":8,\"nonzero_bytes\":0}\n{\"event\":\"pre_free\",\"buffer\":\"plain\",\"bytes\":128,\"nonzero_bytes\":0}\n{\"event\":\"pre_free\",\"buffer\":\"corr0\",\"bytes\":256,\"nonzero_bytes\":0}\n{\"event\":\"pre_free\",\"buffer\":\"corr1\",\"bytes\":256,\"nonzero_bytes\":0}\n{\"event\":\"summary\",\"failed_cases_or_cleanup\":0,\"tracked_buffers\":10,\"observed_frees\":10,\"nonzero_at_free_buffers\":1,\"all_tracked_freed\":true,\"workspace_struct_zero\":true}\n",
+        "stderr": "Warning: Permanently added '192.168.122.143' (ED25519) to the list of known hosts.\r\n\nAuthorized users only. All activities may be monitored and reported.\nrns tiling: cores=1 M=1 N=16 Ka=32 Kb=32 single=(1,16,32) base=(16,32,32)\n"
+      },
+      "semantic_validation": {
+        "checks": {
+          "exit_zero": true,
+          "three_expected_cases": true,
+          "real_npu_outputs_match": true,
+          "quantized_input_observed": true,
+          "fresh_masks_observed": true,
+          "tail_observation_complete": true,
+          "pre_free_observation_complete": true,
+          "normal_cleanup_complete": true,
+          "rng_injection_scope": true
+        },
+        "all_checks_pass": true,
+        "events": [
+          {
+            "event": "scope",
+            "same_process_test_observer": true,
+            "production_memory_access": false,
+            "cpu_correction": false,
+            "rng_error_mode": true
+          },
+          {
+            "event": "case",
+            "step": 0,
+            "M": 2,
+            "rc": 0,
+            "output_mismatches": 0,
+            "injected_getrandom_EIO": 0,
+            "pass": true
+          },
+          {
+            "event": "workspace",
+            "phase": "first_success",
+            "M": 2,
+            "mcap": 2,
+            "xq_matches_synthetic": true,
+            "xq_nonzero": 64,
+            "r0_nonzero": 127,
+            "r1_nonzero": 128,
+            "limbs_nonzero": 252,
+            "mask_limbs_nonzero": 253,
+            "r0_fnv1a64": "4a13672863813ee6",
+            "r1_fnv1a64": "585206b3cfa32e97"
+          },
+          {
+            "event": "case",
+            "step": 1,
+            "M": 2,
+            "rc": 0,
+            "output_mismatches": 0,
+            "injected_getrandom_EIO": 0,
+            "pass": true
+          },
+          {
+            "event": "workspace",
+            "phase": "second_success",
+            "M": 2,
+            "mcap": 2,
+            "xq_matches_synthetic": true,
+            "xq_nonzero": 64,
+            "r0_nonzero": 126,
+            "r1_nonzero": 127,
+            "limbs_nonzero": 253,
+            "mask_limbs_nonzero": 254,
+            "r0_fnv1a64": "735eacf8517ca276",
+            "r1_fnv1a64": "4d281702a25bdde6"
+          },
+          {
+            "event": "fresh_masks",
+            "r0_changed": true,
+            "r1_changed": true
+          },
+          {
+            "event": "case",
+            "step": 2,
+            "M": 1,
+            "rc": -1,
+            "output_mismatches": 0,
+            "injected_getrandom_EIO": 1,
+            "pass": true
+          },
+          {
+            "event": "workspace",
+            "phase": "rng_error_return",
+            "M": 1,
+            "mcap": 2,
+            "xq_matches_synthetic": true,
+            "xq_nonzero": 32,
+            "r0_nonzero": 63,
+            "r1_nonzero": 63,
+            "limbs_nonzero": 127,
+            "mask_limbs_nonzero": 127,
+            "r0_fnv1a64": "6a76f83313bdee34",
+            "r1_fnv1a64": "e8af7f354042074c"
+          },
+          {
+            "event": "unused_tail",
+            "buffer": "xq",
+            "bytes": 32,
+            "unchanged": true,
+            "nonzero_bytes": 32
+          },
+          {
+            "event": "unused_tail",
+            "buffer": "r0",
+            "bytes": 64,
+            "unchanged": true,
+            "nonzero_bytes": 63
+          },
+          {
+            "event": "unused_tail",
+            "buffer": "r1",
+            "bytes": 64,
+            "unchanged": true,
+            "nonzero_bytes": 64
+          },
+          {
+            "event": "unused_tail",
+            "buffer": "limbs",
+            "bytes": 128,
+            "unchanged": true,
+            "nonzero_bytes": 126
+          },
+          {
+            "event": "unused_tail",
+            "buffer": "mask_limbs",
+            "bytes": 128,
+            "unchanged": true,
+            "nonzero_bytes": 127
+          },
+          {
+            "event": "pre_free",
+            "buffer": "xq",
+            "bytes": 64,
+            "nonzero_bytes": 0
+          },
+          {
+            "event": "pre_free",
+            "buffer": "r0",
+            "bytes": 128,
+            "nonzero_bytes": 0
+          },
+          {
+            "event": "pre_free",
+            "buffer": "r1",
+            "bytes": 128,
+            "nonzero_bytes": 0
+          },
+          {
+            "event": "pre_free",
+            "buffer": "limbs",
+            "bytes": 256,
+            "nonzero_bytes": 0
+          },
+          {
+            "event": "pre_free",
+            "buffer": "mask_limbs",
+            "bytes": 256,
+            "nonzero_bytes": 0
+          },
+          {
+            "event": "pre_free",
+            "buffer": "y",
+            "bytes": 512,
+            "nonzero_bytes": 382
+          },
+          {
+            "event": "pre_free",
+            "buffer": "xs",
+            "bytes": 8,
+            "nonzero_bytes": 0
+          },
+          {
+            "event": "pre_free",
+            "buffer": "plain",
+            "bytes": 128,
+            "nonzero_bytes": 0
+          },
+          {
+            "event": "pre_free",
+            "buffer": "corr0",
+            "bytes": 256,
+            "nonzero_bytes": 0
+          },
+          {
+            "event": "pre_free",
+            "buffer": "corr1",
+            "bytes": 256,
+            "nonzero_bytes": 0
+          },
+          {
+            "event": "summary",
+            "failed_cases_or_cleanup": 0,
+            "tracked_buffers": 10,
+            "observed_frees": 10,
+            "nonzero_at_free_buffers": 1,
+            "all_tracked_freed": true,
+            "workspace_struct_zero": true
+          }
+        ]
+      },
+      "idle_after": {
+        "requests": 53,
+        "active": 0,
+        "queued": 0,
+        "last_batch": 1,
+        "peak_batch": 2,
+        "batch_calls": 601,
+        "batch_rows": 629,
+        "mean_decode_batch": 1.047,
+        "scalar_decode_calls": 573,
+        "prefill_chunks": 55,
+        "prefill_batch_calls": 53,
+        "prefill_batch_rows": 55,
+        "prefill_tokens": 1252,
+        "mean_prefill_batch": 1.038,
+        "peak_prefill_batch": 2,
+        "scalar_prefill_calls": 51,
+        "ttft_ms": 2145.5,
+        "tpot_ms": 409.6
+      }
+    }
+  ],
+  "after": {
+    "requests": 53,
+    "active": 0,
+    "queued": 0,
+    "last_batch": 1,
+    "peak_batch": 2,
+    "batch_calls": 601,
+    "batch_rows": 629,
+    "mean_decode_batch": 1.047,
+    "scalar_decode_calls": 573,
+    "prefill_chunks": 55,
+    "prefill_batch_calls": 53,
+    "prefill_batch_rows": 55,
+    "prefill_tokens": 1252,
+    "mean_prefill_batch": 1.038,
+    "peak_prefill_batch": 2,
+    "scalar_prefill_calls": 51,
+    "ttft_ms": 2145.5,
+    "tpot_ms": 409.6
+  },
+  "backend_request_count_unchanged": true,
+  "backend_idle_after": true,
+  "final_metrics": {
+    "exit_code": 0,
+    "stdout": "{\"requests\":53,\"active\":0,\"queued\":0,\"last_batch\":1,\"peak_batch\":2,\"batch_calls\":601,\"batch_rows\":629,\"mean_decode_batch\":1.047,\"scalar_decode_calls\":573,\"prefill_chunks\":55,\"prefill_batch_calls\":53,\"prefill_batch_rows\":55,\"prefill_tokens\":1252,\"mean_prefill_batch\":1.038,\"peak_prefill_batch\":2,\"scalar_prefill_calls\":51,\"ttft_ms\":2145.5,\"tpot_ms\":409.6}",
+    "stderr": "Warning: Permanently added '192.168.122.143' (ED25519) to the list of known hosts.\r\n\nAuthorized users only. All activities may be monitored and reported.\n"
+  },
+  "final_idle": {
+    "requests": 53,
+    "active": 0,
+    "queued": 0,
+    "last_batch": 1,
+    "peak_batch": 2,
+    "batch_calls": 601,
+    "batch_rows": 629,
+    "mean_decode_batch": 1.047,
+    "scalar_decode_calls": 573,
+    "prefill_chunks": 55,
+    "prefill_batch_calls": 53,
+    "prefill_batch_rows": 55,
+    "prefill_tokens": 1252,
+    "mean_prefill_batch": 1.038,
+    "peak_prefill_batch": 2,
+    "scalar_prefill_calls": 51,
+    "ttft_ms": 2145.5,
+    "tpot_ms": 409.6
+  },
+  "finished_ns": 1789727769185264100,
+  "final_checks": {
+    "no_error": true,
+    "all_runs_pass": true,
+    "all_snapshots_idle": true,
+    "request_counts_present_and_unchanged": true,
+    "source_hashes_match": true,
+    "rng_hash_pinned": true
+  },
+  "pass": true
+}

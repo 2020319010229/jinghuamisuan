@@ -1,0 +1,53 @@
+{
+  "gpu": {
+    "nonce": "914d5ab639aaa7777e526464e1b9552b6dbf804ce7bf086ceec271f7a4f849d3",
+    "attest_result": true,
+    "token_len": 3055,
+    "claims": {
+      "iss": "https://nras.attestation.nvidia.com",
+      "sub": "NVIDIA-PLATFORM-ATTESTATION",
+      "x-nvidia-ver": "2.0",
+      "x-nvidia-overall-att-result": true,
+      "eat_nonce": "914d5ab639aaa7777e526464e1b9552b6dbf804ce7bf086ceec271f7a4f849d3",
+      "x-nvidia-gpu-driver-rim-schema-validated": true,
+      "x-nvidia-gpu-attestation-report-cert-chain-validated": true,
+      "x-nvidia-gpu-vbios-rim-signature-verified": true,
+      "x-nvidia-gpu-vbios-rim-fetched": true,
+      "x-nvidia-gpu-attestation-report-nonce-match": true,
+      "x-nvidia-gpu-vbios-index-no-conflict": true,
+      "x-nvidia-gpu-vbios-rim-cert-validated": true,
+      "x-nvidia-gpu-attestation-report-parsed": true,
+      "x-nvidia-gpu-driver-rim-signature-verified": true,
+      "x-nvidia-gpu-arch-check": true,
+      "x-nvidia-attestation-warning": null,
+      "x-nvidia-gpu-driver-version": "610.57.04",
+      "x-nvidia-gpu-driver-rim-measurements-available": true,
+      "x-nvidia-gpu-attestation-report-signature-verified": true,
+      "x-nvidia-gpu-driver-rim-fetched": true,
+      "x-nvidia-gpu-vbios-rim-schema-validated": true,
+      "x-nvidia-gpu-driver-rim-cert-validated": true,
+      "x-nvidia-gpu-vbios-version": "97.00.D9.00.35",
+      "x-nvidia-gpu-vbios-rim-measurements-available": true
+    },
+    "jwt_count": 3,
+    "policy_validation_error": "'overall-claims'",
+    "token_file": "/tmp/gpu_eat_token.txt"
+  },
+  "cpu": {
+    "tdx_guest_dev": true,
+    "tsm_configfs": true,
+    "cpuinfo_tdx_flag": true,
+    "dmesg_tdx": [
+      "[    0.000000] tdx: Guest detected",
+      "[    4.138159] process: using TDX aware idle routine",
+      "[    4.138159] Memory Encryption Features active: Intel TDX"
+    ],
+    "lsmod": [
+      "tdx_guest              12288  0",
+      "tsm                    16384  1 tdx_guest"
+    ],
+    "provider": "tdx_guest",
+    "quote_bytes": 0,
+    "generation": "1"
+  }
+}

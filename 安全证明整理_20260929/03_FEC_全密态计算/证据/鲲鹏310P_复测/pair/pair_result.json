@@ -1,0 +1,148 @@
+{
+  "run_id": "a8358b1b5d30bb7bf912",
+  "scope": "two clients in one host process, distinct DEKs and sessions; not OS tenant isolation",
+  "before": {
+    "requests": 31,
+    "active": 0,
+    "queued": 0,
+    "last_batch": 1,
+    "peak_batch": 2,
+    "batch_calls": 311,
+    "batch_rows": 325,
+    "mean_decode_batch": 1.045,
+    "scalar_decode_calls": 297,
+    "prefill_chunks": 32,
+    "prefill_batch_calls": 31,
+    "prefill_batch_rows": 32,
+    "prefill_tokens": 792,
+    "mean_prefill_batch": 1.032,
+    "peak_prefill_batch": 2,
+    "scalar_prefill_calls": 30,
+    "ttft_ms": 4470.5,
+    "tpot_ms": 397.0
+  },
+  "synthetic_prompts": [
+    "Compute 2 plus 3. Answer only the number.",
+    "Translate the word cat into French. Answer only the translated word."
+  ],
+  "serial": [
+    {
+      "client": 0,
+      "phase": "serial",
+      "session": "security-a8358b1b5d30bb7bf912-serial-0_eeb38ca0e531dc84269dcc0f87c068db",
+      "start_ns": 704806340578986,
+      "deltas": 16,
+      "done": true,
+      "end_ns": 704815592475184,
+      "synthetic_output": "Thinking Process:\n\n1.  **Analyze the Request:** The user wants",
+      "output_sha256": "d796a14fb2915e1ac5aaaad9134d63eca775de0a3255bac01d020ba6366a84cd"
+    },
+    {
+      "client": 1,
+      "phase": "serial",
+      "session": "security-a8358b1b5d30bb7bf912-serial-1_8b975a14646f30fd8ced78c4c656ca05",
+      "start_ns": 704815630753475,
+      "deltas": 16,
+      "done": true,
+      "end_ns": 704824957557793,
+      "synthetic_output": "Thinking Process:\n\n1.  **Analyze the Request:**\n    *",
+      "output_sha256": "a4bf318f01f7b329d2d8ce12d19ff432d7527c077e3137c5f29f82e0be8b6deb"
+    }
+  ],
+  "concurrent": [
+    {
+      "client": 0,
+      "phase": "concurrent",
+      "session": "security-a8358b1b5d30bb7bf912-concurrent-0_452cbd6d4a1eea738e1105987a727512",
+      "start_ns": 704824995316457,
+      "deltas": 16,
+      "done": true,
+      "end_ns": 704840119140233,
+      "synthetic_output": "Thinking Process:\n\n1.  **Analyze the Request:** The user wants",
+      "output_sha256": "d796a14fb2915e1ac5aaaad9134d63eca775de0a3255bac01d020ba6366a84cd"
+    },
+    {
+      "client": 1,
+      "phase": "concurrent",
+      "session": "security-a8358b1b5d30bb7bf912-concurrent-1_fedc1ae0f4f0df2781cef7ce964682ae",
+      "start_ns": 704825047021897,
+      "deltas": 16,
+      "done": true,
+      "end_ns": 704840520946115,
+      "synthetic_output": "Thinking Process:\n\n1.  **Analyze the Request:**\n    *",
+      "output_sha256": "a4bf318f01f7b329d2d8ce12d19ff432d7527c077e3137c5f29f82e0be8b6deb"
+    }
+  ],
+  "tests": [
+    {
+      "name": "all_four_streams_done_and_decrypted",
+      "passed": true
+    },
+    {
+      "name": "client_0_concurrent_matches_serial",
+      "passed": true
+    },
+    {
+      "name": "serial_client_0_response_rejects_other_key",
+      "passed": true
+    },
+    {
+      "name": "concurrent_client_0_response_rejects_other_key",
+      "passed": true
+    },
+    {
+      "name": "client_1_concurrent_matches_serial",
+      "passed": true
+    },
+    {
+      "name": "serial_client_1_response_rejects_other_key",
+      "passed": true
+    },
+    {
+      "name": "concurrent_client_1_response_rejects_other_key",
+      "passed": true
+    },
+    {
+      "name": "reference_outputs_distinguishable",
+      "passed": true
+    },
+    {
+      "name": "client_request_intervals_overlap",
+      "passed": true
+    },
+    {
+      "name": "exactly_four_backend_requests",
+      "passed": true
+    },
+    {
+      "name": "backend_idle_after",
+      "passed": true
+    }
+  ],
+  "concurrent_interval_overlap_ms": 15072.118336,
+  "after": {
+    "requests": 35,
+    "active": 0,
+    "queued": 0,
+    "last_batch": 1,
+    "peak_batch": 2,
+    "batch_calls": 357,
+    "batch_rows": 385,
+    "mean_decode_batch": 1.078,
+    "scalar_decode_calls": 329,
+    "prefill_chunks": 37,
+    "prefill_batch_calls": 35,
+    "prefill_batch_rows": 37,
+    "prefill_tokens": 882,
+    "mean_prefill_batch": 1.057,
+    "peak_prefill_batch": 2,
+    "scalar_prefill_calls": 33,
+    "ttft_ms": 5863.8,
+    "tpot_ms": 636.0
+  },
+  "backend_request_delta": 4,
+  "own_dek_cleanup": [
+    0,
+    0
+  ]
+}

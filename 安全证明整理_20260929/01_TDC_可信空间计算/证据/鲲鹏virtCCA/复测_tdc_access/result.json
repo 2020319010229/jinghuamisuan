@@ -1,0 +1,20 @@
+{
+  "started_ns": 1789727417458070300,
+  "passed": true,
+  "task": "TDC-04/07 非授权侧访问测试（宿主机 + CVM 内非特权用户）",
+  "scope": "read-only; single-tenant deployment has no second tenant, so host side and unprivileged user are exercised instead",
+  "host_exit": 0,
+  "cvm_exit": 0,
+  "checks": {
+    "host_no_device_node": true,
+    "host_npu_smi_unusable": true,
+    "host_no_devdrv": true,
+    "host_bar_read_zero": true,
+    "host_vfio_pci": true,
+    "iommu_one_device_per_group": true,
+    "cvm_unprivileged_denied": true,
+    "cvm_server_has_no_npu": true
+  },
+  "note": "跨租户越权未实测：本环境单租户。宿主侧与非特权用户两类非授权侧不等同于完整多租户隔离证明。",
+  "finished_ns": 1789727439374796100
+}

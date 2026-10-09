@@ -1,0 +1,219 @@
+{
+  "started_ns": 1789727790172013600,
+  "passed": true,
+  "task": "FEC-08 异常处理与安全回退（故障注入）",
+  "scope": "independent process, engine sources copied out of the live tree; production engine untouched; device weight corruption is reverted",
+  "sources": {
+    "security_fault_injection.c": "58c4bcd495c63e021be969608a1e76c3330f0809833de4c34651db3ca53c53a5",
+    "security_fault_getrandom.c": "0bad051df5e0e5c619cb99b6b50cb40e27c8f4e8f75581922fe7baeed552ee49"
+  },
+  "steps": [
+    {
+      "name": "metrics_before",
+      "exit_code": 0,
+      "stdout": "{\"requests\":53,\"active\":0,\"queued\":0,\"last_batch\":1,\"peak_batch\":2,\"batch_calls\":601,\"batch_rows\":629,\"mean_decode_batch\":1.047,\"scalar_decode_calls\":573,\"prefill_chunks\":55,\"prefill_batch_calls\":53,\"prefill_batch_rows\":55,\"prefill_tokens\":1252,\"mean_prefill_batch\":1.038,\"peak_prefill_batch\":2,\"scalar_prefill_calls\":51,\"ttft_ms\":2145.5,\"tpot_ms\":409.6}",
+      "stderr": "Warning: Permanently added '192.168.122.143' (ED25519) to the list of known hosts.\r\n\nAuthorized users only. All activities may be monitored and reported.\n"
+    },
+    {
+      "name": "container_dir",
+      "exit_code": 0,
+      "stdout": "/tmp/otp-security-fault.UxEoWS\n",
+      "stderr": "Warning: Permanently added '192.168.122.143' (ED25519) to the list of known hosts.\r\n\nAuthorized users only. All activities may be monitored and reported.\n"
+    },
+    {
+      "name": "stage",
+      "exit_code": 0,
+      "stdout": "/tmp/otp-security-fault-stage.mFF1UX\n",
+      "stderr": "Warning: Permanently added '192.168.122.143' (ED25519) to the list of known hosts.\r\n\nAuthorized users only. All activities may be monitored and reported.\n"
+    },
+    {
+      "name": "copy_engine_sources",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "Warning: Permanently added '192.168.122.143' (ED25519) to the list of known hosts.\r\n\nAuthorized users only. All activities may be monitored and reported.\n"
+    },
+    {
+      "name": "engine_source_hash",
+      "exit_code": 0,
+      "stdout": "b6e0afa3d5c62d830bf071dc5974774aff3098441572be6e400f7c65c3aeba24  /tmp/otp-security-fault.UxEoWS/q8_ops.c\n",
+      "stderr": "Warning: Permanently added '192.168.122.143' (ED25519) to the list of known hosts.\r\n\nAuthorized users only. All activities may be monitored and reported.\n"
+    },
+    {
+      "name": "copy_security_fault_injection.c",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "Warning: Permanently added '192.168.122.143' (ED25519) to the list of known hosts.\r\n\nAuthorized users only. All activities may be monitored and reported.\n"
+    },
+    {
+      "name": "copy_security_fault_getrandom.c",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "Warning: Permanently added '192.168.122.143' (ED25519) to the list of known hosts.\r\n\nAuthorized users only. All activities may be monitored and reported.\n"
+    },
+    {
+      "name": "compile_shim",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "Warning: Permanently added '192.168.122.143' (ED25519) to the list of known hosts.\r\n\nAuthorized users only. All activities may be monitored and reported.\n"
+    },
+    {
+      "name": "compile_probe",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "Warning: Permanently added '192.168.122.143' (ED25519) to the list of known hosts.\r\n\nAuthorized users only. All activities may be monitored and reported.\n"
+    },
+    {
+      "name": "run_cases",
+      "exit_code": 0,
+      "stdout": "bserved\": \"rc=-1\"},\n    {\"case\": \"device_corrupt_M1\", \"passed\": true, \"expected\": \"detected and corrected on trusted CPU\", \"observed\": \"rc=0 col0_maxdiff=2.98247e-05 (corrected back to CPU value)\"},\n    {\"case\": \"device_corrupt_M4_silent\", \"passed\": true, \"expected\": \"reproduce: batch path does not cross-check\", \"observed\": \"rc=0 col0_maxdiff=564.015 -> wrong result returned as success\"},\n    {\"case\": \"restore_check_M4\", \"passed\": true, \"expected\": \"device weight restored, output matches again\", \"observed\": \"rc=0 col0_maxdiff=2.98247e-05\"},\n    {\"case\": \"csprng_failure\", \"passed\": true, \"expected\": \"abort (rc!=0), no unmasked computation\", \"observed\": \"rc=-1 (getrandom forced to fail)\"},\n    {\"case\": \"recover_after_csprng\", \"passed\": true, \"expected\": \"normal operation resumes once the source works\", \"observed\": \"rc=0 col0_maxdiff=2.98247e-05\"}\n  ]\n}\nEXIT=0\n----STDERR----\n[env] weight model.language_model.layers.3.self_attn.q_proj N=8192 K=2048\nrns tiling: cores=16 M=1 N=8192 Ka=2048 Kb=2048 single=(1,512,2048) base=(16,256,128)\n[case] baseline_M1              PASS  rc=0 col0_maxdiff=2.98247e-05\nrns tiling: cores=16 M=1 N=8192 Ka=2048 Kb=2048 single=(1,512,2048) base=(16,256,128)\n[case] baseline_M4              PASS  rc=0 col0_maxdiff=2.98247e-05\n[rns] K must be /32 and N /16 (K=2047 N=8192)\n[case] shape_K_not_mult32       PASS  rc=-1\n[rns] K must be /32 and N /16 (K=2048 N=8191)\n[case] shape_N_not_mult16       PASS  rc=-1\n[case] unsupported_split        PASS  rc=-1\n[rns] corrected 1 Cube/CRT mismatches (batch=1 K=2048 N=8192 first_flat=0)\n[case] device_corrupt_M1        PASS  rc=0 col0_maxdiff=2.98247e-05 (corrected back to CPU value)\n[case] device_corrupt_M4_silent PASS  rc=0 col0_maxdiff=564.015 -> wrong result returned as success\n[env] device weight restored\n[case] restore_check_M4         PASS  rc=0 col0_maxdiff=2.98247e-05\n[case] csprng_failure           PASS  rc=-1 (getrandom forced to fail)\n[case] recover_after_csprng     PASS  rc=0 col0_maxdiff=2.98247e-05\n",
+      "stderr": "Warning: Permanently added '192.168.122.143' (ED25519) to the list of known hosts.\r\n\nAuthorized users only. All activities may be monitored and reported.\n"
+    },
+    {
+      "name": "disarm",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "Warning: Permanently added '192.168.122.143' (ED25519) to the list of known hosts.\r\n\nAuthorized users only. All activities may be monitored and reported.\n"
+    },
+    {
+      "name": "metrics_after",
+      "exit_code": 0,
+      "stdout": "{\"requests\":53,\"active\":0,\"queued\":0,\"last_batch\":1,\"peak_batch\":2,\"batch_calls\":601,\"batch_rows\":629,\"mean_decode_batch\":1.047,\"scalar_decode_calls\":573,\"prefill_chunks\":55,\"prefill_batch_calls\":53,\"prefill_batch_rows\":55,\"prefill_tokens\":1252,\"mean_prefill_batch\":1.038,\"peak_prefill_batch\":2,\"scalar_prefill_calls\":51,\"ttft_ms\":2145.5,\"tpot_ms\":409.6}",
+      "stderr": "Warning: Permanently added '192.168.122.143' (ED25519) to the list of known hosts.\r\n\nAuthorized users only. All activities may be monitored and reported.\n"
+    },
+    {
+      "name": "engine_health",
+      "exit_code": 0,
+      "stdout": "{\"status\":\"ok\",\"mode\":\"shannon_rns_otp\",\"devices\":2,\"scheduler\":\"continuous_batching\",\"slots\":2,\"batch_wait_us\":100000,\"scalar_mode\":1,\"active\":0,\"queued\":0}",
+      "stderr": "Warning: Permanently added '192.168.122.143' (ED25519) to the list of known hosts.\r\n\nAuthorized users only. All activities may be monitored and reported.\n"
+    },
+    {
+      "name": "cleanup",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "Warning: Permanently added '192.168.122.143' (ED25519) to the list of known hosts.\r\n\nAuthorized users only. All activities may be monitored and reported.\n"
+    },
+    {
+      "name": "cleanup_stage",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "Warning: Permanently added '192.168.122.143' (ED25519) to the list of known hosts.\r\n\nAuthorized users only. All activities may be monitored and reported.\n"
+    }
+  ],
+  "metrics_before": {
+    "requests": 53,
+    "active": 0,
+    "queued": 0,
+    "last_batch": 1,
+    "peak_batch": 2,
+    "batch_calls": 601,
+    "batch_rows": 629,
+    "mean_decode_batch": 1.047,
+    "scalar_decode_calls": 573,
+    "prefill_chunks": 55,
+    "prefill_batch_calls": 53,
+    "prefill_batch_rows": 55,
+    "prefill_tokens": 1252,
+    "mean_prefill_batch": 1.038,
+    "peak_prefill_batch": 2,
+    "scalar_prefill_calls": 51,
+    "ttft_ms": 2145.5,
+    "tpot_ms": 409.6
+  },
+  "tested_engine_source_sha256": "b6e0afa3d5c62d830bf071dc5974774aff3098441572be6e400f7c65c3aeba24",
+  "raw_tail": "[st35] 10 个分片, 共 93951 个张量\n{\n  \"pass\": 10,\n  \"fail\": 0,\n  \"cases\": [\n    {\"case\": \"baseline_M1\", \"passed\": true, \"expected\": \"rc=0 and matches CPU reference\", \"observed\": \"rc=0 col0_maxdiff=2.98247e-05\"},\n    {\"case\": \"baseline_M4\", \"passed\": true, \"expected\": \"rc=0 and matches CPU reference\", \"observed\": \"rc=0 col0_maxdiff=2.98247e-05\"},\n    {\"case\": \"shape_K_not_mult32\", \"passed\": true, \"expected\": \"abort (rc!=0)\", \"observed\": \"rc=-1\"},\n    {\"case\": \"shape_N_not_mult16\", \"passed\": true, \"expected\": \"abort (rc!=0)\", \"observed\": \"rc=-1\"},\n    {\"case\": \"unsupported_split\", \"passed\": true, \"expected\": \"abort (rc!=0)\", \"observed\": \"rc=-1\"},\n    {\"case\": \"device_corrupt_M1\", \"passed\": true, \"expected\": \"detected and corrected on trusted CPU\", \"observed\": \"rc=0 col0_maxdiff=2.98247e-05 (corrected back to CPU value)\"},\n    {\"case\": \"device_corrupt_M4_silent\", \"passed\": true, \"expected\": \"reproduce: batch path does not cross-check\", \"observed\": \"rc=0 col0_maxdiff=564.015 -> wrong result returned as success\"},\n    {\"case\": \"restore_check_M4\", \"passed\": true, \"expected\": \"device weight restored, output matches again\", \"observed\": \"rc=0 col0_maxdiff=2.98247e-05\"},\n    {\"case\": \"csprng_failure\", \"passed\": true, \"expected\": \"abort (rc!=0), no unmasked computation\", \"observed\": \"rc=-1 (getrandom forced to fail)\"},\n    {\"case\": \"recover_after_csprng\", \"passed\": true, \"expected\": \"normal operation resumes once the source works\", \"observed\": \"rc=0 col0_maxdiff=2.98247e-05\"}\n  ]\n}\nEXIT=0\n----STDERR----\n[env] weight model.language_model.layers.3.self_attn.q_proj N=8192 K=2048\nrns tiling: cores=16 M=1 N=8192 Ka=2048 Kb=2048 single=(1,512,2048) base=(16,256,128)\n[case] baseline_M1              PASS  rc=0 col0_maxdiff=2.98247e-05\nrns tiling: cores=16 M=1 N=8192 Ka=2048 Kb=2048 single=(1,512,2048) base=(16,256,128)\n[case] baseline_M4              PASS  rc=0 col0_maxdiff=2.98247e-05\n[rns] K must be /32 and N /16 (K=2047 N=8192)\n[case] shape_K_not_mult32       PASS  rc=-1\n[rns] K must be /32 and N /16 (K=2048 N=8191)\n[case] shape_N_not_mult16       PASS  rc=-1\n[case] unsupported_split        PASS  rc=-1\n[rns] corrected 1 Cube/CRT mismatches (batch=1 K=2048 N=8192 first_flat=0)\n[case] device_corrupt_M1        PASS  rc=0 col0_maxdiff=2.98247e-05 (corrected back to CPU value)\n[case] device_corrupt_M4_silent PASS  rc=0 col0_maxdiff=564.015 -> wrong result returned as success\n[env] device weight restored\n[case] restore_check_M4         PASS  rc=0 col0_maxdiff=2.98247e-05\n[case] csprng_failure           PASS  rc=-1 (getrandom forced to fail)\n[case] recover_after_csprng     PASS  rc=0 col0_maxdiff=2.98247e-05\n",
+  "cases": [
+    {
+      "case": "baseline_M1",
+      "passed": true,
+      "expected": "rc=0 and matches CPU reference",
+      "observed": "rc=0 col0_maxdiff=2.98247e-05"
+    },
+    {
+      "case": "baseline_M4",
+      "passed": true,
+      "expected": "rc=0 and matches CPU reference",
+      "observed": "rc=0 col0_maxdiff=2.98247e-05"
+    },
+    {
+      "case": "shape_K_not_mult32",
+      "passed": true,
+      "expected": "abort (rc!=0)",
+      "observed": "rc=-1"
+    },
+    {
+      "case": "shape_N_not_mult16",
+      "passed": true,
+      "expected": "abort (rc!=0)",
+      "observed": "rc=-1"
+    },
+    {
+      "case": "unsupported_split",
+      "passed": true,
+      "expected": "abort (rc!=0)",
+      "observed": "rc=-1"
+    },
+    {
+      "case": "device_corrupt_M1",
+      "passed": true,
+      "expected": "detected and corrected on trusted CPU",
+      "observed": "rc=0 col0_maxdiff=2.98247e-05 (corrected back to CPU value)"
+    },
+    {
+      "case": "device_corrupt_M4_silent",
+      "passed": true,
+      "expected": "reproduce: batch path does not cross-check",
+      "observed": "rc=0 col0_maxdiff=564.015 -> wrong result returned as success"
+    },
+    {
+      "case": "restore_check_M4",
+      "passed": true,
+      "expected": "device weight restored, output matches again",
+      "observed": "rc=0 col0_maxdiff=2.98247e-05"
+    },
+    {
+      "case": "csprng_failure",
+      "passed": true,
+      "expected": "abort (rc!=0), no unmasked computation",
+      "observed": "rc=-1 (getrandom forced to fail)"
+    },
+    {
+      "case": "recover_after_csprng",
+      "passed": true,
+      "expected": "normal operation resumes once the source works",
+      "observed": "rc=0 col0_maxdiff=2.98247e-05"
+    }
+  ],
+  "pass_count": 10,
+  "fail_count": 0,
+  "metrics_after": {
+    "requests": 53,
+    "active": 0,
+    "queued": 0,
+    "last_batch": 1,
+    "peak_batch": 2,
+    "batch_calls": 601,
+    "batch_rows": 629,
+    "mean_decode_batch": 1.047,
+    "scalar_decode_calls": 573,
+    "prefill_chunks": 55,
+    "prefill_batch_calls": 53,
+    "prefill_batch_rows": 55,
+    "prefill_tokens": 1252,
+    "mean_prefill_batch": 1.038,
+    "peak_prefill_batch": 2,
+    "scalar_prefill_calls": 51,
+    "ttft_ms": 2145.5,
+    "tpot_ms": 409.6
+  },
+  "backend_requests_unchanged": true,
+  "backend_idle_after": true,
+  "engine_healthz_after": "{\"status\":\"ok\",\"mode\":\"shannon_rns_otp\",\"devices\":2,\"scheduler\":\"continuous_batching\",\"slots\":2,\"batch_wait_us\":100000,\"scalar_mode\":1,\"active\":0,\"queued\":0}",
+  "findings": {
+    "malformed_request_aborts": true,
+    "csprng_failure_aborts": true,
+    "single_row_detects_device_fault": true,
+    "batch_path_silent_on_device_fault": true,
+    "device_weight_restored": true
+  },
+  "finished_ns": 1789727804928438600
+}

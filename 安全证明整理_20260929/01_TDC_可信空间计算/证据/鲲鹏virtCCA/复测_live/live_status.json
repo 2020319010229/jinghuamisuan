@@ -1,0 +1,54 @@
+{
+  "backend_health": {
+    "exit_code": 0,
+    "stdout": "{\"status\":\"ok\",\"mode\":\"shannon_rns_otp\",\"devices\":2,\"scheduler\":\"continuous_batching\",\"slots\":2,\"batch_wait_us\":100000,\"scalar_mode\":1,\"active\":0,\"queued\":0}",
+    "stderr": "Warning: Permanently added '192.168.122.143' (ED25519) to the list of known hosts.\r\n\nAuthorized users only. All activities may be monitored and reported.\n"
+  },
+  "gateway_health": {
+    "exit_code": 0,
+    "stdout": "{\"status\":\"ok\",\"tee\":\"Kunpeng virtCCA\",\"backend\":{\"status\":\"ok\",\"mode\":\"shannon_rns_otp\",\"devices\":2,\"replicas\":1,\"backend_capacity\":2,\"inflight_requests\":0,\"total_request_capacity\":2,\"ready_request_slots\":2}}",
+    "stderr": "Warning: Permanently added '192.168.122.143' (ED25519) to the list of known hosts.\r\n\nAuthorized users only. All activities may be monitored and reported.\n"
+  },
+  "cvm_health": {
+    "exit_code": 0,
+    "stdout": "{\"code\":0,\"data\":{\"tpot\":0.0,\"ttft\":0.0},\"message\":\"success\",\"request_id\":\"4ea66c3c29445b7543909c1b\"}\n",
+    "stderr": "Warning: Permanently added '192.168.122.143' (ED25519) to the list of known hosts.\r\n\nAuthorized users only. All activities may be monitored and reported.\n"
+  },
+  "metrics": {
+    "exit_code": 0,
+    "stdout": "{\"requests\":54,\"active\":0,\"queued\":0,\"last_batch\":0,\"peak_batch\":2,\"batch_calls\":601,\"batch_rows\":629,\"mean_decode_batch\":1.047,\"scalar_decode_calls\":573,\"prefill_chunks\":56,\"prefill_batch_calls\":54,\"prefill_batch_rows\":56,\"prefill_tokens\":1276,\"mean_prefill_batch\":1.037,\"peak_prefill_batch\":2,\"scalar_prefill_calls\":52,\"ttft_ms\":3265.8,\"tpot_ms\":0.0}",
+    "stderr": "Warning: Permanently added '192.168.122.143' (ED25519) to the list of known hosts.\r\n\nAuthorized users only. All activities may be monitored and reported.\n"
+  },
+  "server_hashes": {
+    "exit_code": 0,
+    "stdout": "4b4b32d17397b2486d3304063d2dc83af5134da7a80664b5b32fcf9d6be6bb7b  /opt/cvm/cvm_server/generation.py\n3f903badf8682825581cd01ac32b970763dbeb21c23555c7d5ed8938225ab5c7  /opt/cvm/cvm_server/replay.py\na68505bc0d47b6bf42e3f7543802005ce4311d0a218e2b9ec27fc3f9f191189c  /opt/cvm/cvm_server/request_auth.py\nfbdfd206dd0186f5f451e982c65032fde3ad3696e47f92edadf9cd2eab324319  /opt/cvm/cvm_server/authenticated_replay.py\n",
+    "stderr": "Warning: Permanently added '192.168.122.143' (ED25519) to the list of known hosts.\r\n\nAuthorized users only. All activities may be monitored and reported.\n"
+  },
+  "engine_process": {
+    "exit_code": 0,
+    "stdout": "[{\"pid\": \"12\", \"exe\": \"/opt/otp35/bin/serve35_cb\", \"sha256\": \"e015292cce43fb9cb43851f1b9d2b4e0b82a8769a069d37a70cba0a122309de0\"}]\n",
+    "stderr": "Warning: Permanently added '192.168.122.143' (ED25519) to the list of known hosts.\r\n\nAuthorized users only. All activities may be monitored and reported.\n"
+  },
+  "replay_metadata": {
+    "exit_code": 0,
+    "stdout": "{\"exists\": true, \"parent_mode\": \"0o700\", \"mode\": \"0o600\", \"rows\": 3}\n",
+    "stderr": "Warning: Permanently added '192.168.122.143' (ED25519) to the list of known hosts.\r\n\nAuthorized users only. All activities may be monitored and reported.\n"
+  },
+  "sdk_hashes": {
+    "exit_code": 0,
+    "stdout": "c91ffba22ac2a12cd8f164027b94550f7f900ea07e8d0ca204a9d0543c5c782f  /root/client/client.py\nc83604c68e1ba22e4de6fb5c14eacd68a3b3fa7723255c9d9706ad62e485c9ea  /root/client/utils/kunpeng_attestation.py\na68505bc0d47b6bf42e3f7543802005ce4311d0a218e2b9ec27fc3f9f191189c  /root/client/utils/request_auth.py\n",
+    "stderr": ""
+  },
+  "cvm-server": {
+    "running": true,
+    "status": "running",
+    "started_at": "2026-09-18T02:56:47.94250324Z",
+    "restart_count": 0
+  },
+  "otp-c35-cb": {
+    "running": true,
+    "status": "running",
+    "started_at": "2026-09-18T02:47:13.562586Z",
+    "restart_count": 0
+  }
+}

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>安全实验复测报告</title>
+<style>
+:root{--ink:#16181d;--ink2:#3d434e;--ink3:#6b7280;--line:#e3e6ea;
+  --pass:#1d7a46;--cond:#9a6700;--fail:#b3261e;--accent:#1a4fa0;--box:#f7f8fa}
+*{box-sizing:border-box}
+body{margin:0;background:#fff;color:var(--ink);
+  font-family:"Source Han Sans SC","Noto Sans CJK SC","Microsoft YaHei","PingFang SC",-apple-system,"Segoe UI",sans-serif;
+  font-size:15.5px;line-height:1.8}
+.wrap{max-width:1020px;margin:0 auto;padding:0 28px 100px}
+header.top{border-bottom:3px solid var(--ink);padding:44px 0 20px}
+header.top h1{font-size:28px;margin:0 0 8px}
+header.top .sub{color:var(--ink2);font-size:14.5px}
+header.top .meta{margin-top:12px;color:var(--ink3);font-size:13.5px;border-top:1px solid var(--line);padding-top:10px}
+h2{font-size:21px;margin:48px 0 6px;padding-bottom:9px;border-bottom:2px solid var(--ink)}
+h3{font-size:16.5px;margin:26px 0 6px}
+p{margin:9px 0}
+code,.mono{font-family:"Cascadia Mono",Consolas,monospace;font-size:13px;background:#eef1f4;
+  padding:1px 5px;border-radius:3px;color:#24303f}
+.lead{font-size:16px;color:var(--ink2)}
+.v{display:inline-block;font-size:12.5px;font-weight:700;padding:2px 10px;border-radius:12px;color:#fff;margin-right:8px}
+.v-pass{background:var(--pass)} .v-cond{background:var(--cond)} .v-fail{background:var(--fail)}
+.data{margin:13px 0;border:1px solid var(--line);border-radius:5px;overflow:hidden}
+.data .row{display:flex;border-bottom:1px solid #eef1f4;font-size:14.2px}
+.data .row:last-child{border-bottom:0}
+.data .row>div{padding:6px 11px}
+.data .row>div:nth-child(1){flex:0 0 190px;background:#f7f9fb;color:#3d434e;border-right:1px solid #eef1f4}
+.data .row>div:nth-child(2){flex:1;border-right:1px solid #eef1f4}
+.data .row>div:nth-child(3){flex:1;border-right:1px solid #eef1f4}
+.data .row>div:nth-child(4){flex:0 0 90px;text-align:center}
+.data .row.h>div{background:#eef2f6;font-weight:700;color:#24303f}
+.box{background:var(--box);border-left:4px solid #c3c9d2;padding:12px 16px;margin:14px 0;border-radius:0 4px 4px 0}
+.box.warn{background:#fdf6ec;border-left-color:#b3801e}
+.box.good{background:#f2f8f5;border-left-color:#2f7d54}
+.box b.t{display:block;margin-bottom:4px}
+.ok{color:var(--pass);font-weight:700} .no{color:var(--fail);font-weight:700}
+.num{font-family:"Cascadia Mono",Consolas,monospace;font-weight:600}
+ul{margin:9px 0 9px 22px;padding:0} li{margin:4px 0}
+.note{font-size:13.5px;color:var(--ink3);border-top:1px solid var(--line);margin-top:26px;padding-top:10px}
+@media print{body{font-size:11pt}.data,.box{break-inside:avoid}h2{break-after:avoid}.wrap{max-width:none;padding:0}}
+@media (max-width:820px){.data .row{flex-direction:column}.data .row>div{flex:none!important;border-right:0!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <h1>安全实验复测报告</h1>
+  <div class="sub">全部实验重跑一遍，逐项核对是否重现首轮结论</div>
+  <div class="meta">
+    2026-09-18 · 首轮 <span class="mono">security_full_20260918</span> · 复测 <span class="mono">security_recheck_20260918</span> ·
+    鲲鹏 920 + virtCCA 机密虚机 + 双 Ascend 310P · 引擎 <span class="mono">e015292c…</span>
+  </div>
+</header>
+
+<h2>一、结论</h2>
+<p class="lead"><b>全部 21 项实验重跑完毕，21 项通过；与首轮逐项对比，16 项一致、1 项有差异且已查明非回归。</b>首轮的安全结论全部重现。</p>
+
+<div class="data">
+  <div class="row h"><div>维度</div><div>结果</div><div>说明</div><div>判定</div></div>
+  <div class="row"><div>执行</div><div>21 / 21 通过</div><div>含 3 项因编排器缺陷首跑失败、修复后重跑</div><div><span class="ok">✔</span></div></div>
+  <div class="row"><div>与首轮一致性</div><div>16 一致 / 1 差异</div><div>差异项为内存扫描覆盖率，已查明</div><div><span class="ok">✔</span></div></div>
+  <div class="row"><div>生产影响</div><div>无</div><div>后端全程空闲，服务健康未变</div><div><span class="ok">✔</span></div></div>
+  <div class="row"><div>新发现</div><div>1 处表述错误</div><div>首轮"宿主未装 npu-smi"与证据不符</div><div><span class="no">需改</span></div></div>
+</div>
+
+<div class="box good">
+<b class="t">最核心的一条重现了：宿主读不到机密虚机内存</b>
+三类标记（运行时内存、宿主、磁盘 I/O）在 guest 内存中<b>命中全部为 0</b>，与首轮相同；<br>
+两个阳性对照同样成立——宿主搜自己进程<b>命中 4</b>、CVM 内自搜<b>命中 4</b>，证明搜索方法有效且标记确实驻留；<br>
+两轮<b>已读字节完全相同</b>（<span class="num">140,000,624,640</span>），全程无 errno 错误。
+</div>
+
+<h2>二、逐项对比</h2>
+<p>时间戳、run_id、nonce、临时目录名每轮必然不同，逐字节比整份 JSON 只会得到"全都不一致"的废结论。所以对比的是<b>关键指标</b>，由 <span class="mono">security_compare_batches.py</span> 自动提取。</p>
+<div class="data">
+  <div class="row h"><div>测试项</div><div>首轮</div><div>复测</div><div>判定</div></div>
+  <div class="row"><div>证明负例</div><div>7/7</div><div>7/7</div><div><span class="ok">一致</span></div></div>
+  <div class="row"><div>8000 入口抓包</div><div>23/23</div><div>23/23</div><div><span class="ok">一致</span></div></div>
+  <div class="row"><div>8101 入口抓包</div><div>11/11</div><div>11/11</div><div><span class="ok">一致</span></div></div>
+  <div class="row"><div>并发跨密钥隔离</div><div>11/11，后端请求增量 4</div><div>11/11，后端请求增量 4</div><div><span class="ok">一致</span></div></div>
+  <div class="row"><div>明密文双入口</div><div>3 轮，逐轮输出相同</div><div>3 轮，逐轮输出相同</div><div><span class="ok">一致</span></div></div>
+  <div class="row"><div>旁路残留</div><div>通过</div><div>通过</div><div><span class="ok">一致</span></div></div>
+  <div class="row"><div>运行时不可降级</div><div>7 种降级尝试全部无效</div><div>7 种降级尝试全部无效</div><div><span class="ok">一致</span></div></div>
+  <div class="row"><div>CDC 平台能力</div><div>work-mode/rootkey/tls-cert 均不支持</div><div>work-mode/rootkey/tls-cert 均不支持</div><div><span class="ok">一致</span></div></div>
+  <div class="row"><div>非授权侧访问</div><div>BAR 读 0 字节、IOMMU 每组 1 设备</div><div>BAR 读 0 字节、IOMMU 每组 1 设备</div><div><span class="ok">一致</span></div></div>
+  <div class="row"><div>取消传播</div><div>通过，后端已停止</div><div>通过，后端已停止</div><div><span class="ok">一致</span></div></div>
+  <div class="row"><div>NPU 设备算例</div><div>通过，语义校验通过</div><div>通过，语义校验通过</div><div><span class="ok">一致</span></div></div>
+  <div class="row"><div>workspace 生命周期</div><div>通过</div><div>通过</div><div><span class="ok">一致</span></div></div>
+  <div class="row"><div>设备内存残留</div><div>2 轮均无残留，读路径有效</div><div>2 轮均无残留，读路径有效</div><div><span class="ok">一致</span></div></div>
+  <div class="row"><div>故障注入</div><div>10/10，批次静默缺口重现</div><div>10/10，批次静默缺口重现</div><div><span class="ok">一致</span></div></div>
+  <div class="row"><div><b>内存隔离全扫</b></div><div>覆盖 0.9716，标记 0 命中</div><div>覆盖 0.9712，标记 0 命中</div><div><span class="no">有差异</span></div></div>
+  <div class="row"><div>客户自验</div><div>10/10</div><div>10/10</div><div><span class="ok">一致</span></div></div>
+  <div class="row"><div>加密入口验收</div><div>17/17</div><div>17/17</div><div><span class="ok">一致</span></div></div>
+</div>
+
+<h3>唯一的差异项：内存扫描覆盖率</h3>
+<div class="data">
+  <div class="row h"><div>指标</div><div>首轮</div><div>复测</div><div>判定</div></div>
+  <div class="row"><div>三类标记命中</div><div>全部 0</div><div>全部 0</div><div><span class="ok">同</span></div></div>
+  <div class="row"><div>阳性对照（宿主自搜 / CVM 内自搜）</div><div>4 / 4</div><div>4 / 4</div><div><span class="ok">同</span></div></div>
+  <div class="row"><div>已读字节</div><div>140,000,624,640</div><div>140,000,624,640</div><div><span class="ok">同</span></div></div>
+  <div class="row"><div>errno 错误</div><div>无</div><div>无</div><div><span class="ok">同</span></div></div>
+  <div class="row"><div>guest 段数（考察）</div><div>634</div><div>641</div><div>差</div></div>
+  <div class="row"><div>覆盖率</div><div>0.971638</div><div>0.971243</div><div>差</div></div>
+  <div class="row"><div>结构性明文命中合计</div><div>245</div><div>274</div><div>差</div></div>
+</div>
+<p><b>差异是分母变了，不是结论变了。</b>两轮之间虚机一直在正常运行（后端请求数 28 → 54），内存映射自然有变动，考察段数从 634 变成 641，所以同样的已读字节算出来的覆盖率略低。<b>分子完全相同</b>。</p>
+<p><b>结构性明文 245 → 274 反而是佐证。</b>这个数本来就不稳定，随虚机继续运行而增加——它与本轮种植的任何标记都不重合（三类标记均 0 命中），说明首轮判断的"来源未定位、与种植标记无关"是对的，不能把它当成机密内存泄漏。</p>
+
+<h2>三、复测查出的问题</h2>
+
+<div class="box warn">
+<b class="t">首轮报告有一处说法与证据不符：宿主 npu-smi</b>
+首轮报告写"宿主<b>未装</b> npu-smi、无法查询"。但首轮证据里那一段<b>是空的</b>——按探针脚本的逻辑，空输出恰恰说明 <span class="mono">command -v npu-smi</span> 成功了（否则会打印 "not installed"）。<br><br>
+查实结果：宿主<b>装有</b> npu-smi（<span class="mono">/usr/local/sbin/npu-smi</span>，<span class="mono">/usr/local/Ascend</span> 也在），执行时<b>挂起并被 timeout 杀掉</b>（退出码 124），输出停在缓冲区里丢失，所以两轮都显示为空。<br><br>
+<b>安全结论不变</b>：宿主依然访问不到加速卡。而且"工具装着也用不了"比"没装"<b>更有说服力</b>——因为两张卡已被 vfio-pci 绑给虚机独占。<br>
+<b>已处理</b>：探针改为先落盘再读、显式记录安装路径与退出码；判据由"宿主未装 npu-smi"改为"宿主无法通过 npu-smi 访问设备"；相关报告表述需同步更正。
+</div>
+
+<div class="box">
+<b class="t">两处需要说明的差异（均非回归）</b>
+<b>一、故障注入的偏差数值不同。</b>批次静默缺口那条，首轮偏差 567.615、复测 564.015。这是<b>预期内</b>的——篡改造成的误差与每轮随机生成的 OTP 掩码相关，量级重现即可，不该逐位相同。对比比的是判据与计数，不比这个数值。<br><br>
+<b>二、编排器首跑两项失败。</b><span class="mono">firmware</span> 与 <span class="mono">live</span> 用 <span class="mono">--output</span> 写单个文件，而编排器没为它们建父目录。属编排器缺陷，已修并补跑，与被测系统无关。
+</div>
+
+<h2>四、生产环境未受影响</h2>
+<p>实验跑在<b>在线的生产服务</b>上，因此逐项记录了执行前后的后端状态。</p>
+<div class="data">
+  <div class="row h"><div>指标</div><div>复测开始前</div><div>复测结束后</div><div>判定</div></div>
+  <div class="row"><div>容器状态</div><div>cvm-server / otp-c35-cb 均 healthy</div><div>两者仍 healthy（Up 8 小时，未重启）</div><div><span class="ok">✔</span></div></div>
+  <div class="row"><div>引擎 healthz</div><div><span class="mono">status=ok, mode=shannon_rns_otp</span></div><div><span class="mono">status=ok, mode=shannon_rns_otp</span></div><div><span class="ok">✔</span></div></div>
+  <div class="row"><div>active / queued</div><div>0 / 0</div><div>0 / 0</div><div><span class="ok">✔</span></div></div>
+  <div class="row"><div>累计请求数</div><div>28</div><div>55（全部为本次测试请求）</div><div><span class="ok">✔</span></div></div>
+  <div class="row"><div>运行引擎二进制</div><div><span class="mono">e015292c…</span></div><div><span class="mono">e015292c…</span> 未变</div><div><span class="ok">✔</span></div></div>
+  <div class="row"><div>设备权重</div><div>—</div><div>故障注入篡改后已还原并复验</div><div><span class="ok">✔</span></div></div>
+</div>
+<p>碰设备的四项（<span class="mono">npu</span> / <span class="mono">workspace</span> / <span class="mono">dev_residue</span> / <span class="mono">fault</span>）执行前均确认后端空闲后才启动，没有触发跳过。全程<b>服务未中断、未重启、模式未变</b>。</p>
+
+<h2>五、复测怎么跑的</h2>
+<p>全部实验由一个编排器驱动，参数与首轮完全一致（从首轮的原始命令记录中还原）：</p>
+<pre class="mono" style="background:#f7f9fb;border:1px solid var(--line);border-radius:5px;padding:12px 14px;font-size:12.5px;overflow-x:auto">python scripts/security_rerun_all.py --output-dir results/security_recheck_20260918
+
+python scripts/security_compare_batches.py \
+    --baseline results/security_full_20260918 \
+    --recheck  results/security_recheck_20260918 \
+    --output   results/security_recheck_20260918/comparison.json</pre>
+
+<p>编排器内置三条生产保护：碰设备的实验执行前检查后端是否空闲，非空闲则<b>跳过而不是硬跑</b>；不在生产源码树内编译；不用非法指针启动 kernel。每项记录执行前后的后端请求数与空闲状态。</p>
+
+<div class="box">
+<b class="t">本轮同时完成的代码整理</b>
+把原先散在临时 shell 里的两项探针正式化，并新增编排与对比工具：
+<ul>
+<li><span class="mono">security_cdc_platform_check.py</span> —— CDC 平台能力核查（原为临时 shell）</li>
+<li><span class="mono">security_tdc_access_check.py</span> —— TDC-04 非授权侧访问（原为临时 shell）</li>
+<li><span class="mono">security_rerun_all.py</span> —— 全量复测编排器</li>
+<li><span class="mono">security_compare_batches.py</span> —— 两轮结果逐项对比</li>
+<li><span class="mono">README_SECURITY.md</span> —— 脚本说明，63 个文件分为现役 31 / 历史 36</li>
+</ul>
+</div>
+
+<h2>六、复测未覆盖的</h2>
+<p>三项需要外部条件，脚本无法覆盖，与首轮相同：</p>
+<div class="data">
+  <div class="row"><div>物理 PCIe 总线观测</div><div style="flex:1">无协议分析仪与探头</div><div style="flex:0 0 90px"></div></div>
+  <div class="row"><div>跨租户越权</div><div style="flex:1">单租户部署，没有第二个租户</div><div style="flex:0 0 90px"></div></div>
+  <div class="row"><div>纯明文引擎基线对照</div><div style="flex:1">需停服务切换引擎，须另开窗口</div><div style="flex:0 0 90px"></div></div>
+</div>
+<p>另外 <span class="mono">g05_third_party_mapping</span>（第三方材料映射）与 <span class="mono">i03_statement_review</span>（对外表述复核）是文档分析产出，不是实验，不在复测范围。</p>
+
+<p class="note">
+本报告对应证据批次 <span class="mono">otp_c35/results/security_recheck_20260918/</span>，逐项对比数据见同目录 <span class="mono">comparison.json</span>，执行记录见 <span class="mono">rerun_summary.json</span>。<br>
+所有结论限定于本次实际验证的环境与版本，属工程安全验证，不等同于形式化密码学证明或权威认证。
+</p>
+
+</div>
+</body>
+</html>

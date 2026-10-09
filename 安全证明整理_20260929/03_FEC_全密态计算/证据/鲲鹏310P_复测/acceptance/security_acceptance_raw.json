@@ -1,0 +1,277 @@
+{
+  "schema": "otp35b-security-acceptance-v1",
+  "run_started_epoch": 1789728390.7862732,
+  "run_finished_epoch": 1789728394.7756324,
+  "target": "http://127.0.0.1:8000",
+  "machine": {
+    "tee": "Kunpeng virtCCA",
+    "architecture": "aarch64",
+    "kernel": "6.6.0-98.0.0.103.oe2403sp2.aarch64",
+    "vcpus": 192,
+    "memory_gib": 129.22,
+    "engine": "C/CANN OTP RNS",
+    "model": "qwen3.5-35b-a3b-otp-c",
+    "quantization": "W8A8",
+    "parallelism": "TP=2 / MoE expert parallel",
+    "hardware": "2 x Ascend 310P 44GiB",
+    "devices": 2,
+    "backend_replicas": 1,
+    "scheduler": "least-loaded admission + continuous-batching state slots",
+    "cann": [],
+    "uptime_s": 28704
+  },
+  "summary": {
+    "passed": 17,
+    "failed": 0,
+    "total": 17,
+    "all_pass": true,
+    "findings": 1
+  },
+  "tests": [
+    {
+      "id": "S01",
+      "name": "服务健康与密态模式",
+      "passed": true,
+      "evidence": {
+        "http_status": 200,
+        "elapsed_ms": 3.969,
+        "response": {
+          "status": "ok",
+          "tee": "Kunpeng virtCCA",
+          "backend": {
+            "status": "ok",
+            "mode": "shannon_rns_otp",
+            "devices": 2,
+            "replicas": 1,
+            "backend_capacity": 2,
+            "inflight_requests": 0,
+            "total_request_capacity": 2,
+            "ready_request_slots": 2
+          }
+        }
+      },
+      "severity": ""
+    },
+    {
+      "id": "S02",
+      "name": "鲲鹏/双 Ascend 310P/TP2 运行身份",
+      "passed": true,
+      "evidence": {
+        "tee": "Kunpeng virtCCA",
+        "architecture": "aarch64",
+        "kernel": "6.6.0-98.0.0.103.oe2403sp2.aarch64",
+        "vcpus": 192,
+        "memory_gib": 129.22,
+        "engine": "C/CANN OTP RNS",
+        "model": "qwen3.5-35b-a3b-otp-c",
+        "quantization": "W8A8",
+        "parallelism": "TP=2 / MoE expert parallel",
+        "hardware": "2 x Ascend 310P 44GiB",
+        "devices": 2,
+        "backend_replicas": 1,
+        "scheduler": "least-loaded admission + continuous-batching state slots",
+        "cann": [],
+        "uptime_s": 28704
+      },
+      "severity": ""
+    },
+    {
+      "id": "S03",
+      "name": "密钥协商算法与公钥长度",
+      "passed": true,
+      "evidence": {
+        "algorithm": "X25519+HKDF-SHA256+AES-256-GCM",
+        "public_key_bytes": 32,
+        "public_key_sha256": "379a91599bbd4138e655e40d7e0a6e8087fa0ee7e521aefbf4561f7582cb8c48"
+      },
+      "severity": ""
+    },
+    {
+      "id": "S04",
+      "name": "测试窗口内服务公钥稳定",
+      "passed": true,
+      "evidence": {
+        "two_fetches_equal": true
+      },
+      "severity": ""
+    },
+    {
+      "id": "S05",
+      "name": "服务私钥文件权限",
+      "passed": true,
+      "evidence": {
+        "path": "/data/otp_c35/.tee_x25519.key",
+        "exists": true,
+        "size": 32,
+        "mode": "0o600"
+      },
+      "severity": ""
+    },
+    {
+      "id": "S06",
+      "name": "请求线上封装不含明文和推理字段",
+      "passed": true,
+      "evidence": {
+        "wire_fields": [
+          "ciphertext",
+          "client_public_key",
+          "nonce",
+          "version"
+        ],
+        "wire_bytes": 337,
+        "plaintext_hits": [],
+        "ciphertext_sha256": "dff7d9b9750d28fee763e83d6647addb5d9d26a0849eec5f3378a23178b11e58"
+      },
+      "severity": ""
+    },
+    {
+      "id": "S07",
+      "name": "4096 次请求 nonce 与密文唯一",
+      "passed": true,
+      "evidence": {
+        "samples": 4096,
+        "unique_nonces": 4096,
+        "unique_ciphertexts": 4096
+      },
+      "severity": ""
+    },
+    {
+      "id": "S08",
+      "name": "本地 AES-GCM 篡改与错误 AAD 拒绝",
+      "passed": true,
+      "evidence": {
+        "ciphertext_bitflip_rejected": true,
+        "wrong_aad_rejected": true
+      },
+      "severity": ""
+    },
+    {
+      "id": "S09",
+      "name": "在线密文篡改拒绝",
+      "passed": true,
+      "evidence": {
+        "http_status": 400,
+        "elapsed_ms": 1.079,
+        "error_sha256": "af423a04ae83683a41346d433395e2a3bbb511bbf5e4d423b5779630d9983450"
+      },
+      "severity": ""
+    },
+    {
+      "id": "S10",
+      "name": "协议版本/AAD 降级拒绝",
+      "passed": true,
+      "evidence": {
+        "http_status": 400,
+        "elapsed_ms": 0.888,
+        "reason_visible": true
+      },
+      "severity": ""
+    },
+    {
+      "id": "S11",
+      "name": "非法 nonce 长度拒绝",
+      "passed": true,
+      "evidence": {
+        "http_status": 400,
+        "elapsed_ms": 0.855,
+        "reason_visible": true
+      },
+      "severity": ""
+    },
+    {
+      "id": "S12",
+      "name": "非法 X25519 公钥长度拒绝",
+      "passed": true,
+      "evidence": {
+        "http_status": 400,
+        "elapsed_ms": 0.731,
+        "reason_visible": true
+      },
+      "severity": ""
+    },
+    {
+      "id": "S13",
+      "name": "端到端加密推理与加密响应可认证解密",
+      "passed": true,
+      "evidence": {
+        "http_status": 200,
+        "elapsed_s": 3.285,
+        "response_wire_fields": [
+          "ciphertext",
+          "nonce",
+          "version"
+        ],
+        "response_wire_has_choices": false,
+        "response_wire_has_content": false,
+        "finish_reason": "length",
+        "usage": {
+          "prompt_tokens": 24,
+          "completion_tokens": 1,
+          "total_tokens": 25
+        },
+        "decrypted_response_sha256": "dff63b26df3ed9341da2fd5c4276672821a7a6eb20f2ac5b3a5dfe4771a23f8b"
+      },
+      "severity": ""
+    },
+    {
+      "id": "S14",
+      "name": "同一 client public key + nonce 重放拒绝",
+      "passed": true,
+      "evidence": {
+        "http_status": 400,
+        "elapsed_ms": 1.121,
+        "reason_visible": true
+      },
+      "severity": ""
+    },
+    {
+      "id": "S15",
+      "name": "未知路由默认拒绝",
+      "passed": true,
+      "evidence": {
+        "expected_status": 404
+      },
+      "severity": ""
+    },
+    {
+      "id": "S16",
+      "name": "RNS CSPRNG 唯一性/均匀性/清零实测",
+      "passed": true,
+      "evidence": {
+        "returncode": 0,
+        "output": "CSPRNG masks=4096 width=256 unique=4096 mean=0.00012061 variance=0.0833057 zeroize=PASS\nRNS q=32749 samples=1048576 range=[0,32748] mean=16362.422 variance_ratio=0.999964\nRNS q=32719 samples=1048576 range=[0,32718] mean=16356.486 variance_ratio=1.001224\nRNS_MOD_UNIFORM_PASS rejection-sampled exact domains"
+      },
+      "severity": ""
+    },
+    {
+      "id": "S17",
+      "name": "RNS 掩码生成与清零代码路径",
+      "passed": true,
+      "evidence": {
+        "getrandom": true,
+        "rejection_sampling": true,
+        "secure_zero": true,
+        "rns_mode": true
+      },
+      "severity": ""
+    }
+  ],
+  "findings": [
+    {
+      "id": "F01",
+      "severity": "HIGH",
+      "name": "0.0.0.0 服务监听端口仍暴露明文推理路由",
+      "observed": true,
+      "evidence": {
+        "http_status": 400,
+        "elapsed_ms": 0.938
+      },
+      "recommendation": "生产入口关闭 /v1/chat/completions，或仅绑定 loopback/可信管理网并由 mTLS 反向代理限制；实际公网可达性还需结合边界防火墙确认。"
+    }
+  ],
+  "scope_notes": [
+    "本轮为非破坏性接口、密码协议、CSPRNG/RNS 与运行配置验证。",
+    "未执行 DoS、资源耗尽、固件攻击、物理攻击或微架构侧信道利用。",
+    "virtCCA 启动属性由宿主机 libvirt/QEMU 证据独立采集；远程证明 quote 未在本脚本验证。"
+  ]
+}

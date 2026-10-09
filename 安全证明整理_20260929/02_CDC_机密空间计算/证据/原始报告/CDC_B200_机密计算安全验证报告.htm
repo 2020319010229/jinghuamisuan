@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CDC 机密计算安全验证报告（b200 / Intel TDX + NVIDIA CC）</title>
+<style>
+  :root{
+    --ink:#1a1a1a; --ink2:#444; --muted:#6b7280;
+    --line:#d8dee9; --bg:#ffffff; --soft:#f6f8fa;
+    --pass:#137333; --passbg:#e6f4ea;
+    --fail:#b3261e; --failbg:#fce8e6;
+    --warn:#9a6700; --warnbg:#fff8c5;
+    --blue:#0b57d0; --bluebg:#e8f0fe;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"Segoe UI","Microsoft YaHei","PingFang SC",sans-serif;
+    font-size:16px;line-height:1.85}
+  .wrap{max-width:1000px;margin:0 auto;padding:48px 28px 96px}
+  header.title{border-bottom:3px solid var(--ink);padding-bottom:22px;margin-bottom:36px}
+  h1{font-size:29px;line-height:1.35;margin:0 0 12px;letter-spacing:-.3px}
+  .sub{color:var(--muted);font-size:15px}
+  h2{font-size:22px;margin:52px 0 16px;padding-bottom:9px;border-bottom:2px solid var(--line)}
+  h3{font-size:17px;margin:30px 0 10px}
+  p{margin:13px 0}
+  code{background:var(--soft);padding:2px 6px;border-radius:4px;
+       font-family:"Cascadia Mono",Consolas,monospace;font-size:.9em}
+  pre{background:var(--soft);border:1px solid var(--line);border-left:4px solid var(--blue);
+      padding:15px 17px;overflow-x:auto;border-radius:5px;font-size:13.5px;line-height:1.7;
+      font-family:"Cascadia Mono",Consolas,monospace}
+  table{border-collapse:collapse;width:100%;margin:20px 0;font-size:14.5px}
+  th,td{border:1px solid var(--line);padding:10px 12px;text-align:left;vertical-align:top}
+  th{background:var(--soft);font-weight:600}
+  tbody tr:nth-child(even){background:#fbfcfd}
+  .tag{display:inline-block;padding:2px 9px;border-radius:11px;font-size:12.5px;
+       font-weight:600;white-space:nowrap}
+  .t-pass{background:var(--passbg);color:var(--pass)}
+  .t-fail{background:var(--failbg);color:var(--fail)}
+  .t-warn{background:var(--warnbg);color:var(--warn)}
+  .t-info{background:var(--bluebg);color:var(--blue)}
+  .card{border:1px solid var(--line);border-radius:7px;padding:18px 20px;margin:20px 0;
+        background:var(--soft)}
+  .card.ok{border-left:5px solid var(--pass);background:var(--passbg)}
+  .card.bad{border-left:5px solid var(--fail);background:var(--failbg)}
+  .card.note{border-left:5px solid var(--warn);background:var(--warnbg)}
+  .card h4{margin:0 0 9px;font-size:15.5px}
+  .kpis{display:flex;flex-wrap:wrap;gap:14px;margin:24px 0}
+  .kpi{flex:1 1 170px;border:1px solid var(--line);border-radius:7px;padding:15px 17px;background:#fff}
+  .kpi .v{font-size:25px;font-weight:700;letter-spacing:-.5px;line-height:1.25}
+  .kpi .k{font-size:12.5px;color:var(--muted);margin-top:5px}
+  figure{margin:26px 0;text-align:center}
+  figcaption{font-size:13.5px;color:var(--muted);margin-top:10px}
+  ul,ol{padding-left:26px} li{margin:7px 0}
+  a{color:var(--blue)}
+  .foot{margin-top:60px;padding-top:18px;border-top:1px solid var(--line);
+        font-size:13px;color:var(--muted)}
+  @media print{ body{font-size:12pt} .wrap{padding:0} h2{page-break-after:avoid} }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="title">
+  <h1>CDC 机密计算安全验证报告<br>Intel TDX 机密虚拟机 + NVIDIA B200 CC 模式</h1>
+  <div class="sub">验证日期 2026-09-23 ~ 09-24 · 宿主 gpuhost（Xeon 8568Y+ 192核 / 1885 GB / 8×B200）· 对应三方案中的方案二「机密空间计算」</div>
+</header>
+
+<h2>一、一句话结论</h2>
+
+<div class="card ok">
+  <h4>已验证通过（核心安全主张成立）</h4>
+  <p>在 b200 机器上把 <strong>CC 模式的 B200 整卡透传进 Intel TDX 机密虚拟机</strong>，
+  CPU 内存加密（TDX）与 GPU 显存加密（Protected Memory）<strong>同时激活</strong>，
+  GPU 远程证明（NVIDIA NRAS）<strong>全链路通过</strong>。核心安全实验——宿主以 root
+  权限全量扫描 QEMU 进程 16.66 GB 内存寻找 Guest 私有内存中的明文标记——
+  <strong>0 命中</strong>（同期正控制 24105 命中，方法有效性已证）。</p>
+</div>
+
+<div class="card note">
+  <h4>必须如实披露的边界（不是缺陷，是机密计算的固有属性 + 环境缺口）</h4>
+  <ol>
+  <li><strong>I/O 路径宿主可见</strong>：实测捕获到 Guest 内 sudo 审计日志行
+  （含测试命令明文）出现在 virtio-blk 的共享 DMA 缓冲中。凡是 Guest 主动写入模拟设备
+  （磁盘、网络）的数据，宿主都能看到——这是 TDX 的设计内行为，不是破解。
+  保护这类数据靠的是传输层加密（如端到端加密信道），与内存加密互补。</li>
+  <li><strong>CPU 侧 Quote 签名未打通</strong>：TDREPORT 接口已通
+  （<code>/dev/tdx_guest</code> + configfs-tsm provider=tdx_guest），
+  但宿主未部署 QGS（Quote 生成服务），TD Quote 读出 0 字节。GPU 侧证明不受影响。</li>
+  <li>本报告为安全验证，性能数据（CC 模式下 matmul 1607 TFLOPS 等）仅作参考附于第七节。</li>
+  </ol>
+</div>
+
+<div class="kpis">
+  <div class="kpi"><div class="v">ON</div><div class="k">CVM 内 CC 状态（宿主同时为 OFF）</div></div>
+  <div class="kpi"><div class="v">177 GB</div><div class="k">受保护显存（非保护显存 0）</div></div>
+  <div class="kpi"><div class="v">PRODUCTION</div><div class="k">CC 环境（正式模式）</div></div>
+  <div class="kpi"><div class="v">0 / 16.66 GB</div><div class="k">宿主扫 QEMU 内存命中纯 canary</div></div>
+  <div class="kpi"><div class="v">通过</div><div class="k">GPU 远程证明（NRAS 全度量链）</div></div>
+</div>
+
+<h2>二、验证了什么：CDC 与本实验的关系</h2>
+
+<p>三方案中 CDC（机密空间计算）的安全主张是：<strong>CPU 与 GPU 都处于硬件 TEE 中，
+内存与显存都加密，两者之间的链路受保护，且能被远程证明</strong>。与之对照，
+TDC 只保证 CPU 侧隔离（GPU 明文可见），FEC 不要求 GPU 可信（卡上算密态数据）。</p>
+
+<p>b200 机器正好补上了此前缺失的 GPU-CC 硬件（此前在昇腾 310P3 上核查为
+「平台不具备能力」）。本报告逐项覆盖 CDC-01 ~ CDC-06：</p>
+
+<table>
+<thead><tr><th style="width:10%">编号</th><th style="width:24%">安全任务</th>
+<th style="width:12%">结论</th><th>关键证据</th></tr></thead>
+<tbody>
+<tr><td>CDC-01</td><td>平台具备 GPU-CC 与 CPU-TEE</td>
+<td><span class="tag t-pass">具备</span></td>
+<td>8×B200 <code>GPU CC capabilities: CC Capable</code>；Intel TDX BIOS 已启用
+（<code>virt/tdx: BIOS enabled: private KeyID range [32, 64)</code>，PAMT 7.9 GB）；
+libvirt <code>&lt;launchSecurity&gt;&lt;value&gt;tdx&lt;/value&gt;</code></td></tr>
+<tr><td>CDC-02</td><td>建立 CPU-TEE 与 GPU 同时在域内的机密 VM</td>
+<td><span class="tag t-pass">已建立</span></td>
+<td>QEMU <code>tdx-guest</code> 对象 + <code>OVMF.inteltdx</code> 引导 Ubuntu 24.04；
+GPU0 经 vfio-pci 透传（挂 pcie-root-port）；Guest 内核
+<code>tdx: Guest detected</code> / <code>Memory Encryption Features active: Intel TDX</code></td></tr>
+<tr><td>CDC-03</td><td>CPU/GPU 双远程证明</td>
+<td><span class="tag t-warn">GPU 通过 / CPU 半通</span></td>
+<td>GPU：NRAS <code>Attestation Successful</code>，28 项声明全 true（第五节）；
+CPU：TDREPORT 接口可用，Quote 签名缺宿主 QGS 服务</td></tr>
+<tr><td>CDC-04</td><td>内存与显存隔离</td>
+<td><span class="tag t-pass">实测通过</span></td>
+<td>双 canary 取证实验（第四节）：私有内存 0 命中；显存 Protected/Unprotected 状态翻转（第三节）</td></tr>
+<tr><td>CDC-05</td><td>异常闭锁（CC 关闭时拒绝机密负载）</td>
+<td><span class="tag t-pass">实测</span></td>
+<td>CUDA Error 802 <code>system not yet initialized</code>：GPU Ready State 未置位时
+CUDA 上下文无法建立——机密负载在 CC 未就绪时确实被挡</td></tr>
+<tr><td>CDC-06</td><td>数据路径关联与独立结论</td>
+<td><span class="tag t-pass">本报告</span></td>
+<td>以带正控制的双 canary 实验区分「私有内存受保护」与「I/O 共享路径可见」两类事实</td></tr>
+</tbody>
+</table>
+
+<h2>三、CPU+GPU 双 TEE 同时激活的实证</h2>
+
+<p>关键证据是<strong>同一物理机、同一时刻</strong>的两侧对照。CVM 内（持有透传 GPU）：</p>
+
+<pre>==============NVSMI CONF-COMPUTE LOG==============
+    CC State                   : ON
+    Multi-GPU Mode             : None
+    CPU CC Capabilities        : INTEL TDX      ← 宿主上同一字段为 None
+    GPU CC Capabilities        : CC Capable
+    CC GPUs Ready State        : Ready
+CC Environment: PRODUCTION
+Protected memory size:   185970368 KiB          ← 177 GB 显存全部受保护
+Unprotected memory size: 0 KiB</pre>
+
+<p>宿主上同时查询：</p>
+
+<pre>    CC State                   : OFF             ← 宿主自身不在 TEE 内（正常）
+    CPU CC Capabilities        : None
+    CC GPUs Ready State        : Not Ready
+Protected memory size:   0 KiB
+Unprotected memory size: 187007296 KiB          ← 透传出去的卡对宿主完全不透明
+（宿主 nvidia-smi 只剩 7 张卡；透传卡已从 nvidia 解绑至 vfio-pci）</pre>
+
+<p>三条独立证据互相印证：①CC 只在 CVM 视角成立（TDX 判定 CPU 侧）；
+②显存保护状态完全翻转（卡侧硬件加密生效）；③宿主驱动层已看不到这张卡（独占直通）。</p>
+
+<figure>
+<svg width="940" height="400" viewBox="0 0 940 400" xmlns="http://www.w3.org/2000/svg"
+     font-family="-apple-system,Segoe UI,Microsoft YaHei,sans-serif">
+  <rect x="20" y="18" width="900" height="364" rx="10" fill="#fafbfc" stroke="#9aa5b1"
+        stroke-width="2" stroke-dasharray="7 4"/>
+  <text x="38" y="44" font-size="14" fill="#6b7280" font-weight="600">宿主 Host（不可信域）· Xeon 8568Y+ · Ubuntu · 8×B200</text>
+
+  <!-- untrusted host elements -->
+  <rect x="48" y="70" width="250" height="96" rx="8" fill="#fce8e6" stroke="#b3261e" stroke-width="2"/>
+  <text x="173" y="96" text-anchor="middle" font-size="14" font-weight="700" fill="#b3261e">取证扫描器（root）</text>
+  <text x="173" y="118" text-anchor="middle" font-size="12" fill="#333">扫描 QEMU 进程 16.66 GB</text>
+  <text x="173" y="138" text-anchor="middle" font-size="12" fill="#333">正控制命中 24105 / 纯 canary 0</text>
+  <text x="173" y="156" text-anchor="middle" font-size="11.5" fill="#6b7280">host 侧其余 7 卡：CC=OFF</text>
+
+  <rect x="48" y="190" width="250" height="76" rx="8" fill="#f3f4f6" stroke="#6b7280" stroke-width="2"/>
+  <text x="173" y="216" text-anchor="middle" font-size="14" font-weight="700" fill="#444">QEMU 进程（TDX）</text>
+  <text x="173" y="238" text-anchor="middle" font-size="12" fill="#333">guest 私有页已从其视图丢弃</text>
+  <text x="173" y="256" text-anchor="middle" font-size="12" fill="#333">仅剩 guest 主动共享的 DMA 页</text>
+
+  <!-- shared I/O path -->
+  <path d="M330,120 C430,120 430,228 508,228" fill="none" stroke="#9a6700" stroke-width="2.5"
+        stroke-dasharray="6 4" marker-end="url(#aw)"/>
+  <defs><marker id="aw" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
+    <path d="M0,0 L10,4 L0,8 Z" fill="#9a6700"/></marker></defs>
+  <text x="420" y="112" text-anchor="middle" font-size="11.5" fill="#9a6700" font-weight="600">virtio I/O 共享 DMA 路径</text>
+  <text x="420" y="129" text-anchor="middle" font-size="11" fill="#9a6700">宿主可见（设计内）：实测捕获</text>
+  <text x="420" y="145" text-anchor="middle" font-size="11" fill="#9a6700">sudo 审计日志行 13 处足迹</text>
+
+  <!-- CVM box -->
+  <rect x="512" y="62" width="384" height="180" rx="9" fill="#e6f4ea" stroke="#137333" stroke-width="2.5"/>
+  <text x="704" y="88" text-anchor="middle" font-size="14.5" font-weight="700" fill="#137333">TDX 机密虚拟机（Ubuntu 24.04）</text>
+  <text x="704" y="109" text-anchor="middle" font-size="11.5" fill="#444">tdx: Guest detected · Memory Encryption active: Intel TDX</text>
+  <rect x="536" y="122" width="336" height="52" rx="6" fill="#fff" stroke="#137333"/>
+  <text x="704" y="143" text-anchor="middle" font-size="12.5" font-weight="600">纯 canary 进程（Guest 内生成）</text>
+  <text x="704" y="162" text-anchor="middle" font-size="11.5" fill="#137333">私有内存 24102 份副本 → 宿主 0 命中</text>
+  <rect x="536" y="180" width="336" height="50" rx="6" fill="#fff" stroke="#137333"/>
+  <text x="704" y="201" text-anchor="middle" font-size="12.5" font-weight="600">远程证明采集端</text>
+  <text x="704" y="220" text-anchor="middle" font-size="11.5" fill="#444">GPU NRAS ✓ · TDREPORT ✓（Quote 待 QGS）</text>
+
+  <!-- GPU box -->
+  <rect x="512" y="262" width="384" height="106" rx="9" fill="#e8f0fe" stroke="#0b57d0" stroke-width="2.5"/>
+  <text x="704" y="288" text-anchor="middle" font-size="14.5" font-weight="700" fill="#0b57d0">B200（CC 模式，vfio 透传）</text>
+  <text x="704" y="310" text-anchor="middle" font-size="12" fill="#333">CC=ON · Environment=PRODUCTION · Ready</text>
+  <text x="704" y="330" text-anchor="middle" font-size="12" fill="#0b57d0" font-weight="600">Protected 177 GB / Unprotected 0</text>
+  <text x="704" y="350" text-anchor="middle" font-size="11.5" fill="#444">CUDA Error 802：CC 未就绪则拒绝机密负载</text>
+  <line x1="704" y1="242" x2="704" y2="260" stroke="#0b57d0" stroke-width="2.5"/>
+</svg>
+<figcaption>图 1　CDC 验证形态与数据路径。红=宿主取证视角，绿=TDX 受保护域，蓝=CC 模式 GPU，
+黄虚线=设计内可见的 I/O 共享路径。</figcaption>
+</figure>
+
+<h2>四、核心实验：双 canary 内存取证</h2>
+
+<h3>4.1 实验设计（方法学重点）</h3>
+
+<p>「宿主扫不到明文」这个结论要成立，必须同时排除两个相反的谬误：<strong>标记根本没放进去</strong>
+（假阴性）和<strong>扫描方法本身无效</strong>（假保护）。因此设计三重保障：</p>
+
+<ol>
+<li><strong>Guest 自扫</strong>：扫描前先在 Guest 内部扫一遍，确认标记真实驻留
+（自扫 needle 从 /dev/shm 读取，不进命令行、不出 Guest）。自扫 0 命中则实验作废。</li>
+<li><strong>正控制</strong>：宿主上另起一个持有相同标记的普通进程。扫描器必须能在它里面
+命中，才证明方法有效。</li>
+<li><strong>进程类型过滤</strong>：按 <code>/proc/pid/comm</code> 过滤目标必须是 qemu、
+控制必须是 python——排除执行脚本自身的 shell（其命令行同时含标记与目标特征，曾污染判读）。</li>
+</ol>
+
+<h3>4.2 canary A（经 SSH 传入）：先给错再纠对的完整过程</h3>
+
+<p>第一轮用「宿主经 SSH 把 canary 传进 Guest」的方式放置，结果 QEMU 内存扫出 7~13 次命中。
+<strong>没有直接下「EXPOSED」结论</strong>，而是用定位器查明每个命中落在哪段内存、
+前后 96 字节是什么：</p>
+
+<pre>== MAP: 70527be00000-70567be00000 rw-p 00000000 00:00 0     ← guest RAM 后端大映射
+   hits in region: 13
+   asc: ...ot ; COMMAND=/usr/bin/python3 /tmp/selfscan.py
+        CDC-CANARY-7f3a9e21b4c8d56f0a1e2d3c4b5a6978 cana</pre>
+
+<p>命中内容是 <strong>sudo 审计日志行</strong>——测试命令自身经 journald 落盘、
+走 virtio-blk 的 DMA 共享缓冲留下的足迹。TDX 下 guest 私有页已从 QEMU 视图丢弃，
+QEMU 仍能读到的这段是 guest 主动置为 shared 的设备 DMA 页。
+结论：<strong>泄漏渠道是 I/O 设备路径（设计内共享），不是私有内存失效</strong>。
+7 次命中 vs Guest 内 24110 份副本，量级差三个数量级，也印证这是足迹而非驻留数据。</p>
+
+<h3>4.3 canary B（纯内存，定论实验）</h3>
+
+<p>排除一切 I/O 混淆：canary 在 <strong>Guest 内部用 os.urandom 生成</strong>，
+明文从生成到消亡只存在于 Guest 私有内存——不进任何命令行（命令行经 SSH 传输）、
+不写盘（needle 存 /dev/shm 即 tmpfs；宿主取 needle 走 SSH 加密信道，且只用于宿主侧检索参数，
+宿主进程参数不会进入 QEMU 内存）。生成时仅打印其 sha256 供对账：</p>
+
+<pre>PURE_SHA256=e3873d8ff48449e486856a5bf2115e9bee901d05ab965d8c2f174bbc9abd60f1
+
+[1] 正控制（宿主普通进程，必须命中）
+    pid=504853 scanned=20.6MB hits={'PURE-b68b40a0…': 24105}   → 方法有效 ✓
+
+[2] Guest 自扫（有效性前提）
+    SELFSCAN pid=30585 scanned=27.0MB hits=24102               → 确实驻留 ✓
+
+[3] 被测目标（TDX CVM 的 QEMU 进程）
+    pid=280990 scanned=16659.8MB regions=498 hits={}           → 0 命中
+
+判读：PROTECTED</pre>
+
+<h3>4.4 与海光 TDC 的对照（同一套方法学）</h3>
+
+<table>
+<thead><tr><th style="width:22%">平台</th><th style="width:26%">CPU 内存加密</th>
+<th>宿主 root 扫 QEMU 内存找 Guest 明文</th></tr></thead>
+<tbody>
+<tr><td>海光 TDC（CSV 未启用）</td><td>无（fw_error=21）</td>
+<td><span class="tag t-fail">EXPOSED</span> Guest 进程堆中的明文 prompt 直接命中
+（16.6 GB 扫描、F2 项）</td></tr>
+<tr><td>b200 CDC（TDX 激活）</td><td>Intel TDX</td>
+<td><span class="tag t-pass">PROTECTED</span> 纯内存 canary：Guest 内 24102 份 ↔ 宿主
+16.66 GB 全扫 0 命中（正控制 24105 命中）</td></tr>
+</tbody>
+</table>
+
+<p>两平台用同一方法学（自扫 + 正控制 + 全量扫描）得到相反结论，
+<strong>定量坐实了「内存加密开启与否」带来的安全差异</strong>——这正是 CDC 相对
+TDC（不开 CSV 时）的核心价值主张。</p>
+
+<h2>五、GPU 远程证明（NRAS）结果</h2>
+
+<p>在 CVM 内通过 nv-attestation-sdk 向 NVIDIA NRAS
+（<code>nras.attestation.nvidia.com</code>）发起 GPU 远程证明，<strong>验证通过</strong>
+（EAT token 3055 字节）。关键声明：</p>
+
+<pre>x-nvidia-gpu-available                          : true
+x-nvidia-gpu-attestation-report-available       : true
+x-nvidia-gpu-attestation-report-parsed          : true
+x-nvidia-gpu-attestation-report-signature-verified   : true   ← 报告签名验证
+x-nvidia-gpu-attestation-report-cert-chain-validated : true   ← 证书链验证
+x-nvidia-gpu-attestation-report-nonce-match          : true   ← 防重放
+x-nvidia-gpu-driver-rim-fetched / -schema-validated  : true
+x-nvidia-gpu-driver-rim-signature-verified           : true   ← 驱动 RIM 签名
+x-nvidia-gpu-vbios-rim-signature-verified            : true   ← VBIOS RIM 签名
+x-nvidia-gpu-measurements-match                       : true   ← 度量值匹配
+x-nvidia-gpu-driver-version : 610.57.04
+x-nvidia-gpu-vbios-version  : 97.00.D9.00.35
+x-nvidia-attestation-warning : null</pre>
+
+<p>含义：数据方在向该 GPU 交付任何机密之前，可以独立验证
+「对端确实是一块运行正版驱动与 VBIOS、未被篡改、处于 CC 模式的 B200」。
+这是 CDC「交付前可验证」主张的实证。</p>
+
+<p>CPU 侧：TDX 报告接口已通——<code>/dev/tdx_guest</code> 设备存在、
+configfs-tsm <code>provider: tdx_guest</code>、inblob 可写。
+但 <strong>TD Quote 读出 0 字节</strong>：Quote 签名需要宿主侧 QGS 服务
+（Quote Generation Service），本机未部署。<span class="tag t-warn">待补</span>
+部署 tdx-qgs + 配置企业根证书后即可补测 CPU 侧完整证明。</p>
+
+<h2>六、异常闭锁验证（CDC-05）</h2>
+
+<p>机密计算的闭锁语义是「保护没就绪就不干活」。实测：</p>
+
+<pre># GPU Ready State 未置位时，在 CVM 内初始化 CUDA：
+CUDA initialization: Unexpected error from cudaGetDeviceCount().
+Error 802: system not yet initialized      ← CC 未就绪，拒绝建立 CUDA 上下文
+
+# 置位 Ready（-srs 1，即属主确认证明流程后放行）后：
+cuda available: True   name: NVIDIA B200   177.4GB   MATMUL_OK</pre>
+
+<p>即：CC 模式下 GPU <strong>不接受跳过就绪流程的裸用法</strong>，
+与「证明通过才允许机密负载」的设计一致。</p>
+
+<h2>七、附：CC 模式下的性能参考（非本报告重点）</h2>
+
+<pre>matmul bf16 (8192³)      1607.17 TFLOPS     ← GPU 内部算力几乎满血
+matmul fp16 (8192³)      1532.28 TFLOPS
+D2D 显存拷贝             5805.96 GB/s       ← HBM 带宽无损
+H2D (PCIe, 经加密弹跳缓冲)   9.25 GB/s       ← CC 代价集中在这里
+D2H (PCIe, 经加密弹跳缓冲)  12.16 GB/s</pre>
+
+<p>机密计算的代价集中在跨 PCIe 传输（加密弹跳缓冲），GPU 内部计算与显存带宽基本无损。
+对推理类负载（权重常驻显存、跨 PCIe 传输占比小）影响有限；
+对频繁 H2D/D2H 的负载需把大块数据尽量留在显存内。</p>
+
+<h2>八、表述边界（对外材料请严格遵守）</h2>
+
+<div class="card bad">
+  <h4>不能说</h4>
+  <ul>
+  <li>「宿主完全看不到任何数据」—— I/O 共享路径实测可见（sudo 审计足迹已定位）</li>
+  <li>「CPU/GPU 双远程证明已全部完成」—— CPU 侧 Quote 因缺 QGS 未打通</li>
+  <li>「全链路加密」—— PCIe 链路加密是 GPU CC 硬件行为，本实验未做物理总线观测，
+      不下物理层结论</li>
+  </ul>
+</div>
+
+<div class="card ok">
+  <h4>可以说</h4>
+  <ul>
+  <li>「Guest 私有内存中的明文，宿主以 root 全量扫描 16.66 GB 无法读到（0 命中，
+      正控制 24105 命中）」</li>
+  <li>「GPU 显存处于全保护状态（Protected 177 GB / Unprotected 0），
+      CC 环境为 PRODUCTION」</li>
+  <li>「GPU 远程证明通过 NVIDIA NRAS 全度量链验证（签名、证书链、nonce、度量值匹配）」</li>
+  <li>「经模拟设备（磁盘/网络）的数据路径宿主可见，属设计内共享，
+      需由传输层加密保护」</li>
+  <li>「CC 未就绪时 GPU 拒绝建立机密负载上下文（Error 802 实测）」</li>
+  </ul>
+</div>
+
+<h2>九、残余风险与待办</h2>
+<ol>
+<li><strong>部署 QGS 补 CPU 侧 Quote</strong>（宿主装 tdx-qgs / sgx-dcap 兼容组件，
+    配置根证书），完成后 CDC-03 即完整。</li>
+<li>I/O 路径披露已在报告中如实呈现；如业务数据需走网络/磁盘，
+    沿用端到端加密信道（与 TDC 线同款 X25519+AES-GCM 方案）。</li>
+<li>多卡 CC 域（Multi-GPU Mode）与 NVLink 在 CC 下的行为未测（本实验单卡）。</li>
+<li>宿主重启后需重做：GPU vfio 绑定、<code>dma_entry_limit</code> 调大
+    （该参数重启回落为 65535）、CC 模式确认（GPU 侧 CC 设置持久于卡固件，但建议复查）。</li>
+</ol>
+
+<h2>十、证据索引</h2>
+<ul>
+<li><a href="memtest_raw_logs.txt">memtest_raw_logs.txt</a> —— 双 canary 实验完整原始日志
+（含定位器的 hex/ascii 证据）</li>
+<li><a href="cdc_mem_forensics_pure.json">cdc_mem_forensics_pure.json</a> —— 纯 canary 判定报告（PROTECTED）</li>
+<li><a href="cdc_mem_forensics_v3.json">cdc_mem_forensics_v3.json</a> —— canary A 判定报告（EXPOSED→经定位改判 I/O 路径）</li>
+<li><a href="cvm_evidence.txt">cvm_evidence.txt</a> / <a href="host_evidence.txt">host_evidence.txt</a>
+—— 双侧 conf-compute 全量状态快照</li>
+<li><a href="cdc_attest.json">cdc_attest.json</a> + <a href="gpu_eat_token.txt">gpu_eat_token.txt</a>
+—— NRAS 证明声明与 token</li>
+<li><a href="cvm-console.log">cvm-console.log</a> —— CVM 引导串口全量日志
+（tdx: Guest detected / Memory Encryption active 全过程）</li>
+<li><a href="bench_cc_on.json">bench_cc_on.json</a> —— CC 模式性能原始数据</li>
+</ul>
+
+<div class="foot">
+  报告生成于 2026-09-24 · 全部数据来自 b200 机器实测（宿主 gpuhost / CVM tdx-cvm）·
+  未达成与待补项已在第一、五、九节如实标注 · 原始证据见本目录 ·
+  方法学三保障（Guest 自扫 / 正控制 / 进程类型过滤）见第四节
+</div>
+
+</div>
+</body>
+</html>

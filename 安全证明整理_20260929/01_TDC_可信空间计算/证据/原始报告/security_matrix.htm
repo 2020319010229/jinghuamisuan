@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>安全证明矩阵与环境拓扑 · 2026-09-18</title>
+<style>
+ *{box-sizing:border-box}
+ body{margin:0;background:#fff;color:#1b1b1b;font:15px/1.75 "Segoe UI","Microsoft YaHei",system-ui,sans-serif}
+ .wrap{max-width:1120px;margin:0 auto;padding:32px 24px 90px}
+ h1{font-size:23px;margin:0 0 6px}
+ .sub{color:#666;font-size:13.4px;margin-bottom:22px}
+ h2{font-size:18px;margin:34px 0 12px;padding-bottom:6px;border-bottom:2px solid #1b1b1b}
+ h3{font-size:15.2px;margin:22px 0 8px;color:#123d6b}
+ table{border-collapse:collapse;width:100%;margin:14px 0;font-size:13.2px}
+ th,td{border:1px solid #d8d8d8;padding:7px 9px;text-align:left;vertical-align:top}
+ th{background:#f3f5f7;font-weight:600}
+ code{background:#f1f2f4;padding:1px 4px;border-radius:3px;font:12.2px Consolas,monospace}
+ .lead{background:#eef5ff;border-left:4px solid #2a6fb5;padding:12px 15px;margin:16px 0;border-radius:0 5px 5px 0}
+ .y{color:#0a6b33;font-weight:600}
+ .c{color:#a06000;font-weight:600}
+ .n{color:#a51d2d;font-weight:600}
+ .t{color:#5a5a5a;font-weight:600}
+ figure{margin:20px 0;text-align:center}
+ figcaption{font-size:12.4px;color:#666;margin-top:7px}
+ @media print{.wrap{max-width:none;padding:0} body{font-size:11.5pt}}
+</style>
+</head>
+<body><div class="wrap">
+
+<h1>安全证明矩阵与环境拓扑</h1>
+<div class="sub">2026-09-18 · 对应计划书 G-01「安全主张—验证任务—证据—判定标准」对应矩阵与 G-02 环境拓扑</div>
+
+<div class="lead">
+<p>本文件把计划书第二节列出的各方案<strong>核心安全主张</strong>，逐条对应到验证任务、本轮原始证据和判定。判定沿用计划书四档：通过、条件通过、不通过、待补证；另加"不具备执行条件"用于平台能力缺失的情形。</p>
+</div>
+
+<h2>一、验证环境拓扑</h2>
+<figure>
+<svg width="1000" height="430" viewBox="0 0 1000 430" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="环境拓扑与可信边界">
+ <defs>
+  <marker id="ar" markerWidth="9" markerHeight="9" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#2a6fb5"/></marker>
+  <marker id="ar2" markerWidth="9" markerHeight="9" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#a51d2d"/></marker>
+ </defs>
+
+ <rect x="14" y="14" width="972" height="402" rx="10" fill="#fbfbfc" stroke="#b9c0c7"/>
+ <text x="30" y="38" font-size="13.5" font-weight="700">宿主机 172.19.2.19 · 鲲鹏 920 · openEuler 24.03 SP3 / 6.6.0-virtCCA（不可信侧）</text>
+
+ <rect x="34" y="52" width="196" height="92" rx="6" fill="#f3f5f7" stroke="#8a9199"/>
+ <text x="132" y="74" text-anchor="middle" font-size="12.5" font-weight="600">SDK 客户端</text>
+ <text x="132" y="93" text-anchor="middle" font-size="11" fill="#555">/root/client</text>
+ <text x="132" y="111" text-anchor="middle" font-size="11" fill="#555">持明文提示与 DEK</text>
+ <text x="132" y="130" text-anchor="middle" font-size="10.5" fill="#a51d2d">本轮作为测试客户端</text>
+
+ <rect x="34" y="166" width="196" height="76" rx="6" fill="#fdf0f1" stroke="#c9868d"/>
+ <text x="132" y="188" text-anchor="middle" font-size="12" font-weight="600">宿主侧能力（实测）</text>
+ <text x="132" y="207" text-anchor="middle" font-size="10.5" fill="#333">无 /dev/davinci*，npu-smi 查不到设备</text>
+ <text x="132" y="225" text-anchor="middle" font-size="10.5" fill="#333">读设备 BAR = 0 字节</text>
+
+ <rect x="34" y="266" width="196" height="76" rx="6" fill="#fdf0f1" stroke="#c9868d"/>
+ <text x="132" y="288" text-anchor="middle" font-size="12" font-weight="600">读 guest 内存（实测）</text>
+ <text x="132" y="307" text-anchor="middle" font-size="10.5" fill="#333">qemu 3×44GB backend</text>
+ <text x="132" y="325" text-anchor="middle" font-size="10.5" fill="#0a6b33">运行时标记 0 命中</text>
+
+ <rect x="262" y="52" width="440" height="330" rx="9" fill="#eef7ef" stroke="#3f8f52" stroke-width="2"/>
+ <text x="482" y="76" text-anchor="middle" font-size="13.5" font-weight="700" fill="#1d5c2e">机密虚机 CVM 192.168.122.143（可信域）</text>
+ <text x="482" y="95" text-anchor="middle" font-size="10.8" fill="#333">virt-8.2 · kvm-type=cvm · tmm-guest · dump-guest-core=off · 138G</text>
+
+ <rect x="282" y="110" width="400" height="62" rx="5" fill="#fff" stroke="#9db8a4"/>
+ <text x="482" y="131" text-anchor="middle" font-size="12" font-weight="600">cvm-server :8101（SDK 入口）</text>
+ <text x="482" y="150" text-anchor="middle" font-size="10.5" fill="#555">国密封装解密 · 远程证明 /dev/tsi · 持久防重放账本</text>
+ <text x="482" y="166" text-anchor="middle" font-size="10.5" fill="#555">不持有任何 NPU 设备</text>
+
+ <rect x="282" y="184" width="400" height="58" rx="5" fill="#fff" stroke="#9db8a4"/>
+ <text x="482" y="205" text-anchor="middle" font-size="12" font-weight="600">tee_gateway :8000（加密/明文入口）</text>
+ <text x="482" y="224" text-anchor="middle" font-size="10.5" fill="#555">X25519 + HKDF + AES-GCM · 分词 · 取消登记表</text>
+
+ <rect x="282" y="254" width="400" height="106" rx="5" fill="#fff" stroke="#9db8a4"/>
+ <text x="482" y="275" text-anchor="middle" font-size="12" font-weight="600">C 引擎 serve35_cb :8020</text>
+ <text x="482" y="294" text-anchor="middle" font-size="10.5" fill="#555">embedding · RMSNorm · Softmax · SiLU · GDN 递推</text>
+ <text x="482" y="312" text-anchor="middle" font-size="10.5" fill="#555">OTP 掩码生成 · 解盲 · CRT 重构 · 采样</text>
+ <text x="482" y="332" text-anchor="middle" font-size="10.8" fill="#1d5c2e" font-weight="600">明文只存在于此边界之内</text>
+ <text x="482" y="350" text-anchor="middle" font-size="10.5" fill="#555">mode=shannon_rns_otp（运行时不可降级）</text>
+
+ <rect x="734" y="120" width="238" height="240" rx="9" fill="#fdf0f1" stroke="#a51d2d" stroke-width="2"/>
+ <text x="853" y="144" text-anchor="middle" font-size="13" font-weight="700" fill="#8a1220">双 Ascend 310P3（不可信加速卡）</text>
+ <text x="853" y="165" text-anchor="middle" font-size="10.8" fill="#333">Atlas 300V Pro · 固件 7.8.0.7.220</text>
+ <text x="853" y="184" text-anchor="middle" font-size="10.8" fill="#333">vfio-pci 直通 · IOMMU 组 83 / 84</text>
+ <text x="853" y="203" text-anchor="middle" font-size="10.8" fill="#333">device-share=False（独占）</text>
+ <rect x="752" y="218" width="202" height="60" rx="5" fill="#fff" stroke="#c9868d"/>
+ <text x="853" y="239" text-anchor="middle" font-size="11.5" font-weight="600">仅处理 RNS 密文分量</text>
+ <text x="853" y="258" text-anchor="middle" font-size="10.5" fill="#555">W8A8 线性层 · MoE 专家</text>
+ <text x="853" y="296" text-anchor="middle" font-size="10.5" fill="#8a1220">无 rootkey / tls-cert / work-mode</text>
+ <text x="853" y="314" text-anchor="middle" font-size="10.5" fill="#8a1220">→ 不具备 GPU-CC 能力</text>
+ <text x="853" y="340" text-anchor="middle" font-size="10.5" fill="#0a6b33">新分配设备内存实测全零</text>
+
+ <line x1="230" y1="98" x2="278" y2="140" stroke="#2a6fb5" stroke-width="2" marker-end="url(#ar)"/>
+ <text x="252" y="120" font-size="10" fill="#2a6fb5">密文</text>
+ <line x1="682" y1="300" x2="730" y2="245" stroke="#a51d2d" stroke-width="2" marker-end="url(#ar2)"/>
+ <text x="690" y="282" font-size="10" fill="#a51d2d">密态 limbs</text>
+ <line x1="230" y1="300" x2="278" y2="300" stroke="#a51d2d" stroke-width="2" stroke-dasharray="5 3" marker-end="url(#ar2)"/>
+</svg>
+<figcaption>绿框为可信域，红框为不可信侧；虚线为本轮实际执行的反向读取尝试</figcaption>
+</figure>
+
+<h2>二、安全证明矩阵</h2>
+
+<h3>方案一 TDC（CPU-TEE + 通用加速卡原生直通）</h3>
+<table>
+<tr><th style="width:24%">核心安全主张</th><th style="width:11%">任务</th><th style="width:41%">本轮证据</th><th style="width:12%">判定</th><th style="width:12%">限制</th></tr>
+<tr><td>输入与 CPU 侧明文处理位于机密安全域</td><td>TDC-02/06</td><td>运行进程 <code>/proc/exe</code> 摘要等于部署二进制；证明负例 7/7；两处抓包 23/23、11/11</td><td class="y">通过</td><td>可信根按现场证据处理</td></tr>
+<tr><td>CPU 内存加密、地址空间隔离有效</td><td>TDC-03</td><td>宿主读 <code>/proc/&lt;qemu&gt;/mem</code> 三段共 130.39GB（覆盖 97.16%，无 errno），运行时标记与磁盘 I/O 标记均 0 命中；两个阳性对照成立</td><td class="y">通过</td><td>第 1 段 245 处静态明文未定位，归入 TDC-07</td></tr>
+<tr><td>一租户一机密域</td><td>TDC-04</td><td>宿主无设备节点/驱动、读 BAR 得 0 字节；CVM 内非特权用户读三设备节点全部被拒；资源一一映射</td><td class="c">条件通过</td><td>单租户部署，跨租户越权未实测</td></tr>
+<tr><td>加速卡独占直通，任务后无残留</td><td>TDC-05</td><td>vfio-pci + 独立 IOMMU 组（每组 1 设备）+ <code>device-share=False</code>；跨进程设备内存 256MB×2 轮读回<strong>全零</strong>，自检命中 1579 万次</td><td class="y">通过</td><td>未做硬件复位级测试</td></tr>
+<tr><td>不宣称通用加速卡显存与总线具备密码学机密性</td><td>TDC-07</td><td>报告如实记录：常规分配读不到他人显存内容；当前部署 H2D 传密文；纯 TDC 形态下将是明文激活</td><td class="y">表述正确</td><td>物理 PCIe 观测缺仪器</td></tr>
+</table>
+
+<h3>方案二 CDC（CPU-TEE + GPU-TEE）</h3>
+<table>
+<tr><th style="width:24%">核心安全主张</th><th style="width:11%">任务</th><th style="width:41%">本轮证据</th><th style="width:12%">判定</th><th style="width:12%">限制</th></tr>
+<tr><td>GPU 处于经验证的机密计算状态</td><td>CDC-01</td><td>310P3 实测：<code>work-mode</code> 不支持查询；驱动与 CANN 无 cc_mode/confidential 符号</td><td class="n">不具备执行条件</td><td rowspan="3">需更换具备 GPU-CC 能力的硬件平台</td></tr>
+<tr><td>GPU 身份与远程证明有效</td><td>CDC-03</td><td><code>rootkey</code>、<code>tls-cert</code>、<code>tls-cert-period</code> 均返回不支持；<code>key-manage</code> 服务 Stop</td><td class="n">不具备执行条件</td></tr>
+<tr><td>显存隔离与 CPU—GPU 链路加密</td><td>CDC-05/06</td><td>以上两项为前提，无法执行；<strong>未以 TDC 或 FEC 证据替代</strong></td><td class="n">不具备执行条件</td></tr>
+</table>
+
+<h3>方案三 FEC（CPU-TEE + 通用加速卡 OTP 密态）</h3>
+<table>
+<tr><th style="width:24%">核心安全主张</th><th style="width:11%">任务</th><th style="width:41%">本轮证据</th><th style="width:12%">判定</th><th style="width:12%">限制</th></tr>
+<tr><td>数据离开 CPU-TEE 前完成 OTP 密态转换</td><td>FEC-05/07</td><td>独立合成算例 96/96，禁 CPU 补正，原始 D2H 整数分量与参考一致；同输入两次 H2D 指纹不同</td><td class="y">通过</td><td>非生产全算子追踪</td></tr>
+<tr><td>加速卡接收、计算、返回的均为密态</td><td>FEC-05</td><td>同上；设备侧新分配内存全零，无法读取他人内容</td><td class="y">通过</td><td>无物理总线观测</td></tr>
+<tr><td>密钥始终与加速卡及宿主侧隔离</td><td>FEC-02</td><td>密钥文件 600/root；宿主读 44GB guest 内存无所获；日志、临时文件、容器日志均无标记（对照文件可被搜出）</td><td class="y">通过</td><td>—</td></tr>
+<tr><td>严格一次一密、用后销毁</td><td>FEC-02</td><td>4096 个掩码全唯一、zeroize=PASS；两模域各 104 万样本方差比 1.0008/0.9996；测试 DEK 清理验证</td><td class="y">通过（计算安全）</td><td>CSPRNG 非真随机源，不宣称信息论安全</td></tr>
+<tr><td>密态计算结果与明文基线一致</td><td>FEC-06</td><td>算子级 96/96 零差异；端到端明文入口与密文入口 3 轮输出 SHA256 逐轮相同</td><td class="y">通过</td><td>纯明文引擎基线对照需停服务，未做</td></tr>
+<tr><td>非线性与解盲仅在 CPU-TEE 内，无明文旁路</td><td>FEC-07</td><td>7 种降级字段全部无效，输出与基线逐个相同，mode 恒为 <code>shannon_rns_otp</code>；静态确认 <code>g_blind</code>/<code>g_r_scale</code> 只能由启动参数设置</td><td class="y">通过</td><td>—</td></tr>
+<tr><td>异常时中止任务而非回退明文</td><td>FEC-08</td><td><b>故障注入 10/10</b>（<code>fault_injection_02/</code>）：非法形参、不支持配置、<b>随机源失效</b>均 <code>rc=-1</code> 中止，不在无掩码下继续算；设备静默算错单行检出并纠正（偏差回 2.98e-05）</td><td class="c">条件通过</td><td><b>批次路径（M&gt;1）不做设备结果交叉校验</b>：同一篡改下偏差 567.615 仍按成功返回。属完整性缺口，密态边界未破坏；硬件级故障与不支持算子未注入</td></tr>
+<tr><td>传输链路无可识别业务明文</td><td>FEC-04</td><td>两入口双点抓包 23/23、11/11；加密入口验收 17/17（篡改、降级、重放均拒绝）</td><td class="y">通过</td><td>—</td></tr>
+<tr><td>多平台适配保持密态边界</td><td>FEC-08</td><td>仅昇腾 310P 实测</td><td class="t">待补证</td><td>其他平台未声明范围前不判定</td></tr>
+</table>
+
+<h2>三、判定统计</h2>
+<table>
+<tr><th>判定</th><th>数量</th><th>说明</th></tr>
+<tr><td class="y">通过</td><td>10</td><td>状态证据与动态或反向测试相互支持</td></tr>
+<tr><td class="c">条件通过</td><td>4</td><td>核心机制成立，部分独立观测不足</td></tr>
+<tr><td class="n">不具备执行条件</td><td>3</td><td>CDC 全部，平台能力缺失，有设备实证</td></tr>
+<tr><td class="t">待补证</td><td>1</td><td>多平台适配</td></tr>
+</table>
+<p>另有 1 项既有 HIGH 风险（F01 网关明文推理路由可达）本轮复现，未整改，判定<span class="n">不通过</span>。</p>
+
+<p style="margin-top:14px">三方案分册报告：<code>TDC_security_report.htm</code>（方案一）、<code>FEC_security_report.htm</code>（方案三）；方案二 CDC 因平台不具备 GPU-CC 能力，以 <code>cdc01_platform/</code> 的平台能力核查结论形式交付，不单独成册。</p><p style="margin-top:22px;color:#666;font-size:12.5px">证据索引见 <code>security_full_report.htm</code> 第八节；完整性清单见 <code>manifest_full_20260918.json</code>。</p>
+
+</div></body></html>
+

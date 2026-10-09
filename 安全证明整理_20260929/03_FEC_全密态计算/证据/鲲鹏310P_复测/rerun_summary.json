@@ -1,0 +1,328 @@
+{
+  "batch_dir": "D:\\python_code\\清华服务器\\otp_c35\\results\\security_recheck_20260918",
+  "note": "主运行与补跑两批合并。补跑原因：firmware/live 因编排器未建父目录失败、selfcheck 因预建 out 目录与脚本 exist_ok=False 冲突失败且退出码被管道掩盖。三项修复后重跑通过。",
+  "runs": [
+    {
+      "kind": "main",
+      "items": "全部 19 项（cdc/tdc_access 已在此前单独完成）"
+    },
+    {
+      "kind": "supplement",
+      "items": "firmware, live, selfcheck"
+    }
+  ],
+  "counts": {
+    "total": 21,
+    "ok": 21,
+    "failed": 0
+  },
+  "items": [
+    {
+      "name": "env",
+      "exit_code": 0,
+      "seconds": 22.8,
+      "status": "ok",
+      "source": "main-run(从执行日志恢复)",
+      "desc": "环境与版本基线",
+      "task": "G-02",
+      "evidence_files": [
+        "env_baseline.json"
+      ]
+    },
+    {
+      "name": "firmware",
+      "desc": "两卡固件与驱动版本",
+      "task": "G-02",
+      "analyze": null,
+      "argv": [
+        "D:\\python_code\\清华服务器\\otp_c35\\scripts\\security_firmware_query.py",
+        "--output",
+        "results\\security_recheck_20260918\\firmware/firmware.json"
+      ],
+      "exit_code": 0,
+      "seconds": 3.7,
+      "verdict": {
+        "source": null,
+        "passed": null
+      },
+      "stdout_tail": "       | Process memory(MB)        |\\n+===============================+=================+======================================================+\\n| 768     0                     | 2535674         | serve35_cb               | 20516                     |\\n+===============================+=================+======================================================+\\n| 1024    0                     | 2535674         | serve35_cb               | 15729                     |\\n+===============================+=================+======================================================+\\n\",\n    \"stderr\": \"Warning: Permanently added '192.168.122.143' (ED25519) to the list of known hosts.\\r\\n\\nAuthorized users only. All activities may be monitored and reported.\\n\"\n  },\n  \"finished_ns\": 1789728532007142800\n}\n",
+      "stderr_tail": "",
+      "status": "ok",
+      "evidence_files": [
+        "firmware.json"
+      ]
+    },
+    {
+      "name": "live",
+      "desc": "线上健康与运行身份",
+      "task": "G-02/TDC-06",
+      "analyze": null,
+      "argv": [
+        "D:\\python_code\\清华服务器\\otp_c35\\scripts\\security_live_status.py",
+        "--output",
+        "results\\security_recheck_20260918\\live/live_status.json"
+      ],
+      "exit_code": 0,
+      "seconds": 6.1,
+      "verdict": {
+        "source": null,
+        "passed": null
+      },
+      "stdout_tail": "92.168.122.143' (ED25519) to the list of known hosts.\\r\\n\\nAuthorized users only. All activities may be monitored and reported.\\n\"\n  },\n  \"sdk_hashes\": {\n    \"exit_code\": 0,\n    \"stdout\": \"c91ffba22ac2a12cd8f164027b94550f7f900ea07e8d0ca204a9d0543c5c782f  /root/client/client.py\\nc83604c68e1ba22e4de6fb5c14eacd68a3b3fa7723255c9d9706ad62e485c9ea  /root/client/utils/kunpeng_attestation.py\\na68505bc0d47b6bf42e3f7543802005ce4311d0a218e2b9ec27fc3f9f191189c  /root/client/utils/request_auth.py\\n\",\n    \"stderr\": \"\"\n  },\n  \"cvm-server\": {\n    \"running\": true,\n    \"status\": \"running\",\n    \"started_at\": \"2026-09-18T02:56:47.94250324Z\",\n    \"restart_count\": 0\n  },\n  \"otp-c35-cb\": {\n    \"running\": true,\n    \"status\": \"running\",\n    \"started_at\": \"2026-09-18T02:47:13.562586Z\",\n    \"restart_count\": 0\n  }\n}\n",
+      "stderr_tail": "",
+      "status": "ok",
+      "evidence_files": [
+        "live_status.json"
+      ]
+    },
+    {
+      "name": "sdk",
+      "exit_code": 0,
+      "seconds": 9.2,
+      "status": "ok",
+      "source": "main-run(从执行日志恢复)",
+      "desc": "SDK 客户端与重放控制",
+      "task": "G-03/FEC-03",
+      "evidence_files": [
+        "experiment_certificate.der",
+        "orchestration.json",
+        "sdk_result.json",
+        "synthetic_replay_request.json"
+      ]
+    },
+    {
+      "name": "attest",
+      "exit_code": 0,
+      "seconds": 3.0,
+      "status": "ok",
+      "source": "main-run(从执行日志恢复)",
+      "desc": "证明负例",
+      "task": "TDC-02/FEC-01",
+      "evidence_files": [
+        "controls.json",
+        "orchestration.json"
+      ]
+    },
+    {
+      "name": "wire_gw",
+      "exit_code": 0,
+      "seconds": 11.8,
+      "status": "ok",
+      "source": "main-run(从执行日志恢复)",
+      "desc": "8000 网关入口抓包",
+      "task": "G-04/FEC-04",
+      "evidence_files": [
+        "analysis.json",
+        "capture_result.json",
+        "client_result.json",
+        "cvm.pcap",
+        "host.pcap",
+        "orchestration.json"
+      ]
+    },
+    {
+      "name": "wire_sdk",
+      "exit_code": 0,
+      "seconds": 11.6,
+      "status": "ok",
+      "source": "main-run(从执行日志恢复)",
+      "desc": "8101 SDK 入口抓包",
+      "task": "G-04/FEC-04",
+      "evidence_files": [
+        "analysis.json",
+        "capture_result.json",
+        "cvm.pcap",
+        "host.pcap",
+        "orchestration.json",
+        "sdk_result.json"
+      ]
+    },
+    {
+      "name": "pair",
+      "exit_code": 0,
+      "seconds": 37.1,
+      "status": "ok",
+      "source": "main-run(从执行日志恢复)",
+      "desc": "并发跨密钥隔离",
+      "task": "FEC-04",
+      "evidence_files": [
+        "orchestration.json",
+        "pair_result.json"
+      ]
+    },
+    {
+      "name": "dual_entry",
+      "exit_code": 0,
+      "seconds": 85.4,
+      "status": "ok",
+      "source": "main-run(从执行日志恢复)",
+      "desc": "明密文双入口一致性",
+      "task": "FEC-06",
+      "evidence_files": [
+        "result.json"
+      ]
+    },
+    {
+      "name": "residue",
+      "exit_code": 0,
+      "seconds": 19.4,
+      "status": "ok",
+      "source": "main-run(从执行日志恢复)",
+      "desc": "旁路残留",
+      "task": "FEC-05",
+      "evidence_files": [
+        "result.json"
+      ]
+    },
+    {
+      "name": "no_fallback",
+      "exit_code": 0,
+      "seconds": 39.3,
+      "status": "ok",
+      "source": "main-run(从执行日志恢复)",
+      "desc": "运行时不可降级",
+      "task": "FEC-07",
+      "evidence_files": [
+        "result.json"
+      ]
+    },
+    {
+      "name": "cdc",
+      "exit_code": 0,
+      "seconds": null,
+      "status": "ok",
+      "source": "main-run(从执行日志恢复)",
+      "desc": "CDC 平台能力核查",
+      "task": "CDC-01/03",
+      "evidence_files": [
+        "npu_security_capability.txt",
+        "probe.sh",
+        "result.json"
+      ]
+    },
+    {
+      "name": "tdc_access",
+      "exit_code": 0,
+      "seconds": null,
+      "status": "ok",
+      "source": "main-run(从执行日志恢复)",
+      "desc": "非授权侧访问",
+      "task": "TDC-04/07",
+      "evidence_files": [
+        "cvm_side.txt",
+        "host_side.txt",
+        "result.json",
+        "tdc04_cvm.sh",
+        "tdc04_host.sh"
+      ]
+    },
+    {
+      "name": "cancel",
+      "exit_code": 0,
+      "seconds": 27.4,
+      "status": "ok",
+      "source": "main-run(从执行日志恢复)",
+      "desc": "取消传播线上验收",
+      "task": "FEC-08",
+      "evidence_files": [
+        "cancel_result.json",
+        "orchestration.json"
+      ]
+    },
+    {
+      "name": "npu",
+      "exit_code": 0,
+      "seconds": 14.6,
+      "status": "ok",
+      "source": "main-run(从执行日志恢复)",
+      "desc": "NPU 设备接口合成算例",
+      "task": "FEC-05",
+      "evidence_files": [
+        "result.json"
+      ]
+    },
+    {
+      "name": "workspace",
+      "exit_code": 0,
+      "seconds": 19.1,
+      "status": "ok",
+      "source": "main-run(从执行日志恢复)",
+      "desc": "workspace 生命周期",
+      "task": "FEC-02",
+      "evidence_files": [
+        "result.json"
+      ]
+    },
+    {
+      "name": "dev_residue",
+      "exit_code": 0,
+      "seconds": 18.1,
+      "status": "ok",
+      "source": "main-run(从执行日志恢复)",
+      "desc": "跨进程设备内存残留",
+      "task": "TDC-05",
+      "evidence_files": [
+        "result.json"
+      ]
+    },
+    {
+      "name": "fault",
+      "exit_code": 0,
+      "seconds": 16.0,
+      "status": "ok",
+      "source": "main-run(从执行日志恢复)",
+      "desc": "故障注入与安全回退",
+      "task": "FEC-08",
+      "evidence_files": [
+        "result.json"
+      ]
+    },
+    {
+      "name": "memory",
+      "exit_code": 0,
+      "seconds": 589.4,
+      "status": "ok",
+      "source": "main-run(从执行日志恢复)",
+      "desc": "宿主读 guest 内存全量扫描",
+      "task": "TDC-03",
+      "evidence_files": [
+        "result.json"
+      ]
+    },
+    {
+      "name": "selfcheck",
+      "desc": "客户自验（宿主独立执行）",
+      "task": "G-03/验收",
+      "analyze": null,
+      "argv": [
+        "<remote>"
+      ],
+      "exit_code": 0,
+      "seconds": 10.0,
+      "verdict": {
+        "source": "customer_selfcheck.json",
+        "passed": true
+      },
+      "stdout_tail": "{\"pass\": true, \"failed_checks\": [], \"error_type\": null}\n",
+      "stderr_tail": "",
+      "status": "ok",
+      "evidence_files": [
+        "customer_selfcheck.json",
+        "sdk_result.json",
+        "test_dek_ownership.json"
+      ]
+    },
+    {
+      "name": "acceptance",
+      "exit_code": 0,
+      "seconds": 7.7,
+      "status": "ok",
+      "source": "main-run(从执行日志恢复)",
+      "desc": "加密入口篡改与重放 17 项",
+      "task": "FEC-04",
+      "evidence_files": [
+        "security_acceptance_raw.json"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "needles": [
+    "请用一句话解释什么是可信执行环境。",
+    "可信执行环境是指一种能够确保应用程序在运行时符合其预期功能和安全策略的环境，它包"
+  ],
+  "qemu_pid": 36402,
+  "running_as_root": true,
+  "checks": [
+    {
+      "check": "F1 信道流量",
+      "file": "/home/songyihong/tdc_module2/channel_capture.bin",
+      "bytes": 1039,
+      "ciphertext_blobs": 2,
+      "plaintext_hits": [],
+      "status": "PASS",
+      "detail": "信道上只见密文，未发现明文片段"
+    },
+    {
+      "check": "F2 Guest 进程内存",
+      "pid": 36402,
+      "scanned_mb": 9505.1,
+      "plaintext_hits": {
+        "请用一句话解释什么是可信执行环境。": 2
+      },
+      "status": "EXPOSED",
+      "detail": "宿主可在 QEMU 内存中读到明文: {'请用一句话解释什么是可信执行环境。': 2}"
+    },
+    {
+      "check": "F3 磁盘镜像",
+      "image": "/home/songyihong/tdc_module2/guest_rootfs.img",
+      "size_gb": 24.0,
+      "model_signature_in_raw_image": true,
+      "status": "EXPOSED",
+      "detail": "模型以明文存储于镜像，宿主可直接读取"
+    },
+    {
+      "check": "F4 会话密钥外泄",
+      "guest_pub_on_wire": true,
+      "status": "PASS",
+      "detail": "信道上只出现 Guest 公钥，未出现私钥或会话密钥；会话密钥由双方各自 ECDH 导出，不在信道传输"
+    }
+  ]
+}

@@ -1,0 +1,165 @@
+{
+  "started_ns": 1789727771352021400,
+  "passed": true,
+  "scope": "cross-process device memory reuse inside the engine container; synthetic markers; production engine untouched",
+  "megabytes": 256,
+  "rounds": [
+    {
+      "round": 1,
+      "writer_mode": "write",
+      "writer": {
+        "role": "write",
+        "bytes": 268435456,
+        "freed": true
+      },
+      "reader": {
+        "role": "read",
+        "bytes": 268435456,
+        "marker_hits": 0,
+        "nonzero_bytes": 0,
+        "self_check_hits": 15790320
+      },
+      "marker_prefix": "DEVRESIDUE7dd5…",
+      "residue_found": false,
+      "read_path_valid": true
+    },
+    {
+      "round": 2,
+      "writer_mode": "write-nofree",
+      "writer": {
+        "role": "write-nofree",
+        "bytes": 268435456,
+        "freed": false
+      },
+      "reader": {
+        "role": "read",
+        "bytes": 268435456,
+        "marker_hits": 0,
+        "nonzero_bytes": 0,
+        "self_check_hits": 15790320
+      },
+      "marker_prefix": "DEVRESIDUE3e41…",
+      "residue_found": false,
+      "read_path_valid": true
+    }
+  ],
+  "steps": [
+    {
+      "name": "metrics_before",
+      "exit_code": 0,
+      "stdout": "{\"requests\":53,\"active\":0,\"queued\":0,\"last_batch\":1,\"peak_batch\":2,\"batch_calls\":601,\"batch_rows\":629,\"mean_decode_batch\":1.047,\"scalar_decode_calls\":573,\"prefill_chunks\":55,\"prefill_batch_calls\":53,\"prefill_batch_rows\":55,\"prefill_tokens\":1252,\"mean_prefill_batch\":1.038,\"peak_prefill_batch\":2,\"scalar_prefill_calls\":51,\"ttft_ms\":2145.5,\"tpot_ms\":409.6}",
+      "stderr": "Warning: Permanently added '192.168.122.143' (ED25519) to the list of known hosts.\r\n\nAuthorized users only. All activities may be monitored and reported.\n"
+    },
+    {
+      "name": "stage",
+      "exit_code": 0,
+      "stdout": "/tmp/otp-security-devres-stage.ByELhx\n",
+      "stderr": "Warning: Permanently added '192.168.122.143' (ED25519) to the list of known hosts.\r\n\nAuthorized users only. All activities may be monitored and reported.\n"
+    },
+    {
+      "name": "container_dir",
+      "exit_code": 0,
+      "stdout": "/tmp/otp-security-devres.aqd9h3\n",
+      "stderr": "Warning: Permanently added '192.168.122.143' (ED25519) to the list of known hosts.\r\n\nAuthorized users only. All activities may be monitored and reported.\n"
+    },
+    {
+      "name": "copy",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "Warning: Permanently added '192.168.122.143' (ED25519) to the list of known hosts.\r\n\nAuthorized users only. All activities may be monitored and reported.\n"
+    },
+    {
+      "name": "compile",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "Warning: Permanently added '192.168.122.143' (ED25519) to the list of known hosts.\r\n\nAuthorized users only. All activities may be monitored and reported.\n"
+    },
+    {
+      "name": "write_0",
+      "exit_code": 0,
+      "stdout": "{\"role\":\"write\",\"bytes\":268435456,\"freed\":true}\n",
+      "stderr": "Warning: Permanently added '192.168.122.143' (ED25519) to the list of known hosts.\r\n\nAuthorized users only. All activities may be monitored and reported.\n"
+    },
+    {
+      "name": "read_0",
+      "exit_code": 0,
+      "stdout": "{\"role\":\"read\",\"bytes\":268435456,\"marker_hits\":0,\"nonzero_bytes\":0,\"self_check_hits\":15790320}\n",
+      "stderr": "Warning: Permanently added '192.168.122.143' (ED25519) to the list of known hosts.\r\n\nAuthorized users only. All activities may be monitored and reported.\n"
+    },
+    {
+      "name": "write_1",
+      "exit_code": 0,
+      "stdout": "{\"role\":\"write-nofree\",\"bytes\":268435456,\"freed\":false}\n",
+      "stderr": "Warning: Permanently added '192.168.122.143' (ED25519) to the list of known hosts.\r\n\nAuthorized users only. All activities may be monitored and reported.\n"
+    },
+    {
+      "name": "read_1",
+      "exit_code": 0,
+      "stdout": "{\"role\":\"read\",\"bytes\":268435456,\"marker_hits\":0,\"nonzero_bytes\":0,\"self_check_hits\":15790320}\n",
+      "stderr": "Warning: Permanently added '192.168.122.143' (ED25519) to the list of known hosts.\r\n\nAuthorized users only. All activities may be monitored and reported.\n"
+    },
+    {
+      "name": "metrics_after",
+      "exit_code": 0,
+      "stdout": "{\"requests\":53,\"active\":0,\"queued\":0,\"last_batch\":1,\"peak_batch\":2,\"batch_calls\":601,\"batch_rows\":629,\"mean_decode_batch\":1.047,\"scalar_decode_calls\":573,\"prefill_chunks\":55,\"prefill_batch_calls\":53,\"prefill_batch_rows\":55,\"prefill_tokens\":1252,\"mean_prefill_batch\":1.038,\"peak_prefill_batch\":2,\"scalar_prefill_calls\":51,\"ttft_ms\":2145.5,\"tpot_ms\":409.6}",
+      "stderr": "Warning: Permanently added '192.168.122.143' (ED25519) to the list of known hosts.\r\n\nAuthorized users only. All activities may be monitored and reported.\n"
+    },
+    {
+      "name": "cleanup",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "Warning: Permanently added '192.168.122.143' (ED25519) to the list of known hosts.\r\n\nAuthorized users only. All activities may be monitored and reported.\n"
+    },
+    {
+      "name": "cleanup_stage",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "Warning: Permanently added '192.168.122.143' (ED25519) to the list of known hosts.\r\n\nAuthorized users only. All activities may be monitored and reported.\n"
+    }
+  ],
+  "metrics_before": {
+    "requests": 53,
+    "active": 0,
+    "queued": 0,
+    "last_batch": 1,
+    "peak_batch": 2,
+    "batch_calls": 601,
+    "batch_rows": 629,
+    "mean_decode_batch": 1.047,
+    "scalar_decode_calls": 573,
+    "prefill_chunks": 55,
+    "prefill_batch_calls": 53,
+    "prefill_batch_rows": 55,
+    "prefill_tokens": 1252,
+    "mean_prefill_batch": 1.038,
+    "peak_prefill_batch": 2,
+    "scalar_prefill_calls": 51,
+    "ttft_ms": 2145.5,
+    "tpot_ms": 409.6
+  },
+  "metrics_after": {
+    "requests": 53,
+    "active": 0,
+    "queued": 0,
+    "last_batch": 1,
+    "peak_batch": 2,
+    "batch_calls": 601,
+    "batch_rows": 629,
+    "mean_decode_batch": 1.047,
+    "scalar_decode_calls": 573,
+    "prefill_chunks": 55,
+    "prefill_batch_calls": 53,
+    "prefill_batch_rows": 55,
+    "prefill_tokens": 1252,
+    "mean_prefill_batch": 1.038,
+    "peak_prefill_batch": 2,
+    "scalar_prefill_calls": 51,
+    "ttft_ms": 2145.5,
+    "tpot_ms": 409.6
+  },
+  "backend_requests_unchanged": true,
+  "backend_idle_after": true,
+  "no_cross_process_residue": true,
+  "read_path_validated": true,
+  "finished_ns": 1789727788105542200
+}

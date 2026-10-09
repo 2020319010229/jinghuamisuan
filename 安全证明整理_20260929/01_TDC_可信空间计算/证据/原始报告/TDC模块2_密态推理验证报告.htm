@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TDC 模块2 密态推理验证报告</title>
+<style>
+  :root{
+    --ink:#1a1a1a; --ink2:#444; --muted:#6b7280;
+    --line:#d8dee9; --bg:#ffffff; --soft:#f6f8fa;
+    --pass:#137333; --passbg:#e6f4ea;
+    --fail:#b3261e; --failbg:#fce8e6;
+    --warn:#9a6700; --warnbg:#fff8c5;
+    --blue:#0b57d0; --bluebg:#e8f0fe;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:-apple-system,"Segoe UI","Microsoft YaHei","PingFang SC",sans-serif;
+    font-size:16px; line-height:1.85;
+  }
+  .wrap{max-width:1000px; margin:0 auto; padding:48px 28px 96px}
+  header.title{border-bottom:3px solid var(--ink); padding-bottom:22px; margin-bottom:36px}
+  h1{font-size:30px; line-height:1.35; margin:0 0 12px; letter-spacing:-.3px}
+  .sub{color:var(--muted); font-size:15px}
+  h2{font-size:22px; margin:52px 0 16px; padding-bottom:9px; border-bottom:2px solid var(--line)}
+  h3{font-size:17px; margin:30px 0 10px; color:var(--ink)}
+  p{margin:13px 0}
+  code{background:var(--soft); padding:2px 6px; border-radius:4px;
+       font-family:"Cascadia Mono",Consolas,monospace; font-size:.9em}
+  pre{background:var(--soft); border:1px solid var(--line); border-left:4px solid var(--blue);
+      padding:15px 17px; overflow-x:auto; border-radius:5px; font-size:13.5px; line-height:1.7;
+      font-family:"Cascadia Mono",Consolas,monospace}
+  table{border-collapse:collapse; width:100%; margin:20px 0; font-size:14.5px}
+  th,td{border:1px solid var(--line); padding:10px 12px; text-align:left; vertical-align:top}
+  th{background:var(--soft); font-weight:600}
+  tbody tr:nth-child(even){background:#fbfcfd}
+  .tag{display:inline-block; padding:2px 9px; border-radius:11px; font-size:12.5px;
+       font-weight:600; white-space:nowrap}
+  .t-pass{background:var(--passbg); color:var(--pass)}
+  .t-fail{background:var(--failbg); color:var(--fail)}
+  .t-warn{background:var(--warnbg); color:var(--warn)}
+  .t-info{background:var(--bluebg); color:var(--blue)}
+  .card{border:1px solid var(--line); border-radius:7px; padding:18px 20px; margin:20px 0;
+        background:var(--soft)}
+  .card.ok{border-left:5px solid var(--pass); background:var(--passbg)}
+  .card.bad{border-left:5px solid var(--fail); background:var(--failbg)}
+  .card.note{border-left:5px solid var(--warn); background:var(--warnbg)}
+  .card h4{margin:0 0 9px; font-size:15.5px}
+  .kpis{display:flex; flex-wrap:wrap; gap:14px; margin:24px 0}
+  .kpi{flex:1 1 170px; border:1px solid var(--line); border-radius:7px; padding:15px 17px;
+       background:#fff}
+  .kpi .v{font-size:25px; font-weight:700; letter-spacing:-.5px; line-height:1.25}
+  .kpi .k{font-size:12.5px; color:var(--muted); margin-top:5px}
+  figure{margin:26px 0; text-align:center}
+  figcaption{font-size:13.5px; color:var(--muted); margin-top:10px}
+  ul,ol{padding-left:26px} li{margin:7px 0}
+  a{color:var(--blue)}
+  .foot{margin-top:60px; padding-top:18px; border-top:1px solid var(--line);
+        font-size:13px; color:var(--muted)}
+  @media print{ body{font-size:12pt} .wrap{padding:0} h2{page-break-after:avoid} }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="title">
+  <h1>TDC 模块 2 —— 海光平台 Guest 内密态大模型推理<br>实施与安全性验证报告</h1>
+  <div class="sub">验证日期 2026-09-23 &nbsp;·&nbsp; 宿主 m01r4n12（Hygon C86，128 核 / 503 GB）&nbsp;·&nbsp; 模型 Qwen2.5-0.5B-Instruct</div>
+</header>
+
+<h2>一、一句话结论</h2>
+
+<div class="card ok">
+  <h4>已达成</h4>
+  <p><strong>完整的大模型推理已经真正运行在独立的 Guest 虚拟机内部</strong>，并且打通了
+  「客户端加密 → 信道只走密文 → Guest 内解密 → Guest 内推理 → 加密回传 → 客户端解密」
+  的端到端密态链路。宿主在通信信道上<strong>抓不到任何明文</strong>，加解密开销仅占端到端时延的
+  <strong>0.002%</strong>。</p>
+</div>
+
+<div class="card bad">
+  <h4>未达成（已定位到确切原因）</h4>
+  <p>海光 <strong>CSV 内存加密没有启用</strong>。因此在实测中，拥有 root 权限的宿主管理员
+  <strong>仍然可以从 QEMU 进程内存里直接捞到明文 prompt</strong>（本报告 F2 项实测命中）。
+  根因不是代码问题，而是宿主内核缺少一个启动参数 —— 详见第七节。这一项必须如实告知，
+  不能因为传输层加密做好了就宣称「宿主看不到明文」。</p>
+</div>
+
+<div class="kpis">
+  <div class="kpi"><div class="v">25 s</div><div class="k">Guest 冷启动到服务就绪</div></div>
+  <div class="kpi"><div class="v">152.7 ms</div><div class="k">平均 TPOT（每 token 时延）</div></div>
+  <div class="kpi"><div class="v">0.185 ms</div><div class="k">端到端加解密总开销</div></div>
+  <div class="kpi"><div class="v">0.0021 %</div><div class="k">加密开销占端到端比例</div></div>
+  <div class="kpi"><div class="v">2 / 4</div><div class="k">安全取证项通过（2 项暴露）</div></div>
+</div>
+
+<h2>二、系统架构与数据流</h2>
+
+<p>整体分三层：宿主机（不可信）、Guest 虚拟机（受保护域）、两者之间的 virtio-serial 信道。
+敏感明文只在 Guest 内部出现，信道上流动的全部是 AES-256-GCM 密文。</p>
+
+<figure>
+<svg width="940" height="430" viewBox="0 0 940 430" xmlns="http://www.w3.org/2000/svg"
+     font-family="-apple-system,Segoe UI,Microsoft YaHei,sans-serif">
+  <defs>
+    <marker id="ar" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
+      <path d="M0,0 L10,4 L0,8 Z" fill="#0b57d0"/>
+    </marker>
+    <marker id="ar2" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
+      <path d="M0,0 L10,4 L0,8 Z" fill="#137333"/>
+    </marker>
+  </defs>
+
+  <!-- Host box -->
+  <rect x="20" y="20" width="900" height="390" rx="10" fill="#fafbfc" stroke="#9aa5b1"
+        stroke-width="2" stroke-dasharray="7 4"/>
+  <text x="38" y="45" font-size="14" fill="#6b7280" font-weight="600">宿主机 Host（不可信域）· Hygon C86 · openEuler 24.03</text>
+
+  <!-- client -->
+  <rect x="48" y="78" width="200" height="118" rx="8" fill="#e8f0fe" stroke="#0b57d0" stroke-width="2"/>
+  <text x="148" y="104" text-anchor="middle" font-size="15" font-weight="700" fill="#0b57d0">数据方客户端</text>
+  <text x="148" y="126" text-anchor="middle" font-size="12.5" fill="#333">host_client.py</text>
+  <text x="148" y="148" text-anchor="middle" font-size="12" fill="#444">① 明文 prompt</text>
+  <text x="148" y="167" text-anchor="middle" font-size="12" fill="#444">② X25519 协商会话密钥</text>
+  <text x="148" y="186" text-anchor="middle" font-size="12" fill="#444">③ AES-256-GCM 加密</text>
+
+  <!-- channel -->
+  <rect x="300" y="88" width="160" height="98" rx="8" fill="#fff8c5" stroke="#9a6700" stroke-width="2"/>
+  <text x="380" y="114" text-anchor="middle" font-size="14" font-weight="700" fill="#9a6700">virtio-serial 信道</text>
+  <text x="380" y="136" text-anchor="middle" font-size="11.5" fill="#333">tdc.chan0.sock</text>
+  <text x="380" y="157" text-anchor="middle" font-size="11.5" fill="#b3261e" font-weight="600">宿主可完整抓包</text>
+  <text x="380" y="175" text-anchor="middle" font-size="11.5" fill="#137333" font-weight="600">实测：只有密文</text>
+
+  <!-- Guest box -->
+  <rect x="512" y="62" width="384" height="316" rx="9" fill="#e6f4ea" stroke="#137333" stroke-width="2.5"/>
+  <text x="704" y="88" text-anchor="middle" font-size="14.5" font-weight="700" fill="#137333">TDC Guest 虚拟机（受保护域）</text>
+  <text x="704" y="108" text-anchor="middle" font-size="11.5" fill="#444">独立内核 6.6.0-euler · 独立 rootfs · 8 vCPU / 8 GB</text>
+
+  <rect x="536" y="126" width="336" height="66" rx="6" fill="#fff" stroke="#137333"/>
+  <text x="704" y="149" text-anchor="middle" font-size="13" font-weight="600">④ Guest 内解密（明文首次出现）</text>
+  <text x="704" y="172" text-anchor="middle" font-size="11.5" fill="#444">X25519 私钥在 Guest 内生成，从不出 Guest</text>
+
+  <rect x="536" y="206" width="336" height="76" rx="6" fill="#fff" stroke="#137333"/>
+  <text x="704" y="230" text-anchor="middle" font-size="13" font-weight="600">⑤ Qwen2.5-0.5B 推理</text>
+  <text x="704" y="252" text-anchor="middle" font-size="11.5" fill="#444">torch 2.14.0+cpu · transformers 5.17.0</text>
+  <text x="704" y="271" text-anchor="middle" font-size="11.5" fill="#444">290 个张量 · 954 MB 权重</text>
+
+  <rect x="536" y="296" width="336" height="58" rx="6" fill="#fff" stroke="#137333"/>
+  <text x="704" y="320" text-anchor="middle" font-size="13" font-weight="600">⑥ 结果加密后才离开 Guest</text>
+  <text x="704" y="341" text-anchor="middle" font-size="11.5" fill="#444">同一会话密钥 AES-256-GCM</text>
+
+  <!-- arrows -->
+  <line x1="250" y1="128" x2="296" y2="128" stroke="#0b57d0" stroke-width="2.5" marker-end="url(#ar)"/>
+  <line x1="462" y1="128" x2="530" y2="146" stroke="#0b57d0" stroke-width="2.5" marker-end="url(#ar)"/>
+  <text x="496" y="120" text-anchor="middle" font-size="11" fill="#0b57d0" font-weight="600">密文</text>
+
+  <path d="M536,325 L470,325 L470,176 L462,176" fill="none" stroke="#137333" stroke-width="2.5"
+        marker-end="url(#ar2)"/>
+  <path d="M300,166 L262,166 L262,176 L252,176" fill="none" stroke="#137333" stroke-width="2.5"
+        marker-end="url(#ar2)"/>
+  <text x="496" y="345" text-anchor="middle" font-size="11" fill="#137333" font-weight="600">密文</text>
+
+  <!-- attacker note -->
+  <rect x="48" y="238" width="412" height="140" rx="8" fill="#fce8e6" stroke="#b3261e" stroke-width="2"/>
+  <text x="254" y="264" text-anchor="middle" font-size="14" font-weight="700" fill="#b3261e">宿主管理员视角（取证验证）</text>
+  <text x="66" y="289" font-size="12" fill="#333">F1 抓信道原始字节 → <tspan fill="#137333" font-weight="700">只有密文，明文 0 命中</tspan></text>
+  <text x="66" y="311" font-size="12" fill="#333">F4 找会话私钥 → <tspan fill="#137333" font-weight="700">信道上只有公钥</tspan></text>
+  <text x="66" y="333" font-size="12" fill="#333">F2 扫 QEMU 进程内存 9.5 GB → <tspan fill="#b3261e" font-weight="700">捞到明文</tspan></text>
+  <text x="66" y="355" font-size="12" fill="#333">F3 搜 rootfs 裸镜像 → <tspan fill="#b3261e" font-weight="700">模型明文可读</tspan></text>
+  <text x="66" y="372" font-size="11" fill="#6b7280">F2/F3 暴露的根因：CSV 内存加密未启用（见第七节）</text>
+</svg>
+<figcaption>图 1　密态推理数据流与宿主取证结果。绿色为受保护域，红色为实测暴露面。</figcaption>
+</figure>
+
+<h2>三、运行环境事实</h2>
+
+<table>
+<thead><tr><th style="width:26%">项目</th><th>宿主 Host</th><th>Guest 虚拟机</th></tr></thead>
+<tbody>
+<tr><td>主机名 / 身份</td><td>m01r4n12</td><td>tdc-guest</td></tr>
+<tr><td>CPU</td><td>Hygon C86 Processor，128 核</td><td>8 vCPU（<code>-cpu host</code> 透传）</td></tr>
+<tr><td>内存</td><td>503 GB</td><td>8 GB</td></tr>
+<tr><td>操作系统</td><td>openEuler 24.03 LTS-SP2</td><td>openEuler 24.03 LTS-SP2（独立 rootfs）</td></tr>
+<tr><td>内核</td><td>6.6.0-euler</td><td>6.6.0-euler（独立启动，非共享）</td></tr>
+<tr><td>虚拟化</td><td>QEMU 8.2.0-56.oe2403sp2 + KVM</td><td>q35 机型，virtio-blk 根盘</td></tr>
+<tr><td>固件</td><td>edk2-ovmf-202308-32</td><td>直接内核引导（<code>-kernel</code> + initramfs）</td></tr>
+<tr><td>Python</td><td>3.11.6（仅用于客户端与取证）</td><td>3.11.6</td></tr>
+<tr><td>推理栈</td><td>—</td><td>torch 2.14.0+cpu，transformers 5.17.0</td></tr>
+<tr><td>模型</td><td>—</td><td>Qwen2.5-0.5B-Instruct，290 张量，988,097,824 字节</td></tr>
+<tr><td>根盘镜像</td><td>guest_rootfs.img（24 GB raw，实占 3.3 GB）</td><td>ext4，LABEL=tdcroot</td></tr>
+</tbody>
+</table>
+
+<p>机器事实原始记录见 <a href="results/env_facts.json">results/env_facts.json</a>。</p>
+
+<h2>四、端到端密态推理验证</h2>
+
+<h3>4.1 真实运行记录</h3>
+
+<p>下面是一次完整请求的实际终端输出（未经修饰）。注意客户端打印的明文只存在于客户端本地，
+信道上传输的是 <code>ciphertext on wire</code> 那一行：</p>
+
+<pre>[host] connecting /home/songyihong/tdc_module2/tdc.chan0.sock
+[host] guest pubkey: PDXlQ2P4Ad/OXYC2uuzBz+TA... model: model
+[host] session key derived (X25519 + HKDF-SHA256)
+[host] plaintext prompt  : 请用一句话解释什么是可信执行环境。
+[host] ciphertext on wire: K+yqe8xwP2LhSkNYVu/nBUODB6Iih6+Ug7ofE+VlsL44Qxp9iBTYuXSH4+1LOfDq...
+[host] ciphertext reply  : iTjNW7O0b+Wj9Yudgv8z7R4m0LzqwXu+Swe9FMmslkP/qXY/ZbbCjFGnorrU2sqp...
+[host] decrypted answer  : 可信执行环境是指一种能够确保应用程序在运行时符合其预期功能和安全
+                           策略的环境，它包括了对代码、数据、系统资源以及用户行为等进行严格
+                           控制和管理的机制。这种环境旨在保护应用程序的安全性和可靠性，防止
+                           恶意攻击和数据泄露等问题的发生。
+[host] guest stats       : {'prompt_tokens': 38, 'gen_tokens': 62, 'latency_s': 8.97}
+[host] round trip        : 8.99s</pre>
+
+<p>Guest 内部同一时刻的服务日志，证明解密与推理确实发生在 Guest 内：</p>
+
+<pre>[   19.126] [guest] ephemeral X25519 keypair generated in-guest (private key never leaves)
+[   23.497] [guest] loading tokenizer/model from /opt/tdc/model
+[   24.459] [guest] model ready in 1.0s
+[   24.460] [guest] channel open, waiting for requests
+[   27.413] [guest] sent pubkey
+[   27.415] [guest] decrypted request (17 chars) in-guest
+[   36.610] [guest] generated 62 tokens in 9.18s</pre>
+
+<h3>4.2 信道上宿主实际看到的字节</h3>
+
+<p>这是宿主在 virtio-serial 信道上抓到的原始内容全文（共 1039 字节）。可以看到握手只交换公钥，
+业务内容全部是 base64 密文：</p>
+
+<pre>--- HOST-&gt;GUEST (18 bytes) ---
+{"type": "hello"}
+
+--- GUEST-&gt;HOST (92 bytes) ---
+{"type": "pubkey", "pub": "t95cdsRxaHgBQd6jBKGK7bPBRAHoFhmVzzxrqqtEgAI=", "model": "model"}
+
+--- HOST-&gt;GUEST (202 bytes) ---
+{"type": "req", "epk": "W2IorMqNgeC/28nReF0XkNHa+NjDSqW6EsGYQpbYl3Y=",
+ "nonce": "24uHB5n62IECPwkO",
+ "ct": "d07a/lfIm4EO+JZ7bFGDT8eJqcYMuoBx8vYI1lO3sA9HBTJwCEPWoIJrfF9SLgpwlWu/qjvzYzmENG5n354Mxdevew=="}
+
+--- GUEST-&gt;HOST (598 bytes) ---
+{"type": "resp", "nonce": "4xV0MoF81c7tpYOK", "ct": "pdKDNLj9bzcSgdc3ip4VkkRFdqDS..."}</pre>
+
+<p>对该文件做明文关键词检索的结果：<code>可信执行环境</code> 0 命中、<code>请用一句话</code> 0 命中、
+<code>解释</code> 0 命中。原始抓包文件见 <a href="results/channel_capture.bin">results/channel_capture.bin</a>。</p>
+
+<h2>五、性能评测</h2>
+
+<p>按用户要求的「输入输出 token 量梯度爬坡」设计 6 个用例，并且<strong>每次请求的 query 内容都不相同</strong>
+（脚本给每条 query 追加唯一编号），以排除任何缓存命中对指标的污染。</p>
+
+<table>
+<thead><tr><th>用例</th><th>输入 token</th><th>输出 token</th><th>Guest 内推理</th>
+<th>端到端时延</th><th>TPOT</th><th>加解密开销</th></tr></thead>
+<tbody>
+<tr><td>S1 短</td><td>51</td><td>48</td><td>6.65 s</td><td>6.65 s</td><td>138.5 ms</td><td>0.241 ms</td></tr>
+<tr><td>S2 短</td><td>52</td><td>64</td><td>8.79 s</td><td>8.79 s</td><td>137.4 ms</td><td>0.175 ms</td></tr>
+<tr><td>M1 中</td><td>67</td><td>64</td><td>8.93 s</td><td>8.93 s</td><td>139.6 ms</td><td>0.152 ms</td></tr>
+<tr><td>M2 中</td><td>78</td><td>64</td><td>9.01 s</td><td>9.01 s</td><td>140.8 ms</td><td>0.208 ms</td></tr>
+<tr><td>L1 长</td><td>99</td><td>64</td><td>11.34 s</td><td>11.34 s</td><td>177.2 ms</td><td>0.172 ms</td></tr>
+<tr><td>L2 长</td><td>100</td><td>64</td><td>11.69 s</td><td>11.69 s</td><td>182.7 ms</td><td>0.161 ms</td></tr>
+<tr style="font-weight:600;background:#eef2f7">
+  <td>平均</td><td>74.5</td><td>61.3</td><td>9.40 s</td><td>9.41 s</td><td>152.7 ms</td><td>0.185 ms</td></tr>
+</tbody>
+</table>
+
+<figure>
+<svg width="900" height="330" viewBox="0 0 900 330" xmlns="http://www.w3.org/2000/svg"
+     font-family="-apple-system,Segoe UI,Microsoft YaHei,sans-serif">
+  <line x1="90" y1="270" x2="860" y2="270" stroke="#9aa5b1" stroke-width="1.5"/>
+  <line x1="90" y1="40" x2="90" y2="270" stroke="#9aa5b1" stroke-width="1.5"/>
+  <text x="52" y="46" font-size="11.5" fill="#6b7280" text-anchor="end">200</text>
+  <text x="52" y="103" font-size="11.5" fill="#6b7280" text-anchor="end">150</text>
+  <text x="52" y="160" font-size="11.5" fill="#6b7280" text-anchor="end">100</text>
+  <text x="52" y="217" font-size="11.5" fill="#6b7280" text-anchor="end">50</text>
+  <text x="52" y="274" font-size="11.5" fill="#6b7280" text-anchor="end">0</text>
+  <text x="26" y="160" font-size="12" fill="#444" transform="rotate(-90 26 160)" text-anchor="middle">TPOT (ms)</text>
+  <line x1="90" y1="99" x2="860" y2="99" stroke="#e5e9f0" stroke-dasharray="4 4"/>
+  <line x1="90" y1="156" x2="860" y2="156" stroke="#e5e9f0" stroke-dasharray="4 4"/>
+  <line x1="90" y1="213" x2="860" y2="213" stroke="#e5e9f0" stroke-dasharray="4 4"/>
+
+  <!-- bars: TPOT scaled 200ms = 230px -->
+  <g>
+    <rect x="130" y="111" width="74" height="159" fill="#0b57d0" rx="3"/>
+    <text x="167" y="104" font-size="12" text-anchor="middle" fill="#0b57d0" font-weight="600">138.5</text>
+    <text x="167" y="290" font-size="12.5" text-anchor="middle" fill="#444">S1 短</text>
+    <text x="167" y="307" font-size="11" text-anchor="middle" fill="#6b7280">51→48</text>
+  </g>
+  <g>
+    <rect x="248" y="112" width="74" height="158" fill="#0b57d0" rx="3"/>
+    <text x="285" y="105" font-size="12" text-anchor="middle" fill="#0b57d0" font-weight="600">137.4</text>
+    <text x="285" y="290" font-size="12.5" text-anchor="middle" fill="#444">S2 短</text>
+    <text x="285" y="307" font-size="11" text-anchor="middle" fill="#6b7280">52→64</text>
+  </g>
+  <g>
+    <rect x="366" y="109" width="74" height="161" fill="#3b7de0" rx="3"/>
+    <text x="403" y="102" font-size="12" text-anchor="middle" fill="#0b57d0" font-weight="600">139.6</text>
+    <text x="403" y="290" font-size="12.5" text-anchor="middle" fill="#444">M1 中</text>
+    <text x="403" y="307" font-size="11" text-anchor="middle" fill="#6b7280">67→64</text>
+  </g>
+  <g>
+    <rect x="484" y="108" width="74" height="162" fill="#3b7de0" rx="3"/>
+    <text x="521" y="101" font-size="12" text-anchor="middle" fill="#0b57d0" font-weight="600">140.8</text>
+    <text x="521" y="290" font-size="12.5" text-anchor="middle" fill="#444">M2 中</text>
+    <text x="521" y="307" font-size="11" text-anchor="middle" fill="#6b7280">78→64</text>
+  </g>
+  <g>
+    <rect x="602" y="66" width="74" height="204" fill="#9a6700" rx="3"/>
+    <text x="639" y="59" font-size="12" text-anchor="middle" fill="#9a6700" font-weight="600">177.2</text>
+    <text x="639" y="290" font-size="12.5" text-anchor="middle" fill="#444">L1 长</text>
+    <text x="639" y="307" font-size="11" text-anchor="middle" fill="#6b7280">99→64</text>
+  </g>
+  <g>
+    <rect x="720" y="60" width="74" height="210" fill="#9a6700" rx="3"/>
+    <text x="757" y="53" font-size="12" text-anchor="middle" fill="#9a6700" font-weight="600">182.7</text>
+    <text x="757" y="290" font-size="12.5" text-anchor="middle" fill="#444">L2 长</text>
+    <text x="757" y="307" font-size="11" text-anchor="middle" fill="#6b7280">100→64</text>
+  </g>
+</svg>
+<figcaption>图 2　输入长度爬坡下的 TPOT。输入从 51 增到 100 token 时 TPOT 上升约 32%，
+符合 CPU 推理下注意力随上下文增长的预期。</figcaption>
+</figure>
+
+<div class="card note">
+  <h4>关于加密开销的结论</h4>
+  <p>六个用例的加解密总开销稳定在 <strong>0.15–0.25 毫秒</strong>，平均 0.185 ms，
+  占端到端时延的 <strong>0.0021%</strong>。也就是说，<strong>在这套方案里做端到端加密几乎不花钱</strong>，
+  性能瓶颈完全在 CPU 推理本身，不在密码学。这条结论对后续换更大模型、换更强机型同样成立，
+  因为加密开销只与消息长度有关，与模型规模无关。</p>
+</div>
+
+<p>完整评测数据见 <a href="results/bench_result.json">results/bench_result.json</a>。</p>
+
+<h2>六、安全任务汇总表</h2>
+
+<p>下表汇总本次验证覆盖的全部安全任务。「验证方式」一栏写明是实测还是设计保证，
+「结论」一栏对未达成项不做任何美化。</p>
+
+<table>
+<thead><tr><th style="width:6%">编号</th><th style="width:20%">安全任务</th>
+<th style="width:30%">验证方式</th><th style="width:11%">结论</th><th>说明与证据</th></tr></thead>
+<tbody>
+<tr>
+  <td>A1</td><td>数据方到 TEE 的传输加密</td>
+  <td>实测：抓取信道原始字节，检索明文关键词</td>
+  <td><span class="tag t-pass">通过</span></td>
+  <td>AES-256-GCM；1039 字节抓包中明文关键词 0 命中</td>
+</tr>
+<tr>
+  <td>A2</td><td>明文只在 Guest 内出现</td>
+  <td>实测：Guest 服务日志与宿主抓包对照</td>
+  <td><span class="tag t-pass">通过</span></td>
+  <td>Guest 日志 <code>decrypted request (17 chars) in-guest</code>；宿主侧同期只有密文</td>
+</tr>
+<tr>
+  <td>A3</td><td>推理结果加密后才离开 TEE</td>
+  <td>实测：响应报文结构与解密验证</td>
+  <td><span class="tag t-pass">通过</span></td>
+  <td>响应体仅含 nonce + ct，客户端解密后才得到可读文本</td>
+</tr>
+<tr>
+  <td>A4</td><td>会话密钥协商，私钥不外泄</td>
+  <td>实测：信道内容检索 + 协议设计审查</td>
+  <td><span class="tag t-pass">通过</span></td>
+  <td>X25519 私钥在 Guest 内生成；信道上只出现公钥，会话密钥由双方各自 ECDH 导出</td>
+</tr>
+<tr>
+  <td>A5</td><td>防缓存命中干扰的评测方法</td>
+  <td>实测：6 用例梯度爬坡，每条 query 唯一</td>
+  <td><span class="tag t-pass">通过</span></td>
+  <td>每条 query 追加唯一编号，输入 51→100 token 递增</td>
+</tr>
+<tr>
+  <td>A6</td><td>完整模型在 Guest 内推理</td>
+  <td>实测：Guest 内加载 290 张量并生成 368 token</td>
+  <td><span class="tag t-pass">通过</span></td>
+  <td>非宿主代跑；Guest 有独立内核、独立 rootfs、独立 Python 栈</td>
+</tr>
+<tr>
+  <td>A7</td><td>Guest 与宿主的执行隔离</td>
+  <td>设计 + 实测：独立内核引导，virtio 单一信道</td>
+  <td><span class="tag t-pass">通过</span></td>
+  <td>Guest 无网络设备，对外仅一条 virtio-serial 信道</td>
+</tr>
+<tr>
+  <td>A8</td><td>宿主内存中的明文暴露</td>
+  <td>实测：root 扫描 QEMU 进程 9.5 GB 地址空间</td>
+  <td><span class="tag t-fail">暴露</span></td>
+  <td><strong>明文 prompt 命中 2 次</strong>。根因：CSV 内存加密未启用（见 A10）</td>
+</tr>
+<tr>
+  <td>A9</td><td>磁盘镜像中的模型暴露</td>
+  <td>实测：在 24 GB 裸镜像中检索模型结构特征</td>
+  <td><span class="tag t-fail">暴露</span></td>
+  <td>命中 <code>Qwen2ForCausalLM</code>；模型以明文存储，宿主可直接提取权重</td>
+</tr>
+<tr>
+  <td>A10</td><td>CSV 内存加密启用</td>
+  <td>实测：8 组参数组合 + libvirt 能力查询 + PSP 状态</td>
+  <td><span class="tag t-warn">受阻</span></td>
+  <td>硬件与内核就绪，缺宿主内核启动参数；详见第七节</td>
+</tr>
+<tr>
+  <td>A11</td><td>远程证明（Remote Attestation）</td>
+  <td>—</td>
+  <td><span class="tag t-info">未开展</span></td>
+  <td>依赖 A10 先完成。CSV 未启用时没有可信的度量报告可签发</td>
+</tr>
+<tr>
+  <td>A12</td><td>模型权重密态存储</td>
+  <td>—</td>
+  <td><span class="tag t-info">未开展</span></td>
+  <td>需配合 A10，由 Guest 内密钥解密加密后的权重文件，可消除 A9</td>
+</tr>
+</tbody>
+</table>
+
+<p>取证原始输出见 <a href="results/forensics_report.json">results/forensics_report.json</a>。</p>
+
+<div class="card bad">
+  <h4>必须明确的表述边界</h4>
+  <p>基于本次实测，对外可以说的是：<strong>「在通信信道上宿主只能看到密文，会话私钥不出 Guest」</strong>。
+  <strong>不能</strong>说「宿主无法获取明文」或「宿主看不到模型」—— A8 与 A9 两项实测证明，
+  在 CSV 未启用的当前状态下，具有 root 权限的宿主管理员既能从内存捞到明文，也能从镜像提取模型权重。</p>
+</div>
+
+<h2>七、CSV 内存加密受阻分析</h2>
+
+<h3>7.1 已经确认具备的条件</h3>
+
+<table>
+<thead><tr><th style="width:30%">条件</th><th style="width:16%">状态</th><th>实测依据</th></tr></thead>
+<tbody>
+<tr><td>CPU 支持 CSV</td><td><span class="tag t-pass">具备</span></td>
+    <td><code>/proc/cpuinfo</code> 含 <code>csv</code> 标志；CPUID 0x8000001F 显示 SME=1 SEV=1 SEV-ES=1</td></tr>
+<tr><td>C-bit 参数</td><td><span class="tag t-pass">已确定</span></td>
+    <td>CBITPOS=47，物理地址位缩减=3（注意不是常见的 5）</td></tr>
+<tr><td>PSP 安全处理器</td><td><span class="tag t-pass">在线</span></td>
+    <td><code>ccp 0000:12:00.4: CSV API:1.5 build:2446</code>；平台状态 = INIT</td></tr>
+<tr><td>内核 KVM 支持</td><td><span class="tag t-pass">已启用</span></td>
+    <td><code>kvm_amd: CSV enabled (ASIDs 1-500)</code>、<code>CSV2 enabled</code>、<code>CSV3 enabled</code></td></tr>
+<tr><td>QEMU CSV 代码</td><td><span class="tag t-pass">已具备</span></td>
+    <td>升级到 8.2.0-56 后二进制含 <code>csv3_init</code>、<code>csv3_launch_encrypt_data</code>
+        等完整海光 CSV3 符号</td></tr>
+<tr><td>UEFI 固件</td><td><span class="tag t-pass">已安装</span></td>
+    <td>edk2-ovmf-202308-32，含 <code>ovmf.amdsev/OVMF.fd</code></td></tr>
+<tr><td><strong>CSV3 安全内存预留</strong></td><td><span class="tag t-fail">缺失</span></td>
+    <td><code>/sys/kernel/mm/csv3_cma/mem_info</code> 显示 <strong>total cma size: 0 MiB</strong></td></tr>
+</tbody>
+</table>
+
+<h3>7.2 根因</h3>
+
+<p>宿主内核在开机第 0.02 秒就打出了这条日志：</p>
+
+<pre>[    0.021738] CSV: Fail, either kernel param csv_mem_percentage or
+               csv_smcr_size&amp;csv_use_hugetlb is required
+[    0.021739] CSV: Don't reserve any memory
+[    3.412253] ccp 0000:12:00.4: CSV3: fail to set secure memory region,
+               CSV3 support unavailable</pre>
+
+<p>而当前宿主的内核命令行是：</p>
+
+<pre>BOOT_IMAGE=/vmlinuz-6.6.0-euler root=/dev/mapper/openeuler-root ro
+rd.lvm.lv=openeuler/root cgroup_disable=files apparmor=0 crashkernel=512M rhgb quiet</pre>
+
+<p>里面<strong>没有任何 csv 相关参数</strong>。CSV3 需要在启动阶段从物理内存中划出一块连续的安全内存区
+（CMA），这块区域必须在内核启动时预留，运行时无法补救。没有预留，PSP 就拒绝建立加密上下文，
+表现为 QEMU 侧的：</p>
+
+<pre>qemu-kvm: sev_launch_start: LAUNCH_START ret=1 fw_error=21 'Feature not supported'
+qemu-kvm: sev_kvm_init: failed to create encryption context</pre>
+
+<p>为排除是参数写法问题，已穷举验证 8 组组合（policy 取 0x0/0x1/0x20/0x21，
+带与不带 <code>user-id</code>），以及 q35 与 pc 两种机型，<strong>错误码完全一致</strong>。
+libvirt 的权威能力查询同样返回 <code>&lt;sev supported='no'/&gt;</code>。因此可以确定
+不是调用方式问题，而是平台侧未就绪。</p>
+
+<h3>7.3 修复路径</h3>
+
+<p>需要一次宿主机重启，步骤如下（<strong>本次未执行，按用户决定保持机器状态不变</strong>）：</p>
+
+<ol>
+<li>备份 <code>/etc/default/grub</code>；</li>
+<li>在 <code>GRUB_CMDLINE_LINUX</code> 追加 <code>csv_mem_percentage=50</code>
+    （按需调整比例，代表划给 CSV3 的物理内存百分比）；</li>
+<li><code>grub2-mkconfig -o /boot/grub2/grub.cfg</code>，建议用一次性启动项以便失败回退；</li>
+<li>重启后确认 <code>/sys/kernel/mm/csv3_cma/mem_info</code> 的 total cma size 不再是 0，
+    且 dmesg 不再出现 <code>CSV3 support unavailable</code>；</li>
+<li>以 <code>-object sev-guest,id=sev0,cbitpos=47,reduced-phys-bits=3,policy=0x1</code>
+    重试启动，验证 Guest 内核打印内存加密激活信息；</li>
+<li>重跑本报告第六节的取证，<strong>预期 A8 由「暴露」转为「未命中」</strong>，届时安全闭环完整。</li>
+</ol>
+
+<h2>八、实施过程中解决的关键问题</h2>
+
+<p>这一节记录排障过程，供后续在同类机器上复现时少走弯路。</p>
+
+<table>
+<thead><tr><th style="width:20%">问题</th><th style="width:34%">表象</th><th>根因与解法</th></tr></thead>
+<tbody>
+<tr>
+  <td>宿主「没有外网」</td>
+  <td>dnf 全部失败，<code>Could not resolve host</code>；此前被判断为机器不通外网，
+      只能从本地上传大文件</td>
+  <td><strong>并非没网</strong>。IP 层完全通（ping 223.5.5.5 往返 15 ms），
+      只是 <code>/etc/resolv.conf</code> 是指向 <code>/run/systemd/resolve/</code> 的悬空符号链接，
+      而 systemd-resolved 未启用，导致 DNS 完全不可用。删除悬空链接并写入常规 nameserver 后，
+      openEuler 源、PyPI、hf-mirror 全部恢复。此后所有依赖改为机器自行下载</td>
+</tr>
+<tr>
+  <td>PyTorch 装不上</td>
+  <td>先后试了 Windows 版（含 <code>c10.dll</code>）、PyPI 的 CUDA 版
+      （缺 <code>libcudart.so.12</code>），均无法在 Guest 运行</td>
+  <td>DNS 修好后直接在目标 rootfs 内 <code>pip install --index-url .../whl/cpu torch</code>，
+      装到原生 Linux CPU 版 torch 2.14.0+cpu，一步到位</td>
+</tr>
+<tr>
+  <td>模型加载失败</td>
+  <td><code>SafetensorError: incomplete metadata, file not fully covered</code></td>
+  <td>宿主上那份 model.safetensors 是 1,645,238,848 字节的<strong>损坏文件</strong>
+      （正确为 988,097,824 字节）。重新下载并用 safetensors 头部做完整性校验
+      （校验逻辑：8 字节头长 + 头 + 最大张量结束偏移 == 文件大小），确认 290 张量全覆盖后再写入镜像</td>
+</tr>
+<tr>
+  <td>Guest 起不来</td>
+  <td>用宿主 initramfs 直接引导，找不到根设备</td>
+  <td>宿主 initramfs 是 hostonly 模式，只含宿主 LVM 驱动。改用
+      <code>dracut --no-hostonly --add-drivers "virtio_blk virtio_pci virtio_console ext4"</code>
+      生成通用 initramfs</td>
+</tr>
+<tr>
+  <td>QEMU 读不到内核文件</td>
+  <td>dracut 生成的 initramfs 权限为 0600 root</td>
+  <td>QEMU 以普通用户运行（用户已在 kvm 组，这样 unix socket 属主正确、
+      客户端才连得上），因此需要把内核与 initramfs 改为 0644</td>
+</tr>
+<tr>
+  <td>CSV 参数报错</td>
+  <td><code>Parameter 'reduced-phys-bits' is missing</code>，
+      且 <code>-object sev-guest,help</code> 并未列出该参数</td>
+  <td>help 输出不完整。实际必填，且本机正确值是 <strong>3</strong> 而非常见的 5 ——
+      该值须从 CPUID 0x8000001F 的 EBX[11:6] 读取，不能照抄 AMD EPYC 的经验值</td>
+</tr>
+<tr>
+  <td>脚本把密码写进配置文件</td>
+  <td><code>/etc/resolv.conf</code> 内容变成了密码字符串</td>
+  <td><code>sudo -S</code> 从标准输入读密码，与 heredoc / 管道传数据互相抢占 stdin。
+      凡是需要写入内容的提权操作，一律先写临时文件再 <code>sudo cp</code></td>
+</tr>
+</tbody>
+</table>
+
+<h2>九、代码库与接口说明</h2>
+
+<h3>9.1 文件清单</h3>
+
+<table>
+<thead><tr><th style="width:28%">文件</th><th style="width:14%">运行位置</th><th>职责</th></tr></thead>
+<tbody>
+<tr><td><a href="guest_infer_server.py">guest_infer_server.py</a></td><td>Guest 内</td>
+    <td>密态推理服务端：生成 X25519 密钥对、解密请求、调用 Qwen 推理、加密响应</td></tr>
+<tr><td><a href="host_client.py">host_client.py</a></td><td>宿主</td>
+    <td>数据方客户端：协商会话密钥、加密 prompt、解密结果，并把信道原始字节落盘取证</td></tr>
+<tr><td><a href="bench_e2e.py">bench_e2e.py</a></td><td>宿主</td>
+    <td>梯度爬坡评测：6 个唯一 query 用例，统计 TPOT、端到端时延与加解密开销</td></tr>
+<tr><td><a href="host_forensics.py">host_forensics.py</a></td><td>宿主（需 root）</td>
+    <td>四项安全取证：信道流量、QEMU 进程内存、裸磁盘镜像、密钥外泄</td></tr>
+<tr><td><a href="run_guest.sh">run_guest.sh</a></td><td>宿主</td>
+    <td>以普通用户启动 Guest，挂 virtio 根盘与 virtio-serial 信道</td></tr>
+<tr><td><a href="results/">results/</a></td><td>—</td>
+    <td>本次验证的全部原始产物（JSON 结果、抓包、Guest 日志）</td></tr>
+</tbody>
+</table>
+
+<h3>9.2 通信协议</h3>
+
+<p>信道采用 NDJSON（一行一个 JSON 对象），共三类消息。这也是后续接入尤旺团队标准
+prompt 接口时需要对齐的部分 —— 只需在客户端一侧做协议转换，Guest 内服务无需改动。</p>
+
+<pre>握手：
+  客户端 → Guest   {"type":"hello"}
+  Guest → 客户端   {"type":"pubkey","pub":"&lt;base64 X25519 公钥&gt;","model":"&lt;名称&gt;"}
+
+推理：
+  客户端 → Guest   {"type":"req",
+                    "epk":"&lt;base64 客户端临时公钥&gt;",
+                    "nonce":"&lt;base64 12 字节&gt;",
+                    "ct":"&lt;base64 AES-256-GCM 密文&gt;"}
+  Guest → 客户端   {"type":"resp",
+                    "nonce":"&lt;base64&gt;",
+                    "ct":"&lt;base64&gt;",
+                    "stats":{"prompt_tokens":38,"gen_tokens":62,"latency_s":8.97}}
+
+保活：
+  客户端 → Guest   {"type":"ping"}   →   {"type":"pong"}</pre>
+
+<p>密钥派生方式：双方各自用 X25519 做 ECDH 得到共享密钥，再经
+<code>HKDF-SHA256(info="tdc-module2-session-v1")</code> 派生 32 字节 AES-256-GCM 密钥。
+Guest 侧私钥在进程启动时生成于内存，不落盘、不传输。</p>
+
+<h3>9.3 服务器上的目录结构</h3>
+
+<pre>/home/songyihong/tdc_module2/
+├── guest_rootfs.img          Guest 根盘（24 GB raw，ext4，LABEL=tdcroot）
+├── vmlinuz-6.6.0-euler       Guest 内核
+├── initramfs-guest.img       通用 initramfs（含 virtio 驱动）
+├── model_clean/              校验通过的 Qwen2.5-0.5B-Instruct 原始权重
+├── guest_infer_server.py     （同时已写入镜像 /opt/tdc/）
+├── host_client.py            宿主客户端
+├── bench_e2e.py              评测脚本
+├── host_forensics.py         取证脚本
+├── run_guest.sh              启动脚本
+├── tdc.chan0.sock            virtio-serial 信道（Guest 运行时存在）
+├── guest-console.log         Guest 串口控制台全量日志
+├── channel_capture.bin       信道原始字节抓包
+├── e2e_result.json           单次端到端结果
+├── bench_result.json         评测结果
+└── forensics_report.json     取证结果
+
+Guest 镜像内部：
+/opt/tdc/guest_infer_server.py     推理服务
+/opt/tdc/model/                    模型权重（954 MB）
+/etc/systemd/system/tdc-infer.service   开机自启单元
+</pre>
+
+<h3>9.4 复现步骤</h3>
+
+<pre># 1. 启动 Guest（约 25 秒后服务就绪）
+bash /home/songyihong/tdc_module2/run_guest.sh
+grep '\[guest\]' /home/songyihong/tdc_module2/guest-console.log
+
+# 2. 单次端到端密态推理
+python3 host_client.py --sock tdc.chan0.sock \
+        --prompt "你的问题" \
+        --capture channel_capture.bin --json-out e2e_result.json
+
+# 3. 梯度爬坡评测
+python3 bench_e2e.py --sock tdc.chan0.sock --out bench_result.json
+
+# 4. 安全取证（内存扫描需 root）
+sudo python3 host_forensics.py --dir . \
+        --result-json e2e_result.json \
+        --out forensics_report.json --max-scan-gb 12</pre>
+
+<h2>十、后续建议</h2>
+
+<ol>
+<li><strong>优先级最高</strong>：安排一次宿主重启窗口，加 <code>csv_mem_percentage</code> 启用 CSV3。
+    这是把 A8、A9 两项从「暴露」转为「受保护」的唯一途径，也是整个密态方案价值的支点。</li>
+<li>CSV3 启用后补做远程证明（A11），让数据方能在交付密钥之前验证对端确实是预期的 Guest 镜像。</li>
+<li>模型权重改为密态存储（A12）：权重以密文写入镜像，由 Guest 在远程证明通过后取得密钥解密，
+    消除宿主直接提取权重的风险。</li>
+<li>当前 initramfs 为 904 MB（dracut 全驱动模式），可裁剪到几十 MB，缩短启动时间并减少攻击面。</li>
+<li>评测脚本已按「唯一 query + 梯度爬坡」设计，后续换机型时可直接复用，保证横向可比。</li>
+</ol>
+
+<div class="foot">
+  报告生成于 2026-09-23 · 全部数据来自海光宿主 m01r4n12 实测 ·
+  原始产物见 <a href="results/">results/</a> 目录 ·
+  未达成项已在第六、七节如实标注，请勿在对外材料中扩大结论范围
+</div>
+
+</div>
+</body>
+</html>

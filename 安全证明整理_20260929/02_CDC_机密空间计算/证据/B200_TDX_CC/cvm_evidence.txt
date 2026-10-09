@@ -1,0 +1,92 @@
+Warning: Permanently added '[127.0.0.1]:12222' (ED25519) to the list of known hosts.
+### collected_at: 2026-09-23T08:08:14+00:00
+### hostname: tdx-cvm
+### kernel: 6.8.0-139-generic
+### CVM tdx cpuinfo flag
+tdx_guest
+### CVM tdx dmesg
+[    0.000000] tdx: Guest detected
+[    0.000000] secureboot: Secure boot enabled
+[    0.000000] Kernel is locked down from EFI Secure Boot mode; see man kernel_lockdown.7
+[    0.017802] secureboot: Secure boot enabled
+[    4.360973] process: using TDX aware idle routine
+[    4.360973] Memory Encryption Features active: Intel TDX
+[    4.360973] LSM: initializing lsm=lockdown,capability,landlock,yama,apparmor,integrity
+[    6.035572] software IO TLB: Memory encryption is active and system is using DMA bounce buffers
+### CVM lockdown
+none [integrity] confidentiality
+### CVM lspci
+00:00.0 Host bridge [0600]: Intel Corporation 82G33/G31/P35/P31 Express DRAM Controller [8086:29c0]
+00:01.0 Ethernet controller [0200]: Red Hat, Inc. Virtio 1.0 network device [1af4:1041] (rev 01)
+00:02.0 3D controller [0302]: NVIDIA Corporation Device [10de:2901] (rev a1)
+00:03.0 SCSI storage controller [0100]: Red Hat, Inc. Virtio 1.0 block device [1af4:1042] (rev 01)
+00:04.0 SCSI storage controller [0100]: Red Hat, Inc. Virtio 1.0 block device [1af4:1042] (rev 01)
+00:1f.0 ISA bridge [0601]: Intel Corporation 82801IB (ICH9) LPC Interface Controller [8086:2918] (rev 02)
+00:1f.2 SATA controller [0106]: Intel Corporation 82801IR/IO/IH (ICH9R/DO/DH) 6 port SATA Controller [AHCI mode] [8086:2922] (rev 02)
+00:1f.3 SMBus [0c05]: Intel Corporation 82801I (ICH9 Family) SMBus Controller [8086:2930] (rev 02)
+### CVM nvidia device
+00:02.0 3D controller [0302]: NVIDIA Corporation Device [10de:2901] (rev a1)
+	Subsystem: NVIDIA Corporation Device [10de:1999]
+	Flags: bus master, fast devsel, latency 0, IRQ 22
+	Memory at 384000000000 (64-bit, prefetchable) [size=64M]
+	Memory at 380000000000 (64-bit, prefetchable) [size=256G]
+	Memory at 384004000000 (64-bit, prefetchable) [size=32M]
+	Capabilities: <access denied>
+	Kernel driver in use: nvidia
+	Kernel modules: nvidiafb, nvidia_drm, nvidia
+
+### CVM nvidia-smi
+Wed Sep 23 08:08:14 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 610.57.04              KMD Version: 610.57.04     CUDA UMD Version: 13.3     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA B200                    Off |   00000000:00:02.0 Off |                    0 |
+| N/A   27C    P0            141W / 1000W |       0MiB / 183359MiB |      0%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+### CVM conf-compute -q
+
+==============NVSMI CONF-COMPUTE LOG==============
+
+    CC State                   : ON
+    Multi-GPU Mode             : None
+    CPU CC Capabilities        : INTEL TDX
+    GPU CC Capabilities        : CC Capable
+    CC GPUs Ready State        : Ready
+
+### CVM conf-compute -f
+CC status: ON
+### CVM conf-compute -gc
+CPU CC capabilities: INTEL TDX
+### CVM conf-compute -gg
+GPU CC capabilities: CC Capable
+### CVM conf-compute -e
+CC Environment: PRODUCTION
+### CVM conf-compute -grs
+
+Confidential Compute GPUs Ready state: ready
+
+### CVM conf-compute -gm
+GPU 0: NVIDIA B200 (UUID: GPU-527cfec2-d130-0fac-4f66-27dfaafef5dc)
+Protected memory size:   185970368 KiB
+Unprotected memory size: 0 KiB
+### CVM conf-compute -gkr
+
+Confidential Compute Key Rotation Threshold Attacker Advantage: 60
+
+### CVM nvidia modules
+nvidia_uvm           2056192  0
+nvidia_drm            147456  0
+nvidia_modeset       1503232  1 nvidia_drm
+video                  77824  1 nvidia_modeset
+nvidia              16396288  2 nvidia_uvm,nvidia_modeset
+ecc                    45056  2 ecdsa_generic,nvidia
+### CVM NVRM version
+[ 2009.226719] NVRM: loading NVIDIA UNIX Open Kernel Module for x86_64  610.57.04  Release Build  (dvs-builder@U22-I3-AF05-32-1)  Wed Jul 29 02:45:17 UTC 2026
+[ 2009.446038] NVRM: GPU0 kbifCacheVFInfo_GB100: Unable to read NV_PF0_INITIAL_AND_TOTAL_VFS

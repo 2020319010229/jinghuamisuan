@@ -1,0 +1,186 @@
+{
+  "started_ns": 1789727668393729200,
+  "passed": true,
+  "scope": "run-time downgrade attempts against the OTP engine; ordinary requests only",
+  "prompt_token_ids": [
+    101,
+    202,
+    303,
+    404,
+    505,
+    606
+  ],
+  "attempts": [
+    {
+      "field": {
+        "blind": 0
+      },
+      "tokens_identical": true,
+      "mode": "shannon_rns_otp",
+      "mode_unchanged": true,
+      "error": null
+    },
+    {
+      "field": {
+        "plain": true
+      },
+      "tokens_identical": true,
+      "mode": "shannon_rns_otp",
+      "mode_unchanged": true,
+      "error": null
+    },
+    {
+      "field": {
+        "mode": "plain"
+      },
+      "tokens_identical": true,
+      "mode": "shannon_rns_otp",
+      "mode_unchanged": true,
+      "error": null
+    },
+    {
+      "field": {
+        "otp": false
+      },
+      "tokens_identical": true,
+      "mode": "shannon_rns_otp",
+      "mode_unchanged": true,
+      "error": null
+    },
+    {
+      "field": {
+        "disable_otp": true
+      },
+      "tokens_identical": true,
+      "mode": "shannon_rns_otp",
+      "mode_unchanged": true,
+      "error": null
+    },
+    {
+      "field": {
+        "r_scale": 0
+      },
+      "tokens_identical": true,
+      "mode": "shannon_rns_otp",
+      "mode_unchanged": true,
+      "error": null
+    },
+    {
+      "field": {
+        "blind_mode": "plain"
+      },
+      "tokens_identical": true,
+      "mode": "shannon_rns_otp",
+      "mode_unchanged": true,
+      "error": null
+    }
+  ],
+  "steps": [
+    {
+      "name": "health",
+      "exit_code": 0,
+      "stdout": "{\"status\":\"ok\",\"mode\":\"shannon_rns_otp\",\"devices\":2,\"scheduler\":\"continuous_batching\",\"slots\":2,\"batch_wait_us\":100000,\"scalar_mode\":1,\"active\":0,\"queued\":0}"
+    },
+    {
+      "name": "baseline",
+      "exit_code": 0,
+      "stdout": "{\"completion_token_ids\":[220,16,15,15,15,15,15,15],\"usage\":{\"prompt_tokens\":6,\"completion_tokens\":8,\"total_tokens\":14},\"otp\":{\"mode\":\"shannon_rns_otp\",\"ttft_ms\":1408.1,\"tpot_ms\":419.6,\"continuous_batch\":true}}"
+    },
+    {
+      "name": "attempt_0",
+      "exit_code": 0,
+      "stdout": "{\"completion_token_ids\":[220,16,15,15,15,15,15,15],\"usage\":{\"prompt_tokens\":6,\"completion_tokens\":8,\"total_tokens\":14},\"otp\":{\"mode\":\"shannon_rns_otp\",\"ttft_ms\":1307.3,\"tpot_ms\":424.9,\"continuous_batch\":true}}"
+    },
+    {
+      "name": "attempt_1",
+      "exit_code": 0,
+      "stdout": "{\"completion_token_ids\":[220,16,15,15,15,15,15,15],\"usage\":{\"prompt_tokens\":6,\"completion_tokens\":8,\"total_tokens\":14},\"otp\":{\"mode\":\"shannon_rns_otp\",\"ttft_ms\":1329.0,\"tpot_ms\":424.2,\"continuous_batch\":true}}"
+    },
+    {
+      "name": "attempt_2",
+      "exit_code": 0,
+      "stdout": "{\"completion_token_ids\":[220,16,15,15,15,15,15,15],\"usage\":{\"prompt_tokens\":6,\"completion_tokens\":8,\"total_tokens\":14},\"otp\":{\"mode\":\"shannon_rns_otp\",\"ttft_ms\":1294.8,\"tpot_ms\":421.2,\"continuous_batch\":true}}"
+    },
+    {
+      "name": "attempt_3",
+      "exit_code": 0,
+      "stdout": "{\"completion_token_ids\":[220,16,15,15,15,15,15,15],\"usage\":{\"prompt_tokens\":6,\"completion_tokens\":8,\"total_tokens\":14},\"otp\":{\"mode\":\"shannon_rns_otp\",\"ttft_ms\":1271.4,\"tpot_ms\":412.0,\"continuous_batch\":true}}"
+    },
+    {
+      "name": "attempt_4",
+      "exit_code": 0,
+      "stdout": "{\"completion_token_ids\":[220,16,15,15,15,15,15,15],\"usage\":{\"prompt_tokens\":6,\"completion_tokens\":8,\"total_tokens\":14},\"otp\":{\"mode\":\"shannon_rns_otp\",\"ttft_ms\":1273.0,\"tpot_ms\":408.3,\"continuous_batch\":true}}"
+    },
+    {
+      "name": "attempt_5",
+      "exit_code": 0,
+      "stdout": "{\"completion_token_ids\":[220,16,15,15,15,15,15,15],\"usage\":{\"prompt_tokens\":6,\"completion_tokens\":8,\"total_tokens\":14},\"otp\":{\"mode\":\"shannon_rns_otp\",\"ttft_ms\":1264.0,\"tpot_ms\":406.9,\"continuous_batch\":true}}"
+    },
+    {
+      "name": "attempt_6",
+      "exit_code": 0,
+      "stdout": "{\"completion_token_ids\":[220,16,15,15,15,15,15,15],\"usage\":{\"prompt_tokens\":6,\"completion_tokens\":8,\"total_tokens\":14},\"otp\":{\"mode\":\"shannon_rns_otp\",\"ttft_ms\":1274.1,\"tpot_ms\":407.2,\"continuous_batch\":true}}"
+    },
+    {
+      "name": "health",
+      "exit_code": 0,
+      "stdout": "{\"status\":\"ok\",\"mode\":\"shannon_rns_otp\",\"devices\":2,\"scheduler\":\"continuous_batching\",\"slots\":2,\"batch_wait_us\":100000,\"scalar_mode\":1,\"active\":0,\"queued\":0}"
+    },
+    {
+      "name": "static_blind_sites",
+      "exit_code": 0,
+      "stdout": "ots>16||g_chunk<1||g_batch_wait_us<0||g_batch_wait_us>1000000||g_max_ctx<1||g_max_ctx>16384||g_device_id<0||g_device_id>1||(g_tp2&&g_device_id!=0)||(g_tp2&&g_blind!=0&&g_blind!=4))return 2;signal(SIGPIPE,SIG_IGN);if(s35_open(&g_file,model)||(g_tp2?q8_init_devices(2):q8_init(g_device_id)))return 1;q8_set_rns_mode(0);if(model35_load(&g_model,&g_file,40,1,g_max_ctx))return 1;g_slots=(Slot*)calloc(g_nslots,sizeof(Slot));if(!g_slots)return 1;for(int i=0;i<g_nslots;i++)if(model35_state_init(&g_slots[i].state,&g_model,g_max_ctx))return 1;\n173: g_listen_fd=socket(AF_INET,SOCK_STREAM,0);int one=1;setsockopt(g_listen_fd,SOL_SOCKET,SO_REUSEADDR,&one,sizeof(one));struct sockaddr_in a={};a.sin_family=AF_INET;a.sin_addr.s_addr=htonl(INADDR_ANY);a.sin_port=htons(port);if(g_listen_fd<0||bind(g_listen_fd,(struct sockaddr*)&a,sizeof(a))||listen(g_listen_fd,128))return 1;pthread_t nt;if(pthread_create(&nt,NULL,listener,NULL))return 1;g_ready=1;fprintf(stderr,\"[serve35-cb] ready :%d mode=%s devices=%d device_id=%d slots=%d chunk=%d batch_wait_us=%d max_ctx=%d scheduler=loader-thread\\n\",port,mode_name(g_blind),g_tp2?2:1,g_device_id,g_nslots,g_chunk,g_batch_wait_us,g_max_ctx);scheduler(NULL);return 1;}\n"
+    }
+  ],
+  "health_before": {
+    "status": "ok",
+    "mode": "shannon_rns_otp",
+    "devices": 2,
+    "scheduler": "continuous_batching",
+    "slots": 2,
+    "batch_wait_us": 100000,
+    "scalar_mode": 1,
+    "active": 0,
+    "queued": 0
+  },
+  "baseline": {
+    "tokens": [
+      220,
+      16,
+      15,
+      15,
+      15,
+      15,
+      15,
+      15
+    ],
+    "mode": "shannon_rns_otp"
+  },
+  "health_after": {
+    "status": "ok",
+    "mode": "shannon_rns_otp",
+    "devices": 2,
+    "scheduler": "continuous_batching",
+    "slots": 2,
+    "batch_wait_us": 100000,
+    "scalar_mode": 1,
+    "active": 0,
+    "queued": 0
+  },
+  "mode_stable": true,
+  "static_g_blind_sites": [
+    "25:static int g_nslots=4,g_max_ctx=12288,g_chunk=128,g_batch_wait_us=5000,g_ready,g_blind=4,g_tp2=1;",
+    "52: else{size_t cap=1024+(size_t)r->nout*16;char*b=(char*)malloc(cap);if(b){size_t o=snprintf(b,cap,\"{\\\"completion_token_ids\\\":[\");for(int i=0;i<r->nout;i++)o+=snprintf(b+o,cap-o,\"%s%d\",i?\",\":\"\",r->out[i]);snprintf(b+o,cap-o,\"],\\\"usage\\\":{\\\"prompt_tokens\\\":%d,\\\"completion_tokens\\\":%d,\\\"total_tokens\\\":%d},\\\"otp\\\":{\\\"mode\\\":\\\"%s\\\",\\\"ttft_ms\\\":%.1f,\\\"tpot_ms\\\":%.1f,\\\"continuous_batch\\\":true}}\",r->np,r->nout,r->np+r->nout,mode_name(g_blind),ttft,tpot);send_json(r->fd,200,b);free(b);}}",
+    "101:    prefill_rc=model35_forward_last(&g_model,tokens,PT,logits,g_blind,g_r_scale);",
+    "104:    prefill_rc=model35_forward_last_state(&g_model,states[0],tokens,PT,logits,g_blind,g_r_scale);",
+    "106:   }else prefill_rc=model35_prefill_batch(&g_model,states,tokens,PB,PT,logits,g_blind,g_r_scale);",
+    "133:    decode_rc=model35_forward_last(&g_model,tokens,1,logits,g_blind,g_r_scale);",
+    "136:    decode_rc=model35_forward_last_state(&g_model,states[0],tokens,1,logits,g_blind,g_r_scale);",
+    "138:   }else decode_rc=model35_decode_batch(&g_model,states,tokens,B,logits,g_blind,g_r_scale);",
+    "155: if(!strncmp(req,\"GET /healthz \",13)){char b[448];snprintf(b,sizeof(b),\"{\\\"status\\\":\\\"%s\\\",\\\"mode\\\":\\\"%s\\\",\\\"devices\\\":%d,\\\"device_id\\\":%d,\\\"scheduler\\\":\\\"continuous_batching\\\",\\\"slots\\\":%d,\\\"batch_wait_us\\\":%d,\\\"scalar_mode\\\":%d,\\\"active\\\":%d,\\\"queued\\\":%d}\",g_ready?\"ok\":\"loading\",mode_name(g_blind),g_tp2?2:1,g_device_id,g_nslots,g_batch_wait_us,g_scalar_mode,g_active,g_queued);send_json(fd,200,b);}",
+    "168:int main(int argc,char**argv){const char*model=DEFAULT_MODEL;int port=8020;for(int i=1;i<argc;i++){if(!strcmp(argv[i],\"--model\")&&i+1<argc)model=argv[++i];else if(!strcmp(argv[i],\"--port\")&&i+1<argc)port=atoi(argv[++i]);else if(!strcmp(argv[i],\"--device-id\")&&i+1<argc)g_device_id=atoi(argv[++i]);else if(!strcmp(argv[i],\"--slots\")&&i+1<argc)g_nslots=atoi(argv[++i]);else if(!strcmp(argv[i],\"--prefill-chunk\")&&i+1<argc)g_chunk=atoi(argv[++i]);else if(!strcmp(argv[i],\"--batch-wait-us\")&&i+1<argc)g_batch_wait_us=atoi(argv[++i]);else if(!strcmp(argv[i],\"--max-ctx\")&&i+1<argc)g_max_ctx=atoi(argv[++i]);else if(!strcmp(argv[i],\"--r-scale\")&&i+1<argc)g_r_scale=atof(argv[++i]);else if(!strcmp(argv[i],\"--plain\")){g_blind=0;g_tp2=0;}else if(!strcmp(argv[i],\"--plain-tp2\")){g_blind=0;g_tp2=1;}else if(!strcmp(argv[i],\"--strict\")){g_blind=3;g_tp2=0;}else if(!strcmp(argv[i],\"--otp-rns\"))g_blind=4;else if(!strcmp(argv[i],\"--tp2\"))g_tp2=1;else return 2;}if(g_nslots<1||g_nslots>16||g_chunk<1||g_batch_wait_us<0||g_batch_wait_us>1000000||g_max_ctx<1||g_max_ctx>16384||g_device_id<0||g_device_id>1||(g_tp2&&g_device_id!=0)||(g_tp2&&g_blind!=0&&g_blind!=4))return 2;signal(SIGPIPE,SIG_IGN);if(s35_open(&g_file,model)||(g_tp2?q8_init_devices(2):q8_init(g_device_id)))return 1;q8_set_rns_mode(0);if(model35_load(&g_model,&g_file,40,1,g_max_ctx))return 1;g_slots=(Slot*)calloc(g_nslots,sizeof(Slot));if(!g_slots)return 1;for(int i=0;i<g_nslots;i++)if(model35_state_init(&g_slots[i].state,&g_model,g_max_ctx))return 1;",
+    "173: g_listen_fd=socket(AF_INET,SOCK_STREAM,0);int one=1;setsockopt(g_listen_fd,SOL_SOCKET,SO_REUSEADDR,&one,sizeof(one));struct sockaddr_in a={};a.sin_family=AF_INET;a.sin_addr.s_addr=htonl(INADDR_ANY);a.sin_port=htons(port);if(g_listen_fd<0||bind(g_listen_fd,(struct sockaddr*)&a,sizeof(a))||listen(g_listen_fd,128))return 1;pthread_t nt;if(pthread_create(&nt,NULL,listener,NULL))return 1;g_ready=1;fprintf(stderr,\"[serve35-cb] ready :%d mode=%s devices=%d device_id=%d slots=%d chunk=%d batch_wait_us=%d max_ctx=%d scheduler=loader-thread\\n\",port,mode_name(g_blind),g_tp2?2:1,g_device_id,g_nslots,g_chunk,g_batch_wait_us,g_max_ctx);scheduler(NULL);return 1;}"
+  ],
+  "no_downgrade_accepted": true,
+  "finished_ns": 1789727706468669900
+}

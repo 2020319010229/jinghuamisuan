@@ -1,0 +1,171 @@
+{
+  "started_utc": "2026-09-18T10:30:58.406167+00:00",
+  "scope": "read-only host/CVM operational baseline, not attestation verification",
+  "connection_limit": "Existing connector does not authenticate previously unknown SSH host keys; remote identity is not cryptographically established by this run.",
+  "collector_sha256": "ad7ab322175e469f250620763cb0f247df394d34902043064cdb7a04335e3385",
+  "phase": "baseline",
+  "checks": [
+    {
+      "target": "host",
+      "check": "system",
+      "utc": "2026-09-18T10:30:58.911680+00:00",
+      "local_before_ns": 1789727458911680400,
+      "local_after_ns": 1789727459065896000,
+      "collected": true,
+      "stdout": "Linux 6.6.0-virtCCA aarch64 GNU/Linux\nNAME=\"openEuler\"\nVERSION=\"24.03 (LTS-SP3)\"\nID=\"openEuler\"\nVERSION_ID=\"24.03\"\nPRETTY_NAME=\"openEuler 24.03 (LTS-SP3)\"\nANSI_COLOR=\"0;31\"\n\n2026-09-18T10:30:59Z\n\nCHECK_EXIT_CODE=0\n",
+      "stderr": ""
+    },
+    {
+      "target": "host",
+      "check": "devices",
+      "utc": "2026-09-18T10:30:59.065896+00:00",
+      "local_before_ns": 1789727459065896000,
+      "local_after_ns": 1789727459356487300,
+      "collected": true,
+      "stdout": "/dev/vfio:\ntotal 0\ncrw-------. 1 root root 237,   0 Sep 10 16:22 83\ncrw-------. 1 root root 237,   1 Sep 10 16:22 84\ndrwxr-xr-x. 2 root root       80 Sep 10 16:22 devices\ncrw-rw-rw-. 1 root root  10, 196 Sep 10 16:20 vfio\n/usr/local/sbin/npu-smi\n\nCHECK_EXIT_CODE=0\n",
+      "stderr": ""
+    },
+    {
+      "target": "host",
+      "check": "accelerator",
+      "utc": "2026-09-18T10:30:59.356487+00:00",
+      "local_before_ns": 1789727459356487300,
+      "local_after_ns": 1789727474518931700,
+      "collected": true,
+      "stdout": "\nCHECK_EXIT_CODE=124\n",
+      "stderr": ""
+    },
+    {
+      "target": "host",
+      "check": "containers",
+      "utc": "2026-09-18T10:31:14.518931+00:00",
+      "local_before_ns": 1789727474518931700,
+      "local_after_ns": 1789727474820262600,
+      "collected": true,
+      "stdout": "\nCHECK_EXIT_CODE=0\n",
+      "stderr": ""
+    },
+    {
+      "target": "host",
+      "check": "listeners",
+      "utc": "2026-09-18T10:31:14.820262+00:00",
+      "local_before_ns": 1789727474820262600,
+      "local_after_ns": 1789727475042406800,
+      "collected": true,
+      "stdout": "State  Recv-Q Send-Q Local Address:Port Peer Address:PortProcess\nLISTEN 0      4096         0.0.0.0:111       0.0.0.0:*          \nLISTEN 0      128          0.0.0.0:22        0.0.0.0:*          \nLISTEN 0      32     192.168.122.1:53        0.0.0.0:*          \nLISTEN 0      4096            [::]:111          [::]:*          \nLISTEN 0      128             [::]:22           [::]:*          \nLISTEN 0      4096               *:9100            *:*          \n\nCHECK_EXIT_CODE=0\n",
+      "stderr": ""
+    },
+    {
+      "target": "host",
+      "check": "process_names",
+      "utc": "2026-09-18T10:31:15.042406+00:00",
+      "local_before_ns": 1789727475042406800,
+      "local_after_ns": 1789727475294302100,
+      "collected": true,
+      "stdout": "     18 kworker/R-0000:\n     11 kworker/R-scsi_\n      6 kworker/R-ib_ma\n      5 sshd\n      4 kworker/R-ext4-\n      3 kworker/R-nvme-\n      3 kworker/R-kmpat\n      3 bash\n      2 sort\n      2 kworker/R-ib-co\n      2 dnsmasq\n      2 agetty\n      1 watchdogd\n      1 virtlogd\n      1 uniq\n      1 tuned\n      1 systemd-udevd\n      1 systemd-machine\n      1 systemd-logind\n      1 systemd-journal\n      1 systemd\n      1 spi0\n      1 smartd\n      1 scsi_eh_6\n      1 scsi_eh_5\n      1 scsi_eh_4\n      1 scsi_eh_3\n      1 scsi_eh_2\n      1 scsi_eh_1\n      1 scsi_eh_0\n      1 rsyslogd\n      1 rpcbind\n      1 rngd\n      1 restorecond\n      1 rcu_tasks_trace_kthread\n      1 rcu_tasks_rude_kthread\n      1 rcu_sched\n      1 qemu-system-aar\n      1 ps\n      1 pool_workqueue_release\n      1 polkitd\n      1 oom_reaper\n      1 node_exporter\n      1 NetworkManager\n      1 migration/99\n      1 migration/98\n      1 migration/97\n      1 migration/96\n      1 migration/95\n      1 migration/94\n\nCHECK_EXIT_CODE=0\n",
+      "stderr": ""
+    },
+    {
+      "target": "host",
+      "check": "source_identity",
+      "utc": "2026-09-18T10:31:15.294302+00:00",
+      "local_before_ns": 1789727475294302100,
+      "local_after_ns": 1789727475474442600,
+      "collected": true,
+      "stdout": "\nCHECK_EXIT_CODE=0\n",
+      "stderr": ""
+    },
+    {
+      "target": "host",
+      "check": "health",
+      "utc": "2026-09-18T10:31:15.474442+00:00",
+      "local_before_ns": 1789727475474442600,
+      "local_after_ns": 1789727475688799900,
+      "collected": true,
+      "stdout": "\nport=8000\n\nhttp_status=000\n\nport=8101\n\nhttp_status=000\n\nport=8030\n\nhttp_status=000\n\nCHECK_EXIT_CODE=0\n",
+      "stderr": "curl: (7) Failed to connect to 127.0.0.1 port 8000 after 0 ms: Couldn't connect to server\ncurl: (7) Failed to connect to 127.0.0.1 port 8101 after 0 ms: Couldn't connect to server\ncurl: (7) Failed to connect to 127.0.0.1 port 8030 after 0 ms: Couldn't connect to server\n"
+    },
+    {
+      "target": "cvm",
+      "check": "system",
+      "utc": "2026-09-18T10:31:15.688799+00:00",
+      "local_before_ns": 1789727475688799900,
+      "local_after_ns": 1789727476019956700,
+      "collected": true,
+      "stdout": "Linux 6.6.0-98.0.0.103.oe2403sp2.aarch64 aarch64 GNU/Linux\nNAME=\"openEuler\"\nVERSION=\"24.03 (LTS-SP2)\"\nID=\"openEuler\"\nVERSION_ID=\"24.03\"\nPRETTY_NAME=\"openEuler 24.03 (LTS-SP2)\"\nANSI_COLOR=\"0;31\"\n\n2026-09-18T10:31:07Z\n\nCHECK_EXIT_CODE=0\n",
+      "stderr": "Warning: Permanently added '192.168.122.143' (ED25519) to the list of known hosts.\r\n\nAuthorized users only. All activities may be monitored and reported.\n"
+    },
+    {
+      "target": "cvm",
+      "check": "devices",
+      "utc": "2026-09-18T10:31:16.020971+00:00",
+      "local_before_ns": 1789727476020971700,
+      "local_after_ns": 1789727476402277800,
+      "collected": true,
+      "stdout": "crw-rw---- 1 HwHiAiUser HwHiAiUser 240,   0 Sep 10 08:23 /dev/davinci0\ncrw-rw---- 1 HwHiAiUser HwHiAiUser 240,   2 Sep 10 08:23 /dev/davinci2\ncrw-rw---- 1 HwHiAiUser HwHiAiUser 241,   0 Sep 10 08:23 /dev/davinci_manager\ncrw------- 1 root       root        10, 126 Sep 10 08:23 /dev/tsi\n\n/dev/vfio:\ntotal 0\ncrw-rw-rw- 1 root root 10, 196 Sep 10 08:23 vfio\n/usr/local/sbin/npu-smi\n\nCHECK_EXIT_CODE=0\n",
+      "stderr": "Warning: Permanently added '192.168.122.143' (ED25519) to the list of known hosts.\r\n\nAuthorized users only. All activities may be monitored and reported.\n"
+    },
+    {
+      "target": "cvm",
+      "check": "accelerator",
+      "utc": "2026-09-18T10:31:16.403266+00:00",
+      "local_before_ns": 1789727476403266000,
+      "local_after_ns": 1789727477431546200,
+      "collected": true,
+      "stdout": "+--------------------------------------------------------------------------------------------------------+\n| npu-smi 25.2.0                                   Version: 25.2.0                                       |\n+-------------------------------+-----------------+------------------------------------------------------+\n| NPU     Name                  | Health          | Power(W)     Temp(C)           Hugepages-Usage(page) |\n| Chip    Device                | Bus-Id          | AICore(%)    Memory-Usage(MB)                        |\n+===============================+=================+======================================================+\n| 768     310P3                 | OK              | NA           35                10201 / 10201         |\n| 0       0                     | 0000:03:00.0    | 0            22355/ 44215                            |\n+===============================+=================+======================================================+\n| 1024    310P3                 | OK              | NA           37                7811  / 7811          |\n| 0       1                     | 0000:04:00.0    | 0            17577/ 44215                            |\n+===============================+=================+======================================================+\n+-------------------------------+-----------------+------------------------------------------------------+\n| NPU     Chip                  | Process id      | Process name             | Process memory(MB)        |\n+===============================+=================+======================================================+\n| 768     0                     | 2535674         | serve35_cb               | 20508                     |\n+===============================+=================+======================================================+\n| 1024    0                     | 2535674         | serve35_cb               | 15729                     |\n+===============================+=================+======================================================+\n\nCHECK_EXIT_CODE=0\n",
+      "stderr": "Warning: Permanently added '192.168.122.143' (ED25519) to the list of known hosts.\r\n\nAuthorized users only. All activities may be monitored and reported.\n"
+    },
+    {
+      "target": "cvm",
+      "check": "containers",
+      "utc": "2026-09-18T10:31:17.431546+00:00",
+      "local_before_ns": 1789727477431546200,
+      "local_after_ns": 1789727477970775000,
+      "collected": true,
+      "stdout": "cvm-server\tcvm-server:security-20260918-01\tUp 8 hours (healthy)\t0.0.0.0:8101->8101/tcp\notp-c35-cb\t0b434cbfa088\tUp 8 hours (healthy)\t\n\nCHECK_EXIT_CODE=0\n",
+      "stderr": "Warning: Permanently added '192.168.122.143' (ED25519) to the list of known hosts.\r\n\nAuthorized users only. All activities may be monitored and reported.\n"
+    },
+    {
+      "target": "cvm",
+      "check": "listeners",
+      "utc": "2026-09-18T10:31:17.971780+00:00",
+      "local_before_ns": 1789727477971780700,
+      "local_after_ns": 1789727478392901500,
+      "collected": true,
+      "stdout": "State  Recv-Q Send-Q Local Address:Port Peer Address:PortProcess\nLISTEN 0      128          0.0.0.0:22        0.0.0.0:*          \nLISTEN 0      4096         0.0.0.0:8101      0.0.0.0:*          \nLISTEN 0      5            0.0.0.0:8000      0.0.0.0:*          \nLISTEN 0      128          0.0.0.0:8020      0.0.0.0:*          \nLISTEN 0      128             [::]:22           [::]:*          \n\nCHECK_EXIT_CODE=0\n",
+      "stderr": "Warning: Permanently added '192.168.122.143' (ED25519) to the list of known hosts.\r\n\nAuthorized users only. All activities may be monitored and reported.\n"
+    },
+    {
+      "target": "cvm",
+      "check": "process_names",
+      "utc": "2026-09-18T10:31:18.392901+00:00",
+      "local_before_ns": 1789727478392901500,
+      "local_after_ns": 1789727478805705000,
+      "collected": true,
+      "stdout": "    128 kworker/R-hdcdr\n     20 kworker/R-devdr\n     18 kworker/R-pcie_\n      3 sshd\n      3 bash\n      2 sort\n      2 python3\n      2 kworker/R-xfs-c\n      2 kworker/R-xfs-b\n      2 kworker/R-tsdrv\n      2 kworker/R-heart\n      2 kworker/R-aicor\n      2 containerd-shim\n      2 agetty\n      1 xfsaild/vdb\n      1 watchdogd\n      1 uniq\n      1 systemd-udevd\n      1 systemd-logind\n      1 systemd-journal\n      1 systemd\n      1 sleep\n      1 serve35_cb\n      1 rsyslogd\n      1 rcu_tasks_trace_kthread\n      1 rcu_tasks_rude_kthread\n      1 rcu_sched\n      1 ps\n      1 pool_workqueue_release\n      1 oom_reaper\n      1 NetworkManager\n      1 migration/99\n      1 migration/98\n      1 migration/97\n      1 migration/96\n      1 migration/95\n      1 migration/94\n      1 migration/93\n      1 migration/92\n      1 migration/91\n      1 migration/90\n      1 migration/9\n      1 migration/89\n      1 migration/88\n      1 migration/87\n      1 migration/86\n      1 migration/85\n      1 migration/84\n      1 migration/83\n      1 migration/82\n\nCHECK_EXIT_CODE=0\n",
+      "stderr": "Warning: Permanently added '192.168.122.143' (ED25519) to the list of known hosts.\r\n\nAuthorized users only. All activities may be monitored and reported.\n"
+    },
+    {
+      "target": "cvm",
+      "check": "source_identity",
+      "utc": "2026-09-18T10:31:18.806702+00:00",
+      "local_before_ns": 1789727478806702700,
+      "local_after_ns": 1789727479228903100,
+      "collected": true,
+      "stdout": "d461f18cb52c576af0d38bb35fad287f7a11ee5e08309611eb473f7a0920417a  /data/otp_c35/tee_crypto.py\n618b8e5543ae4742d3a1e5ce9a39ae199885ada5f0e366970c8eca8dcbc39555  /data/otp_c35/otp_rng.h\n\nCHECK_EXIT_CODE=0\n",
+      "stderr": "Warning: Permanently added '192.168.122.143' (ED25519) to the list of known hosts.\r\n\nAuthorized users only. All activities may be monitored and reported.\n"
+    },
+    {
+      "target": "cvm",
+      "check": "health",
+      "utc": "2026-09-18T10:31:19.229901+00:00",
+      "local_before_ns": 1789727479229901600,
+      "local_after_ns": 1789727479906281200,
+      "collected": true,
+      "stdout": "\nport=8000\n{\"status\":\"ok\",\"tee\":\"Kunpeng virtCCA\",\"backend\":{\"status\":\"ok\",\"mode\":\"shannon_rns_otp\",\"devices\":2,\"replicas\":1,\"backend_capacity\":2,\"inflight_requests\":0,\"total_request_capacity\":2,\"ready_request_slots\":2}}\nhttp_status=200\n\nport=8101\n<!doctype html>\n<html lang=en>\n<title>404 Not Found</title>\n<h1>Not Found</h1>\n<p>The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.</p>\n\nhttp_status=404\n\nport=8030\n\nhttp_status=000\n\nCHECK_EXIT_CODE=0\n",
+      "stderr": "Warning: Permanently added '192.168.122.143' (ED25519) to the list of known hosts.\r\n\nAuthorized users only. All activities may be monitored and reported.\ncurl: (7) Failed to connect to 127.0.0.1 port 8030 after 0 ms: Couldn't connect to server\n"
+    }
+  ],
+  "host_connected": true,
+  "finished_utc": "2026-09-18T10:31:19.907284+00:00"
+}

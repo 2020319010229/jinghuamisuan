@@ -1,0 +1,25 @@
+############ TDC-04/07 宿主机（不可信侧）访问测试 ############
+== 宿主上是否存在 NPU 设备节点 ==
+ls: cannot access '/dev/davinci*': No such file or directory
+ls: cannot access '/dev/devmm_svm': No such file or directory
+
+== 宿主上 npu-smi 是否可用 ==
+npu-smi 已安装: /usr/local/sbin/npu-smi
+  npu-smi info 退出码=124 (124=超时被杀)
+  npu-smi info 无任何输出
+
+== 宿主侧驱动占用（vfio-pci 表示已交给虚机独占） ==
+18:00.0 -> Kernel driver in use: vfio-pci
+41:00.0 -> Kernel driver in use: vfio-pci
+
+== 宿主上是否加载了昇腾计算驱动 ==
+(以上为空表示宿主未加载 devdrv 系列模块)
+
+== 宿主尝试直接读取设备 BAR 空间 ==
+0000:18:00.0 resource0 读取结果: 0+0 records out 0 bytes copied, 4.1851e-05 s, 0.0 kB/s 
+0000:41:00.0 resource0 读取结果: 0+0 records out 0 bytes copied, 4.398e-05 s, 0.0 kB/s 
+
+== IOMMU 分组（一设备一组 = 可独占直通） ==
+0000:18:00.0 -> IOMMU group 83, 组内设备数 1
+0000:41:00.0 -> IOMMU group 84, 组内设备数 1
+DONE

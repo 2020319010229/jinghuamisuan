@@ -1,0 +1,20 @@
+{
+  "host": "m01r4n12",
+  "host_kernel": "6.6.0-euler",
+  "host_cpu": "Hygon C86 Processor",
+  "host_cores": 128,
+  "host_mem_gb": 503,
+  "qemu": "qemu-8.2.0-56.oe2403sp2.x86_64",
+  "ovmf": "edk2-ovmf-202308-32.oe2403sp2.noarch",
+  "guest_os": "openEuler 24.03 LTS-SP2",
+  "guest_kernel": "6.6.0-euler",
+  "guest_python": "3.11.6",
+  "guest_mem_mb": 8192,
+  "guest_vcpus": 8,
+  "model": "Qwen2.5-0.5B-Instruct",
+  "model_bytes": 988097824,
+  "rootfs_image_bytes": 25769803776,
+  "csv_api": "1.5 build 2446",
+  "csv_kernel_status": "CSV/CSV2/CSV3 enabled in kvm_amd; CSV3 CMA reserved = 0 MiB (missing csv_mem_percentage boot param)",
+  "csv_blocker": "sev_launch_start LAUNCH_START fw_error=21 UNSUPPORTED; libvirt domcapabilities sev supported=no"
+}

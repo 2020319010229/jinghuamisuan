@@ -1,0 +1,22 @@
+[   19.137895] python3[945]: [guest] boot; python 3.11.6
+[   19.138420] python3[945]: [guest] channel /dev/virtio-ports/tdc.chan0
+[   19.149683] python3[945]: [guest] ephemeral X25519 keypair generated in-guest (private key never leaves)
+[?2004h[root@tdc-guest ~]# [   23.499439] python3[945]: [guest] loading tokenizer/model from /opt/tdc/model
+[   24.433948] python3[945]: [guest] model ready in 0.9s
+[   24.434420] python3[945]: [guest] channel open, waiting for requests
+[   27.388253] python3[945]: [guest] sent pubkey
+[   27.390514] python3[945]: [guest] decrypted request (17 chars) in-guest
+[   36.380742] python3[945]: [guest] generated 62 tokens in 8.97s
+[   36.532859] python3[945]: [guest] sent pubkey
+[   36.534810] python3[945]: [guest] decrypted request (33 chars) in-guest
+[   43.187993] python3[945]: [guest] generated 48 tokens in 6.65s
+[   43.196036] python3[945]: [guest] decrypted request (35 chars) in-guest
+[   51.983217] python3[945]: [guest] generated 64 tokens in 8.79s
+[   51.988036] python3[945]: [guest] decrypted request (60 chars) in-guest
+[   60.918132] python3[945]: [guest] generated 64 tokens in 8.93s
+[   60.923033] python3[945]: [guest] decrypted request (70 chars) in-guest
+[   69.929406] python3[945]: [guest] generated 64 tokens in 9.01s
+[   69.940050] python3[945]: [guest] decrypted request (117 chars) in-guest
+[   81.269857] python3[945]: [guest] generated 64 tokens in 11.34s
+[   81.275034] python3[945]: [guest] decrypted request (113 chars) in-guest
+[   92.967619] python3[945]: [guest] generated 64 tokens in 11.69s

@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TDC 安全证明报告</title>
+<style>
+:root{
+  --ink:#16181d; --ink2:#3d434e; --ink3:#6b7280;
+  --line:#e3e6ea; --bg:#ffffff; --box:#f7f8fa;
+  --pass:#1d7a46; --cond:#9a6700; --todo:#6b3fa0; --fail:#b3261e; --accent:#1a4fa0;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:"Source Han Sans SC","Noto Sans CJK SC","Microsoft YaHei","PingFang SC",-apple-system,"Segoe UI",sans-serif;
+  font-size:15.5px;line-height:1.85}
+.wrap{max-width:1040px;margin:0 auto;padding:0 28px 110px}
+header.top{border-bottom:3px solid var(--ink);padding:46px 0 20px}
+header.top h1{font-size:29px;margin:0 0 8px;letter-spacing:.5px}
+header.top .sub{color:var(--ink2);font-size:14.5px}
+header.top .meta{margin-top:14px;color:var(--ink3);font-size:13.5px;border-top:1px solid var(--line);padding-top:12px}
+h2{font-size:21px;margin:52px 0 6px;padding-bottom:9px;border-bottom:2px solid var(--ink)}
+h3{font-size:17px;margin:30px 0 6px}
+h3 .id{font-family:"Cascadia Mono",Consolas,monospace;color:var(--accent);margin-right:10px}
+p{margin:10px 0}
+code,.mono{font-family:"Cascadia Mono",Consolas,monospace;font-size:13px;background:#eef1f4;
+  padding:1px 5px;border-radius:3px;color:#24303f}
+.lead{font-size:16px;color:var(--ink2)}
+.v{display:inline-block;font-size:12.5px;font-weight:700;padding:2px 10px;border-radius:12px;color:#fff;margin-right:8px;vertical-align:2px}
+.v-pass{background:var(--pass)} .v-cond{background:var(--cond)} .v-todo{background:var(--todo)} .v-fail{background:var(--fail)}
+.data{margin:14px 0;border:1px solid var(--line);border-radius:5px;overflow:hidden}
+.data .row{display:flex;border-bottom:1px solid #eef1f4;font-size:14.3px}
+.data .row:last-child{border-bottom:0}
+.data .row>div{padding:7px 12px}
+.data .row>div:first-child{flex:0 0 250px;background:#f7f9fb;color:#3d434e;border-right:1px solid #eef1f4}
+.data .row>div:last-child{flex:1}
+.data .row.h>div{background:#eef2f6;font-weight:700;color:#24303f}
+.box{background:var(--box);border-left:4px solid #c3c9d2;padding:12px 16px;margin:14px 0;border-radius:0 4px 4px 0}
+.box.warn{background:#fdf6ec;border-left-color:#b3801e}
+.box.bad{background:#fdf1f0;border-left-color:#b3261e}
+.box.good{background:#f2f8f5;border-left-color:#2f7d54}
+.box b.t{display:block;margin-bottom:4px}
+.num{font-family:"Cascadia Mono",Consolas,monospace;font-weight:600}
+.ok{color:var(--pass);font-weight:700} .no{color:var(--fail);font-weight:700}
+ul{margin:10px 0 10px 22px;padding:0} li{margin:5px 0}
+figure{margin:24px 0;text-align:center} figcaption{font-size:13px;color:var(--ink3);margin-top:8px}
+.note{font-size:14px;color:var(--ink3);border-top:1px solid var(--line);margin-top:30px;padding-top:12px}
+pre.idx{background:#f7f9fb;border:1px solid var(--line);border-radius:5px;padding:12px 14px;
+  font-family:"Cascadia Mono",Consolas,monospace;font-size:12.5px;line-height:1.7;overflow-x:auto;color:#24303f}
+@media print{body{font-size:11.5pt}.data,.box,figure{break-inside:avoid}h2{break-after:avoid}.wrap{max-width:none;padding:0}}
+@media (max-width:760px){.data .row{flex-direction:column}.data .row>div:first-child{flex:none;border-right:0}.wrap{padding:0 16px 70px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <h1>《TDC 安全证明报告》</h1>
+  <div class="sub">方案一 · 可信空间计算（Trusted Domain Computing）· 计划书 TDC-01 ~ TDC-08 独立结论</div>
+  <div class="meta">
+    2026-09-18 ·
+    鲲鹏 920 + virtCCA 机密虚机 + 双 Ascend 310P vfio-pci 原生直通 ·
+    Qwen3.5-35B-A3B W8A8 ·
+    引擎 <span class="mono">e015292c…</span> ·
+    证据批次 <span class="mono">results/security_full_20260918/</span>
+  </div>
+</header>
+
+<h2>一、结论</h2>
+
+<p class="lead"><b>方案一 TDC 条件通过。</b>八项证明任务中五项通过、两项条件通过。当前部署正是计划书所述 TDC 的架构形态——<b>CPU-TEE 加通用加速卡原生直通</b>——因此 TDC-01 至 TDC-07 全部在本机实测，包括此前从未做过的宿主侧内存反向读取、非授权侧访问与跨任务设备内存残留。</p>
+
+<div class="data">
+  <div class="row h"><div>任务</div><div>判定与关键实测</div></div>
+  <div class="row"><div>TDC-01 架构与可信边界</div><div><span class="v v-pass">通过</span>qemu 实证 <span class="mono">kvm-type=cvm</span> + <span class="mono">tmm-guest</span>；加速卡非机密计算边界已明确披露</div></div>
+  <div class="row"><div>TDC-02 CPU-TEE 可信状态与远程证明</div><div><span class="v v-pass">通过</span>证明负例 7/7；未处于调试模式</div></div>
+  <div class="row"><div>TDC-03 内存加密与地址空间隔离</div><div><span class="v v-pass">通过</span>宿主读 guest 三段共 130.39 GB（覆盖 97.16%），两类标记均 0 命中，两个阳性对照成立</div></div>
+  <div class="row"><div>TDC-04 一租户一机密域隔离</div><div><span class="v v-cond">条件通过</span>宿主与非特权用户两类非授权侧全部被拒；<b>单租户部署，跨租户越权未实测</b></div></div>
+  <div class="row"><div>TDC-05 直通独占与任务后清理</div><div><span class="v v-pass">通过</span>独立 IOMMU 组每组 1 设备；跨进程设备内存读回全零（0 / 268,435,456）</div></div>
+  <div class="row"><div>TDC-06 数据路径验证</div><div><span class="v v-pass">通过</span>两处抓包 23/23、11/11；运行进程 <span class="mono">/proc/exe</span> 摘要 = 部署二进制</div></div>
+  <div class="row"><div>TDC-07 边界外明文风险确认</div><div><span class="v v-cond">条件通过</span>软件侧已测；<b>物理 PCIe 无仪器</b>；245 处静态明文来源未定位</div></div>
+  <div class="row"><div>TDC-08 报告编制与复核</div><div><span class="v v-pass">本报告</span></div></div>
+</div>
+
+<div class="box bad">
+<b class="t">本报告最重要的一条披露（计划书验收要求：TDC 报告必须明确通用加速卡的保护边界）</b>
+<b>通用加速卡不是 GPU-TEE。</b>本报告<b>不宣称</b>加速卡显存与 CPU—加速卡总线具备密码学机密性，<b>也不表述为全链路密态</b>。<br><br>
+还有一点必须讲清楚，否则极易被误读：当前这台机器上叠加运行着方案三的 OTP 盲化，所以<b>实际下发到卡上的是 RNS 密文分量</b>。但这是 FEC 机制带来的，<b>不是 TDC 的性质</b>。<b>若按纯 TDC 形态运行（不启用 OTP），进入加速卡的将是明文激活。</b>本报告按计划书"不以一套方案的证据替代另一套"的要求，<b>不把这一条记为 TDC 的安全属性</b>。<br><br>
+补充一项本轮取得的硬证据：该加速卡<b>确实不具备</b>机密计算能力——310P3 实测 <span class="mono">work-mode</span>、<span class="mono">rootkey</span>、<span class="mono">tls-cert</span> 均返回"不支持查询"，<span class="mono">key-manage</span> 服务 Stop，驱动与 CANN 中无 attest / confidential / cc_mode 符号。<b>这不是把 TDC 说成 CDC 的余地问题，而是物理上就没有。</b>
+</div>
+
+<h2>二、架构与可信边界</h2>
+
+<figure>
+<svg viewBox="0 0 900 372" width="100%" style="max-width:900px" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="TDC 可信边界示意">
+  <rect x="0" y="0" width="900" height="372" fill="#ffffff"/>
+  <g font-family="'Microsoft YaHei',sans-serif" font-size="13">
+    <rect x="16" y="34" width="420" height="186" fill="#f2f8f5" stroke="#2f7d54" stroke-width="2" rx="6"/>
+    <text x="30" y="56" fill="#1d5c3c" font-weight="700" font-size="14">可信域：virtCCA 机密虚机（CPU-TEE）</text>
+    <text x="30" y="80" fill="#24303f">· 内存加密 + 地址空间隔离（本轮反向实测）</text>
+    <text x="30" y="102" fill="#24303f">· <tspan font-family="Consolas,monospace" font-size="12">kvm-type=cvm</tspan> + <tspan font-family="Consolas,monospace" font-size="12">tmm-guest</tspan></text>
+    <text x="30" y="124" fill="#24303f">· <tspan font-family="Consolas,monospace" font-size="12">dump-guest-core=off</tspan> 禁止转储 guest 内存</text>
+    <text x="30" y="146" fill="#24303f">· 远程证明开启，负例 7/7 全拒</text>
+    <text x="30" y="168" fill="#24303f">· 业务明文处理位于此域</text>
+    <text x="30" y="198" fill="#1d5c3c" font-size="12.5" font-weight="700">这是 TDC 保护的全部范围</text>
+
+    <line x1="442" y1="112" x2="554" y2="112" stroke="#b3261e" stroke-width="2" marker-end="url(#ar)"/>
+    <text x="466" y="104" fill="#b3261e" font-size="12" font-weight="700">明文激活</text>
+    <text x="474" y="130" fill="#6b7280" font-size="11">纯 TDC 形态</text>
+    <defs><marker id="ar" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 z" fill="#b3261e"/></marker></defs>
+
+    <rect x="560" y="34" width="324" height="130" fill="#fdf1f0" stroke="#b3261e" stroke-width="2" rx="6"/>
+    <text x="574" y="56" fill="#93231c" font-weight="700" font-size="14">边界外：双 Ascend 310P</text>
+    <text x="574" y="80" fill="#24303f">· vfio-pci 原生直通，独占</text>
+    <text x="574" y="102" fill="#24303f">· <tspan font-weight="700">无 TEE、无 GPU-CC（实测确认）</tspan></text>
+    <text x="574" y="124" fill="#24303f">· 显存与总线<tspan font-weight="700">不宣称</tspan>密码学机密性</text>
+    <text x="574" y="146" fill="#93231c" font-size="12">· 物理 PCIe 观测：无仪器，待补证</text>
+
+    <rect x="560" y="176" width="324" height="60" fill="#fdf1f0" stroke="#b3261e" stroke-width="2" rx="6"/>
+    <text x="574" y="198" fill="#93231c" font-weight="700" font-size="14">不可信：宿主机与管理面</text>
+    <text x="574" y="220" fill="#24303f">本轮实读 130 GB guest 内存，0 命中</text>
+
+    <text x="16" y="258" fill="#6b7280" font-size="12.5">攻击者模型：宿主机管理员、云平台管理面、其他租户、网络监听者均不可信；加速卡侧视为边界外。</text>
+    <text x="16" y="280" fill="#6b7280" font-size="12.5">网络入口：宿主 22/111/53/9100，CVM 22/8000/8020/8101——经核查本环境未部署 Web 前端。</text>
+    <text x="16" y="302" fill="#6b7280" font-size="12.5">资源映射：两卡各自独立 IOMMU 组（83 / 84，每组 1 个设备），device-share=False，一租户一机密域。</text>
+    <line x1="16" y1="320" x2="884" y2="320" stroke="#e3e6ea" stroke-width="1"/>
+    <text x="16" y="344" fill="#93231c" font-size="12.5" font-weight="700">红色箭头这一条最容易被误读：纯 TDC 形态下经 PCIe 下发的是明文激活。</text>
+    <text x="16" y="364" fill="#6b7280" font-size="12.5">本机实际下发的是密文分量，但那是叠加了方案三 OTP 的结果，属 FEC 的性质，本报告不记为 TDC 的安全属性。</text>
+  </g>
+</svg>
+<figcaption>TDC 可信边界。绿框内是 TDC 的保护范围，红框外不宣称密码学机密性</figcaption>
+</figure>
+
+<h2>三、TDC-01　架构与可信边界确认</h2>
+<h3><span class="id">判定</span><span class="v v-pass">通过</span></h3>
+<div class="data">
+  <div class="row h"><div>核查项</div><div>实测</div></div>
+  <div class="row"><div>CPU 机密虚拟机</div><div>qemu 命令行 <span class="mono">kvm-type=cvm</span> + <span class="mono">tmm-guest</span>；<span class="mono">dump-guest-core=off</span>（禁止转储 guest 内存）</div></div>
+  <div class="row"><div>通用加速卡直通</div><div>两卡均 <span class="mono">vfio-pci</span>，宿主侧不持有设备</div></div>
+  <div class="row"><div>guest 内存布局</div><div>3 个 44 GB NUMA backend（共 138 G）——这一发现直接决定了 TDC-03 的扫描范围</div></div>
+  <div class="row"><div>网络入口</div><div>宿主 22/111/53/9100；CVM 22/8000/8020/8101；<b>无 web/nginx/前端容器</b></div></div>
+  <div class="row"><div>管理面与租户边界</div><div>cvm-server 容器只透传 <span class="mono">/dev/tsi</span>，不持有任何 NPU 设备</div></div>
+  <div class="row"><div>加速卡边界披露</div><div>已在本报告第一节与第九节明确写出，未宣称 GPU-TEE 或全链路密态</div></div>
+</div>
+
+<h2>四、TDC-02　CPU-TEE 可信状态与远程证明</h2>
+<h3><span class="id">判定</span><span class="v v-pass">通过</span></h3>
+<ul>
+<li>远程证明全程开启；<b>证明负例 <span class="num">7/7</span></b>——错误 challenge、错误测量值、签名篡改、缺设备证书四类伪造材料全部被拒绝（<span class="mono">attest_01/controls.json</span>）。<b>负例比正例更能说明校验真的在做</b>。</li>
+<li><b>未处于调试模式：</b>证明链路对伪造材料零容忍；<span class="mono">/dev/tsi</span>（鲲鹏 TEE 证明设备）确实在链路上——本轮重建容器时漏了这个设备，证书生成随即失败，反过来印证了它的作用。</li>
+</ul>
+<div class="box warn">
+<b class="t">限制（不因整体通过而弱化）</b>
+可信根证书与<b>经独立批准的参考度量基线</b>尚未取得。当前持有的是<b>观测值，不是第三方批准的基准值</b>——也就是说"度量值与批准基线一致"这一句，我们只能证明前半截（度量值稳定、可复现），后半截（基线已被批准）缺材料。该限制自 9 月起持续记录在案，本轮未改判。
+</div>
+
+<h2>五、TDC-03　CPU 内存加密与地址空间隔离</h2>
+<h3><span class="id">判定</span><span class="v v-pass">通过</span></h3>
+
+<p>这是 TDC 最核心的一条主张。此前只有平台配置类证据（内核参数、<span class="mono">tmm_driver</span>、IOMMU 绑定），<b>从未做过反向读取</b>。本轮从宿主直接读 <span class="mono">/proc/&lt;qemu&gt;/mem</span>，并配两个阳性对照。</p>
+
+<figure>
+<svg viewBox="0 0 900 250" width="100%" style="max-width:900px" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="guest 三段内存扫描结果">
+  <rect x="0" y="0" width="900" height="250" fill="#ffffff"/>
+  <g font-family="'Microsoft YaHei',sans-serif" font-size="13">
+    <text x="0" y="16" fill="#6b7280" font-size="12.5" letter-spacing="1">guest RAM = 3 × 44 GB NUMA backend，本轮全部扫完（130.39 / 134.19 GB，覆盖 97.16%，无 errno）</text>
+
+    <text x="0" y="52" fill="#3d434e" font-family="Consolas,monospace" font-size="12.5">0xfff4a3e00000</text>
+    <rect x="130" y="38" width="520" height="22" fill="#1d7a46" opacity="0.85"/>
+    <text x="140" y="54" fill="#ffffff" font-size="12">44.0 GB 已读</text>
+    <text x="664" y="54" fill="#b3261e" font-weight="700" font-size="12.5">静态明文 245 处</text>
+    <text x="810" y="54" fill="#1d7a46" font-weight="700" font-size="12.5">标记 0</text>
+
+    <text x="0" y="92" fill="#3d434e" font-family="Consolas,monospace" font-size="12.5">0xffe9a3c00000</text>
+    <rect x="130" y="78" width="520" height="22" fill="#1d7a46" opacity="0.85"/>
+    <text x="140" y="94" fill="#ffffff" font-size="12">44.0 GB 已读</text>
+    <text x="664" y="94" fill="#1d7a46" font-weight="700" font-size="12.5">静态明文 0</text>
+    <text x="810" y="94" fill="#1d7a46" font-weight="700" font-size="12.5">标记 0</text>
+
+    <text x="0" y="132" fill="#3d434e" font-family="Consolas,monospace" font-size="12.5">0xffdea3a00000</text>
+    <rect x="130" y="118" width="501" height="22" fill="#1d7a46" opacity="0.85"/>
+    <rect x="631" y="118" width="19" height="22" fill="#d7dde3"/>
+    <text x="140" y="134" fill="#ffffff" font-size="12">42.4 GB 已读</text>
+    <text x="664" y="134" fill="#1d7a46" font-weight="700" font-size="12.5">静态明文 0</text>
+    <text x="810" y="134" fill="#1d7a46" font-weight="700" font-size="12.5">标记 0</text>
+
+    <line x1="0" y1="158" x2="900" y2="158" stroke="#e3e6ea" stroke-width="1"/>
+    <text x="0" y="182" fill="#16181d" font-size="13.5" font-weight="700">判据不止于"没搜到"：</text>
+    <text x="0" y="204" fill="#3d434e" font-size="13">第 2、3 段共 <tspan font-weight="700">86 GB 连一个 ELF 头都没有</tspan>。一台正跑着 35B 模型、占用 40 GB 以上内存的虚机，</text>
+    <text x="0" y="224" fill="#3d434e" font-size="13">若内存对宿主明文可见，不可能这么干净——这比单个标记未命中更难反驳。</text>
+  </g>
+</svg>
+<figcaption>三段全量扫描（<span class="mono">tdc_memory_06_full/result.json</span>）</figcaption>
+</figure>
+
+<div class="data">
+  <div class="row h"><div>检查</div><div>结果与含义</div></div>
+  <div class="row"><div>宿主扫宿主自己进程<br><span style="font-size:12.5px;color:#6b7280">阳性对照 ①</span></div><div><span class="ok">命中</span> → 搜索例程本身有效</div></div>
+  <div class="row"><div>CVM 内自搜运行时标记<br><span style="font-size:12.5px;color:#6b7280">阳性对照 ②</span></div><div><span class="ok">命中</span> → 标记确实驻留在 guest 内存中</div></div>
+  <div class="row"><div>宿主扫 guest 找运行时标记</div><div><b>0 次</b>（三段 130 GB 读完，全程无 errno）</div></div>
+  <div class="row"><div>宿主扫 guest 找磁盘 I/O 标记</div><div><b>0 次</b>（经块设备写入并回读的数据同样取不到）</div></div>
+</div>
+
+<p><b>判定依据：</b>计划书对本项的通过标准是"<b>非授权侧无法取得业务明文、密钥或受保护内存内容</b>"。在 97.16% 覆盖、两个阳性对照成立、两类标记各自独立种植的条件下，宿主侧未取得任何业务明文——该标准已满足。</p>
+
+<div class="box warn">
+<b class="t">不能由此推广的一句话</b>
+<b>不能说"CVM 内存对宿主完全不可见"</b>——第 1 段那 245 处静态明文就是反例。该观测如实转入 TDC-07 披露，不在本项中抹去。
+</div>
+
+<div class="box">
+<b class="t">本项的判定变更过程（说明我们按规则在用判定，不是事后贴标签）</b>
+本项先后判过三次：首版扫描只覆盖 <b>4.5%</b>，判<b>结论不成立</b>并作废（记录保留在 <span class="mono">tdc_memory_01/</span>）；扫完 1.2 段判<b>条件通过</b>；扫完三段 97.16%、两类标记均 0 命中、第 2/3 段共 86 GB 零命中之后，才改判<b>通过</b>。中间还曾假设静态明文来自 virtio 块设备共享缓冲，<b>该假设已被磁盘 I/O 标记对照证伪</b>（标记同样 0 命中），现改写为"来源未定位"。每一版记录都在，没有删改。
+</div>
+
+<h2>六、TDC-04　一租户一机密域隔离</h2>
+<h3><span class="id">判定</span><span class="v v-cond">条件通过</span></h3>
+
+<p>本环境是<b>单租户部署，没有第二个租户可供越权</b>。我们没有硬凑一个"跨租户测试"，而是改测计划书同样点名的另外两类非授权侧——<b>宿主机与管理面</b>、<b>可信域内的非特权用户</b>。</p>
+
+<div class="data">
+  <div class="row h"><div>非授权侧 · 尝试动作</div><div>结果</div></div>
+  <div class="row"><div>宿主：列出 NPU 设备节点</div><div><span class="mono">/dev/davinci*</span> <b>不存在</b></div></div>
+  <div class="row"><div>宿主：运行 npu-smi</div><div>工具<b>已安装</b>（<span class="mono">/usr/local/sbin/npu-smi</span>），但执行时<b>挂起并被 timeout 杀掉</b>（退出码 124），<b>查不到任何设备</b></div></div>
+  <div class="row"><div>宿主：加载计算驱动</div><div><b>未加载</b> devdrv 系列模块</div></div>
+  <div class="row"><div>宿主：直接读设备 BAR <span class="mono">resource0</span></div><div>读出 <b>0 字节</b></div></div>
+  <div class="row"><div>宿主：查看驱动占用</div><div>两卡均 <span class="mono">vfio-pci</span>，已交由虚机独占</div></div>
+  <div class="row"><div>CVM 内非特权用户读设备节点</div><div><span class="mono">davinci0</span> / <span class="mono">devmm_svm</span> / <span class="mono">davinci_manager</span> <b>全部被拒</b>（exit≠0）</div></div>
+  <div class="row"><div>CVM 内以 nobody 运行 npu-smi</div><div>拒绝：<span class="mono">dcmi module initialize failed</span></div></div>
+</div>
+
+<p><b>资源一一映射：</b>两卡各自<b>独立 IOMMU 组</b>（83 / 84，每组仅 1 个设备），<span class="mono">device-share=False</span>，NPU 仅被引擎进程占用；cvm-server 容器只透传 <span class="mono">/dev/tsi</span>，不持有任何 NPU。证据在 <span class="mono">tdc04_access/</span>。</p>
+
+<div class="box warn">
+<b class="t">为何只判条件通过</b>
+以上<b>不等同于完整的多租户隔离证明</b>。要判通过，需要一个真正的第二租户实例去做越权尝试——这需要环境支持，本轮不具备。<b>不能用"宿主读不到"替代"其他租户读不到"</b>，两者攻击面不同。
+</div>
+
+<h2>七、TDC-05　加速卡原生直通与独占使用</h2>
+<h3><span class="id">判定</span><span class="v v-pass">通过</span></h3>
+
+<p><b>直通与独占</b>已由 vfio-pci 绑定 + 独立 IOMMU 组（每组 1 设备）+ <span class="mono">device-share=False</span> 确认，见上一节。</p>
+
+<p><b>"其他租户无法读取残留数据"这一条本轮第一次做了真正的反向测试</b>（此前完全空白）。做法：写进程在设备上分配 256 MB 填满唯一标记；<b>另一个进程</b>分配同样大小，不初始化直接读回。覆盖两种结束方式：</p>
+
+<div class="data">
+  <div class="row h"><div>写进程结束方式</div><div>读进程结果</div></div>
+  <div class="row"><div>正常 <span class="mono">aclrtFree</span> 后退出</div><div>命中标记 <b>0</b> 次；非零字节 <b>0 / 268,435,456</b></div></div>
+  <div class="row"><div>不释放直接退出（驱动回收）</div><div>命中标记 <b>0</b> 次；非零字节 <b>0 / 268,435,456</b></div></div>
+  <div class="row"><div>读路径自检（阳性对照）</div><div>命中自己刚写入的标记 <b>15,790,320</b> 次 → 读路径有效</div></div>
+</div>
+
+<p>两轮读回的都是<b>全零</b>，而自检证明同一条读路径能看到刚写入的数据。结论：当前驱动下，后一个任务通过常规分配拿到的设备内存已被清零，读不到前一个任务的内容，<b>异常退出场景同样成立</b>。测试前后后端请求数不变。证据在 <span class="mono">device_residue_02/</span>。</p>
+
+<p class="note" style="border:0;margin:6px 0 0;padding:0"><b>限制：</b>未做硬件复位级测试（如 FLR 前后的物理残留），仅覆盖驱动层常规分配路径。</p>
+
+<h2>八、TDC-06　TDC 数据路径验证</h2>
+<h3><span class="id">判定</span><span class="v v-pass">通过</span></h3>
+<div class="data">
+  <div class="row h"><div>环节</div><div>证据</div></div>
+  <div class="row"><div>网络侧无业务明文</div><div>8000 入口双点抓包 <span class="num">23/23</span>、8101 入口 <span class="num">11/11</span>，均含阳性对照</div></div>
+  <div class="row"><div>CPU 侧处理位于已证明机密域</div><div>比对<b>运行进程</b> <span class="mono">/proc/&lt;pid&gt;/exe</span> 摘要 = 部署二进制 <span class="mono">e015292c…</span>，而不只是比对磁盘文件</div></div>
+  <div class="row"><div>异常连接阻断</div><div>证明负例 <span class="num">7/7</span>；加密入口篡改与重放 <span class="num">17/17</span></div></div>
+  <div class="row"><div>任务证据可串联</div><div>SDK 打点 → PCAP → 引擎日志 → 运行身份 → 返回摘要，同一次任务可连起来看</div></div>
+</div>
+<div class="box">
+<b class="t">口径说明（两处，避免越界）</b>
+一、抓包证明的是"<b>这条链路上看不到植入的标记</b>"，<b>不等于</b>加密算法本身被证明。<br>
+二、网络侧的加密来自<b>客户端与 CVM 之间的加密通道</b>（AEAD），这是平台的网络层机制，<b>与方案三 OTP 盲化无关</b>——本项引用它是正当的，不构成用 FEC 证据填充 TDC 结论。
+</div>
+
+<h2>九、TDC-07　边界外明文风险确认</h2>
+<h3><span class="id">判定</span><span class="v v-cond">软件侧已测，物理侧待补证</span></h3>
+
+<p class="lead">这一节是 TDC 报告的要害。计划书对本项的通过判定是"<b>结论与实际观测一致，不将通用 GPU 误表述为 GPU-TEE 或全密态</b>"——重点不在"证明没有明文"，而在<b>如实记录能观测到的暴露面</b>。</p>
+
+<h3>1　已经测到的</h3>
+<ul>
+<li><b>设备内存侧：</b>常规分配读不到他人内容（全零，见 TDC-05）。</li>
+<li><b>加速卡能力侧：</b>310P3 实测<b>不具备任何机密计算能力</b>——<span class="mono">work-mode</span>、<span class="mono">rootkey</span>、<span class="mono">tls-cert</span>、<span class="mono">tls-cert-period</span> 均返回"不支持查询"，<span class="mono">key-manage</span> 服务 <b>Stop</b>，<span class="mono">ecc-enable=True</span> 属可靠性而非机密性，驱动与 CANN 中无 attest / confidential / cc_mode / secure_boot 符号（<span class="mono">cdc01_platform/</span>）。</li>
+</ul>
+
+<div class="box bad">
+<b class="t">2　必须写明的暴露面</b>
+<b>纯 TDC 形态下，进入加速卡的是明文激活。</b>当前这台机器因为叠加了方案三的 OTP 盲化，实际下发的是 RNS 密文分量；但那是 FEC 的性质，<b>不是 TDC 的性质</b>。如果客户按纯 TDC 方案部署（CPU-TEE + 通用加速卡直通，不启用 OTP），则：<br>
+· 激活值以<b>明文</b>形式经 PCIe 下发到卡；<br>
+· 卡上显存中存在<b>明文</b>激活与权重；<br>
+· 该卡<b>没有</b>显存加密、设备证明或链路加密能力（上方实测）。<br><br>
+因此 TDC 的安全性完全依赖于"<b>卡被独占直通给这一个机密域，且宿主拿不到卡</b>"这一隔离假设，而不是密码学保护。本轮对该假设做了反向验证（TDC-04/05），但<b>隔离不等于加密</b>——这正是计划书反复要求区分的两件事。
+</div>
+
+<div class="box warn">
+<b class="t">3　一处来源未定位的观测</b>
+guest 第 1 段内可检出 <span class="mono">/opt/cvm</span>（68 次）、<span class="mono">serve35_cb</span>（46 次）、<span class="mono">python3</span>（73 次）、ELF 头（16 次）等静态明文，合计 <b>245 处</b> 1 MiB 块命中；第 2、3 段为 <b>0</b>。<br>
+这些与本轮种植的任何标记<b>都不重合</b>（运行时标记与磁盘 I/O 标记在三段中均 0 命中）。曾假设它们来自 virtio 块设备共享缓冲，<b>该假设已被磁盘标记对照证伪</b>。倾向于是 guest 启动早期（机密内存生效前）或非机密页的残留，但<b>来源尚未定位</b>，现阶段只陈述观测，不武断归因。
+</div>
+
+<div class="box">
+<b class="t">4　尚未取得的证据</b>
+<b>物理 PCIe 总线观测</b>——无协议分析仪与探头。<b>软件接口采样不等于总线抓包</b>，本报告既没有做，也不声称做过。这一条按计划书记为<b>待补证</b>。
+</div>
+
+<h2>十、适用边界与残余风险</h2>
+
+<h3>1　表述边界</h3>
+<div class="data">
+  <div class="row h"><div>不能这样说</div><div>应当这样说</div></div>
+  <div class="row"><div>"GPU-TEE""加速卡侧受密码学保护"</div><div><b>通用加速卡原生直通</b>。该卡实测无 CC 能力，靠<b>独占隔离</b>而非加密</div></div>
+  <div class="row"><div>"全链路密态""端到端加密到卡内"</div><div><b>CPU 机密域内受保护</b>。纯 TDC 形态下卡上是明文激活</div></div>
+  <div class="row"><div>"CVM 内存对宿主完全不可见"</div><div><b>宿主未取得任何业务明文</b>（97.16% 覆盖，两类标记 0 命中）；第 1 段另有 245 处静态明文未定位</div></div>
+  <div class="row"><div>"已抓取并观察到总线数据"</div><div>无 PCIe 协议分析仪，<b>物理总线未观测</b></div></div>
+  <div class="row"><div>"多租户隔离已验证"</div><div><b>单租户部署</b>，已测宿主与非特权用户两类非授权侧；跨租户越权未实测</div></div>
+  <div class="row"><div>"度量值与批准基线一致"</div><div>度量值稳定可复现；<b>基线未经第三方批准</b>，当前是观测值</div></div>
+</div>
+
+<h3>2　残余风险清单</h3>
+<div class="data">
+  <div class="row h"><div>风险</div><div>状态</div></div>
+  <div class="row"><div><b>F01 网关明文推理路由</b>：<span class="mono">0.0.0.0</span> 上明文 <span class="mono">/v1/chat/completions</span> 仍可达</div><div><span class="no">HIGH，本轮复现，未整改</span>。未擅自关闭（会影响现网调用方），需安排整改窗口</div></div>
+  <div class="row"><div>纯 TDC 形态下卡上为明文激活</div><div>方案固有属性，已披露；如需卡侧密态须叠加方案三或改用具 GPU-CC 的硬件</div></div>
+  <div class="row"><div>guest 第 1 段 245 处静态明文</div><div>来源未定位，virtio 假设已被证伪</div></div>
+  <div class="row"><div>跨租户越权未实测</div><div>单租户环境，需多租户环境补测</div></div>
+  <div class="row"><div>物理 PCIe 总线观测</div><div>无仪器，待补证</div></div>
+  <div class="row"><div>可信根与参考度量基线</div><div>持有观测值，非第三方批准基准值</div></div>
+  <div class="row"><div>设备硬件复位级残留</div><div>未测（仅覆盖驱动层常规分配路径）</div></div>
+</div>
+
+<h3>3　适用范围声明</h3>
+<p>本报告结论<b>仅适用于</b>：鲲鹏 920 + virtCCA 机密虚机 + 双 Ascend 310P（固件 7.8.0.7.220、驱动 25.2.0，宿主驱动 25.5.2）、CANN 9.1.0、Qwen3.5-35B-A3B W8A8、引擎 <span class="mono">e015292c…</span>。更换硬件、固件、驱动或模型版本后需按原基线复测。</p>
+<p>本报告属于<b>工程安全验证</b>，不等同于形式化密码学证明或权威认证。按计划书"三套方案分别形成独立安全结论"的要求，本报告<b>不引用方案三 FEC 的 OTP 密态证据</b>作为 TDC 的安全属性；第八节引用的网络层加密属平台机制，与 OTP 无关，已在该处注明。</p>
+
+<h2>十一、证据索引</h2>
+<p>全部原始文件位于 <span class="mono">otp_c35/results/security_full_20260918/</span>。完整性校验见 <span class="mono">manifest_full_20260918_r2.json</span>（191 文件）与此前冻结的 <span class="mono">manifest_full_20260918.json</span>（118 文件）。</p>
+<pre class="idx">env_baseline.json          环境与版本基线（含 qemu 命令行实证）
+firmware.json              两卡固件 7.8.0.7.220、宿主/CVM 驱动版本分别记录
+live_status.json           线上健康、运行引擎与文件摘要
+attest_01/                 TDC-02  证明负例（7/7）
+tdc_memory_06_full/        TDC-03  三段全量扫描（130.39 GB，覆盖 97.16%）★判定依据
+tdc_memory_01..05/         TDC-03  历次版本，01 为 4.5% 覆盖的作废版，全部保留
+tdc04_access/              TDC-04  非授权侧访问（宿主侧 + CVM 内非特权用户）
+device_residue_02/         TDC-05  跨进程设备内存残留（两种结束方式，均全零）
+device_residue_01/         TDC-05  首次运行记录，保留不覆盖
+wire_gateway_01/           TDC-06  8000 入口双点抓包（23/23）
+wire_sdk_01/               TDC-06  8101 入口双点抓包（11/11）
+acceptance_02/             TDC-06  篡改与重放（17/17）
+cdc01_platform/            TDC-07  加速卡能力实测（无 CC 能力的硬证据）
+TDC_security_report.htm    本报告</pre>
+
+<h2>十二、复核记录</h2>
+<div class="box">
+<b class="t">本报告编制中的三条自我约束</b>
+<b>一、不用别的方案的证据填 TDC。</b>当前部署叠加了 OTP，卡上确实是密文——但本报告<b>没有</b>把这一条记为 TDC 的安全属性，而是明确写出"纯 TDC 形态下卡上是明文激活"。<br><br>
+<b>二、失败与作废记录不覆盖。</b>TDC-03 的 4.5% 覆盖作废版（<span class="mono">tdc_memory_01/</span>）、被证伪的 virtio 假设、TDC-05 的首次运行记录，全部保留在证据包内。<br><br>
+<b>三、没做的直接写没做。</b>跨租户越权、物理 PCIe 观测、硬件复位级残留、第三方批准基线——四项都写明未做及原因，不用近似证据充数。
+</div>
+
+<p class="note">
+《TDC 安全证明报告》· 2026-09-18 · 对应计划书第五节 TDC-01 ~ TDC-08 与第十二节验收要求。<br>
+配套材料：《FEC 安全证明报告》<span class="mono">FEC_security_report.htm</span>；安全证明矩阵与环境拓扑 <span class="mono">security_matrix.htm</span>；三方案执行与结论报告 <span class="mono">security_full_report.htm</span>；计划书逐条对照 <span class="mono">plan_point_by_point_response.htm</span>。<br>
+方案二 CDC 因平台不具备 GPU-CC 能力，以平台能力核查结论形式交付，不单独成册。
+</p>
+
+</div>
+</body>
+</html>

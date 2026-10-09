@@ -1,0 +1,595 @@
+{
+  "started_ns": 1789727806149681200,
+  "passed": true,
+  "scope": "host-side read attempt against confidential VM memory, with host positive control",
+  "markers": {
+    "cvm": "CVMCANARY251c9…",
+    "host": "HOSTCANARYdde9…"
+  },
+  "write_holder_cvm": {
+    "exit_code": 0,
+    "stdout": "written\n",
+    "stderr": "Warning: Permanently added '192.168.122.143' (ED25519) to the list of known hosts.\r\n\nAuthorized users only. All activities may be monitored and reported.\n"
+  },
+  "start_holder_cvm": {
+    "exit_code": 0,
+    "stdout": "started 2685846\n",
+    "stderr": "Warning: Permanently added '192.168.122.143' (ED25519) to the list of known hosts.\r\n\nAuthorized users only. All activities may be monitored and reported.\n"
+  },
+  "write_holder_host": {
+    "exit_code": 0,
+    "stdout": "written\n",
+    "stderr": ""
+  },
+  "start_holder_host": {
+    "exit_code": 0,
+    "stdout": "started 224295\n",
+    "stderr": ""
+  },
+  "plant_disk_marker": {
+    "exit_code": 0,
+    "stdout": "139264\ne5e13e731fb999ea\n",
+    "stderr": "Warning: Permanently added '192.168.122.143' (ED25519) to the list of known hosts.\r\n\nAuthorized users only. All activities may be monitored and reported.\n"
+  },
+  "find_qemu": {
+    "exit_code": 0,
+    "stdout": "\",\"size\":47244640256,\"host-nodes\":[0],\"policy\":\"bind\"} -numa node,nodeid=0,cpus=0-63,memdev=ram-node0 -object {\"qom-type\":\"memory-backend-ram\",\"id\":\"ram-node1\",\"size\":47244640256,\"host-nodes\":[1],\"policy\":\"bind\"} -numa node,nodeid=1,cpus=64-127,memdev=ram-node1 -object {\"qom-type\":\"memory-backend-ram\",\"id\":\"ram-node2\",\"size\":47244640256,\"host-nodes\":[2],\"policy\":\"bind\"} -numa node,nodeid=2,cpus=128-191,memdev=ram-node2 -uuid d18184b3-2753-495a-ac45-f91556099777 -display none -no-user-config -nodefaults -chardev socket,id=charmonitor,fd=30,server=on,wait=off -mon chardev=charmonitor,id=monitor,mode=control -rtc base=utc -no-shutdown -boot strict=on -device {\"driver\":\"pcie-root-port\",\"port\":8,\"chassis\":1,\"id\":\"pci.1\",\"bus\":\"pcie.0\",\"multifunction\":true,\"addr\":\"0x1\"} -device {\"driver\":\"pcie-root-port\",\"port\":9,\"chassis\":2,\"id\":\"pci.2\",\"bus\":\"pcie.0\",\"addr\":\"0x1.0x1\"} -device {\"driver\":\"pcie-root-port\",\"port\":10,\"chassis\":3,\"id\":\"pci.3\",\"bus\":\"pcie.0\",\"addr\":\"0x1.0x2\"} -device {\"driver\":\"pcie-root-port\",\"port\":11,\"chassis\":4,\"id\":\"pci.4\",\"bus\":\"pcie.0\",\"addr\":\"0x1.0x3\"} -device {\"driver\":\"pcie-root-port\",\"port\":12,\"chassis\":5,\"id\":\"pci.5\",\"bus\":\"pcie.0\",\"addr\":\"0x1.0x4\"} -blockdev {\"driver\":\"file\",\"filename\":\"/home/qcow2/openEuler-24.03-LTS-SP2-aarch64.qcow2\",\"node-name\":\"libvirt-2-storage\",\"auto-read-only\":true,\"discard\":\"unmap\",\"cache\":{\"direct\":true,\"no-flush\":false}} -blockdev {\"node-name\":\"libvirt-2-format\",\"read-only\":false,\"cache\":{\"direct\":true,\"no-flush\":false},\"driver\":\"qcow2\",\"file\":\"libvirt-2-storage\",\"backing\":null} -device {\"driver\":\"virtio-blk-pci-non-transitional\",\"iommu_platform\":true,\"num-queues\":2,\"bus\":\"pci.2\",\"addr\":\"0x0\",\"drive\":\"libvirt-2-format\",\"id\":\"virtio-disk0\",\"bootindex\":1,\"write-cache\":\"on\"} -blockdev {\"driver\":\"file\",\"filename\":\"/data/models.qcow2\",\"node-name\":\"libvirt-1-storage\",\"auto-read-only\":true,\"discard\":\"unmap\",\"cache\":{\"direct\":true,\"no-flush\":false}} -blockdev {\"node-name\":\"libvirt-1-format\",\"read-only\":false,\"cache\":{\"direct\":true,\"no-flush\":false},\"driver\":\"qcow2\",\"file\":\"libvirt-1-storage\",\"backing\":null} -device {\"driver\":\"virtio-blk-pci-non-transitional\",\"iommu_platform\":true,\"num-queues\":2,\"bus\":\"pci.5\",\"addr\":\"0x0\",\"drive\":\"libvirt-1-format\",\"id\":\"virtio-disk1\",\"write-cache\":\"on\"} -netdev {\"type\":\"tap\",\"fd\":\"31\",\"vhost\":true,\"vhostfd\":\"33\",\"id\":\"hostnet0\"} -device {\"driver\":\"virtio-net-pci-non-transitional\",\"iommu_platform\":true,\"event_idx\":false,\"netdev\":\"hostnet0\",\"id\":\"net0\",\"mac\":\"52:54:00:0d:ad:05\",\"bus\":\"pci.1\",\"addr\":\"0x0\"} -chardev pty,id=charserial0 -serial chardev:charserial0 -audiodev {\"id\":\"audio1\",\"driver\":\"none\"} -device {\"driver\":\"vfio-pci\",\"host\":\"0000:18:00.0\",\"id\":\"hostdev0\",\"bus\":\"pci.3\",\"addr\":\"0x0\"} -device {\"driver\":\"vfio-pci\",\"host\":\"0000:41:00.0\",\"id\":\"hostdev1\",\"bus\":\"pci.4\",\"addr\":\"0x0\"} -object tmm-guest,id=tmm0,sve-vector-length=128,num-pmu-counters=1 -L /usr/share/qemu -msg timestamp=on\n224351 bash -c pgrep -af 'qemu.*kvm-type=cvm' | head -3 || pgrep -af qemu-kvm | head -3\n",
+    "stderr": ""
+  },
+  "qemu_processes": "12344 /home/qemu/build/qemu-system-aarch64 -name guest=cvm,debug-threads=on -S -object {\"qom-type\":\"secret\",\"id\":\"masterKey0\",\"format\":\"raw\",\"file\":\"/var/lib/libvirt/qemu/domain-5-cvm/master-key.aes\"} -machine virt-8.2,usb=off,gic-version=3,dump-guest-core=off,kvm-type=cvm,acpi=off -accel kvm -cpu host -bios /usr/share/edk2/aarch64/QEMU_EFI.fd -m size=138412032k -overcommit mem-lock=off -smp 192,sockets=3,dies=1,clusters=1,cores=64,threads=1 -object {\"qom-type\":\"memory-backend-ram\",\"id\":\"ram-node0\",\"size\":47244640256,\"host-nodes\":[0],\"policy\":\"bind\"} -numa node,nodeid=0,cpus=0-63,memdev=ram-node0 -object {\"qom-type\":\"memory-backend-ram\",\"id\":\"ram-node1\",\"size\":47244640256,\"host-nodes\":[1],\"policy\":\"bind\"} -numa node,nodeid=1,cpus=64-127,memdev=ram-node1 -object {\"qom-type\":\"memory-backend-ram\",\"id\":\"ram-node2\",\"size\":47244640256,\"host-nodes\":[2],\"policy\":\"bind\"} -numa node,nodeid=2,cpus=128-191,memdev=ram-node2 -uuid d18184b3-2753-495a-ac45-f91556099777 -display none -no-user-config -nodefaults -chardev socket,id=charmonitor,fd=30,server=on,wait=off -mon chardev=charmonitor,id=monitor,mode=control -rtc base=utc -no-shutdown -boot strict=on -device {\"driver\":\"pcie-root-port\",\"port\":8,\"chassis\":1,\"id\":\"pci.1\",\"bus\":\"pcie.0\",\"multifunction\":true,\"addr\":\"0x1\"} -device {\"driver\":\"pcie-root-port\",\"port\":9,\"chassis\":2,\"id\":\"pci.2\",\"bus\":\"pcie.0\",\"addr\":\"0x1.0x1\"} -device {\"driver\":\"pcie-root-port\",\"port\":10,\"chassis\":3,\"id\":\"pci.3\",\"bus\":\"pcie.0\",\"addr\":\"0x1.0x2\"} -device {\"driver\":\"pcie-root-port\",\"port\":11,\"chassis\":4,\"id\":\"pci.4\",\"bus\":\"pcie.0\",\"addr\":\"0x1.0x3\"} -device {\"driver\":\"pcie-root-port\",\"port\":12,\"chassis\":5,\"id\":\"pci.5\",\"bus\":\"pcie.0\",\"addr\":\"0x1.0x4\"} -blockdev {\"driver\":\"file\",\"filename\":\"/home/qcow2/openEuler-24.03-LTS-SP2-aarch64.qcow2\",\"node-name\":\"libvirt-2-storage\",\"auto-read-only\":true,\"discard\":\"unmap\",\"cache\":{\"direct\":true,\"no-flush\":false}} -blockdev {\"node-name\":\"libvirt-2-format\",\"read-only\":false,\"cache\":{\"direct\":true,\"no-flush\":false},\"driver\":\"qcow2\",\"file\":\"libvirt-2-storage\",\"backing\":null} -device {\"driver\":\"virtio-blk-pci-non-transitional\",\"iommu_platform\":true,\"num-queues\":2,\"bus\":\"pci.2\",\"addr\":\"0x0\",\"drive\":\"libvirt-2-format\",\"id\":\"virtio-disk0\",\"bootindex\":1,\"write-cache\":\"on\"} -blockdev {\"driver\":\"file\",\"filename\":\"/data/models.qcow2\",\"node-name\":\"libvirt-1-storage\",\"auto-read-only\":true,\"discard\":\"unmap\",\"cache\":{\"direct\":true,\"no-flush\":false}} -blockdev {\"node-name\":\"libvirt-1-format\",\"read-only\":false,\"cache\":{\"direct\":true,\"no-flush\":false},\"driver\":\"qcow2\",\"file\":\"libvirt-1-storage\",\"backing\":null} -device {\"driver\":\"virtio-blk-pci-non-transitional\",\"iommu_platform\":true,\"num-queues\":2,\"bus\":\"pci.5\",\"addr\":\"0x0\",\"drive\":\"libvirt-1-format\",\"id\":\"virtio-disk1\",\"write-cache\":\"on\"} -netdev {\"type\":\"tap\",\"fd\":\"31\",\"vhost\":true,\"vhostfd\":\"33\",\"id\":\"hostnet0\"} -device {\"driver\":\"virtio-net-pci-non-transitional\",\"iommu_platform\":true,\"event_idx\":false,\"netdev\":\"hostnet0\",\"id\":\"net0\",\"mac\":\"52:54:00:0d:ad:05\",\"bus\":\"pci.1\",\"addr\":\"0x0\"} -chardev pty,id=charserial0 -serial chardev:charserial0 -audiodev {\"id\":\"audio1\",\"driver\":\"none\"} -device {\"driver\":\"vfio-pci\",\"host\":\"0000:18:00.0\",\"id\":\"hostdev0\",\"bus\":\"pci.3\",\"addr\":\"0x0\"} -device {\"driver\":\"vfio-pci\",\"host\":\"0000:41:00.0\",\"id\":\"hostdev1\",\"bus\":\"pci.4\",\"addr\":\"0x0\"} -object tmm-guest,id=tmm0,sve-vector-length=128,num-pmu-counters=1 -L /usr/share/qemu -msg timestamp=on\n224351 bash -c pgrep -af 'qemu.*kvm-type=cvm' | head -3 || pgrep -af qemu-kvm | head -3",
+  "qemu_pid": 12344,
+  "host_holder_pid": {
+    "exit_code": 0,
+    "stdout": "224295",
+    "stderr": ""
+  },
+  "host_control_pid": 224295,
+  "write_scanner": {
+    "exit_code": 0,
+    "stdout": "written\n",
+    "stderr": ""
+  },
+  "scan_control": {
+    "exit_code": 0,
+    "stdout": ": 5, \"elf_interp\": 0, \"usr_lib\": 4}, \"largest_segment_bytes\": 1449984, \"candidate_bytes_total\": 3727360, \"coverage_ratio\": 0.997802, \"scanned_segments\": [{\"start\": \"0xffff90cde000\", \"size_bytes\": 1449984, \"path\": \"\", \"bytes_read\": 1449984, \"struct_hits\": {\"ELF_MAGIC\": 0, \"linux_version\": 0, \"proc_path\": 0, \"engine_name\": 0, \"interpreter\": 2, \"elf_interp\": 0, \"usr_lib\": 2}, \"marker_hits\": 1, \"struct_total\": 4}, {\"start\": \"0xffff8f900000\", \"size_bytes\": 1048576, \"path\": \"\", \"bytes_read\": 1048576, \"struct_hits\": {\"ELF_MAGIC\": 0, \"linux_version\": 0, \"proc_path\": 0, \"engine_name\": 0, \"interpreter\": 1, \"elf_interp\": 0, \"usr_lib\": 1}, \"marker_hits\": 1, \"struct_total\": 2}, {\"start\": \"0xffff91609000\", \"size_bytes\": 8192, \"path\": \"\", \"bytes_read\": 8192, \"struct_hits\": {\"ELF_MAGIC\": 0, \"linux_version\": 0, \"proc_path\": 0, \"engine_name\": 0, \"interpreter\": 1, \"elf_interp\": 0, \"usr_lib\": 1}, \"marker_hits\": 0, \"struct_total\": 2}, {\"start\": \"0xffffc0309000\", \"size_bytes\": 135168, \"path\": \"[stack]\", \"bytes_read\": 135168, \"struct_hits\": {\"ELF_MAGIC\": 0, \"linux_version\": 0, \"proc_path\": 0, \"engine_name\": 0, \"interpreter\": 1, \"elf_interp\": 0, \"usr_lib\": 0}, \"marker_hits\": 1, \"struct_total\": 1}, {\"start\": \"0xffff9160d000\", \"size_bytes\": 4096, \"path\": \"[vdso]\", \"bytes_read\": 4096, \"struct_hits\": {\"ELF_MAGIC\": 1, \"linux_version\": 0, \"proc_path\": 0, \"engine_name\": 0, \"interpreter\": 0, \"elf_interp\": 0, \"usr_lib\": 0}, \"marker_hits\": 0, \"struct_total\": 1}, {\"start\": \"0xaaaad2967000\", \"size_bytes\": 581632, \"path\": \"[heap]\", \"bytes_read\": 581632, \"struct_hits\": {\"ELF_MAGIC\": 0, \"linux_version\": 0, \"proc_path\": 0, \"engine_name\": 0, \"interpreter\": 0, \"elf_interp\": 0, \"usr_lib\": 0}, \"marker_hits\": 0, \"struct_total\": 0}, {\"start\": \"0xffff91583000\", \"size_bytes\": 274432, \"path\": \"\", \"bytes_read\": 274432, \"struct_hits\": {\"ELF_MAGIC\": 0, \"linux_version\": 0, \"proc_path\": 0, \"engine_name\": 0, \"interpreter\": 0, \"elf_interp\": 0, \"usr_lib\": 0}, \"marker_hits\": 0, \"struct_total\": 0}, {\"start\": \"0xffff90c98000\", \"size_bytes\": 143360, \"path\": \"\", \"bytes_read\": 143360, \"struct_hits\": {\"ELF_MAGIC\": 0, \"linux_version\": 0, \"proc_path\": 0, \"engine_name\": 0, \"interpreter\": 0, \"elf_interp\": 0, \"usr_lib\": 0}, \"marker_hits\": 1, \"struct_total\": 0}, {\"start\": \"0xffff90fe2000\", \"size_bytes\": 49152, \"path\": \"\", \"bytes_read\": 49152, \"struct_hits\": {\"ELF_MAGIC\": 0, \"linux_version\": 0, \"proc_path\": 0, \"engine_name\": 0, \"interpreter\": 0, \"elf_interp\": 0, \"usr_lib\": 0}, \"marker_hits\": 0, \"struct_total\": 0}, {\"start\": \"0xffff915fe000\", \"size_bytes\": 16384, \"path\": \"\", \"bytes_read\": 16384, \"struct_hits\": {\"ELF_MAGIC\": 0, \"linux_version\": 0, \"proc_path\": 0, \"engine_name\": 0, \"interpreter\": 0, \"elf_interp\": 0, \"usr_lib\": 0}, \"marker_hits\": 0, \"struct_total\": 0}, {\"start\": \"0xffff915fa000\", \"size_bytes\": 8192, \"path\": \"\", \"bytes_read\": 8192, \"struct_hits\": {\"ELF_MAGIC\": 0, \"linux_version\": 0, \"proc_path\": 0, \"engine_name\": 0, \"interpreter\": 0, \"elf_interp\": 0, \"usr_lib\": 0}, \"marker_hits\": 0, \"struct_total\": 0}]}\n",
+    "stderr": ""
+  },
+  "control_scan": {
+    "pid": 224295,
+    "segments_considered": 12,
+    "segments_readable": 11,
+    "segments_unreadable": 1,
+    "bytes_read": 3719168,
+    "errno_counts": {
+      "5": 1
+    },
+    "hits": {
+      "CVMCANARY251c9dc55c484a9523cb79d3": 0,
+      "HOSTCANARYdde9b31aaa4198e698b96463": 4,
+      "DISKCANARY84b7848dfcfa24253666718c": 0
+    },
+    "struct_hits": {
+      "ELF_MAGIC": 1,
+      "linux_version": 0,
+      "proc_path": 0,
+      "engine_name": 0,
+      "interpreter": 5,
+      "elf_interp": 0,
+      "usr_lib": 4
+    },
+    "largest_segment_bytes": 1449984,
+    "candidate_bytes_total": 3727360,
+    "coverage_ratio": 0.997802,
+    "scanned_segments": [
+      {
+        "start": "0xffff90cde000",
+        "size_bytes": 1449984,
+        "path": "",
+        "bytes_read": 1449984,
+        "struct_hits": {
+          "ELF_MAGIC": 0,
+          "linux_version": 0,
+          "proc_path": 0,
+          "engine_name": 0,
+          "interpreter": 2,
+          "elf_interp": 0,
+          "usr_lib": 2
+        },
+        "marker_hits": 1,
+        "struct_total": 4
+      },
+      {
+        "start": "0xffff8f900000",
+        "size_bytes": 1048576,
+        "path": "",
+        "bytes_read": 1048576,
+        "struct_hits": {
+          "ELF_MAGIC": 0,
+          "linux_version": 0,
+          "proc_path": 0,
+          "engine_name": 0,
+          "interpreter": 1,
+          "elf_interp": 0,
+          "usr_lib": 1
+        },
+        "marker_hits": 1,
+        "struct_total": 2
+      },
+      {
+        "start": "0xffff91609000",
+        "size_bytes": 8192,
+        "path": "",
+        "bytes_read": 8192,
+        "struct_hits": {
+          "ELF_MAGIC": 0,
+          "linux_version": 0,
+          "proc_path": 0,
+          "engine_name": 0,
+          "interpreter": 1,
+          "elf_interp": 0,
+          "usr_lib": 1
+        },
+        "marker_hits": 0,
+        "struct_total": 2
+      },
+      {
+        "start": "0xffffc0309000",
+        "size_bytes": 135168,
+        "path": "[stack]",
+        "bytes_read": 135168,
+        "struct_hits": {
+          "ELF_MAGIC": 0,
+          "linux_version": 0,
+          "proc_path": 0,
+          "engine_name": 0,
+          "interpreter": 1,
+          "elf_interp": 0,
+          "usr_lib": 0
+        },
+        "marker_hits": 1,
+        "struct_total": 1
+      },
+      {
+        "start": "0xffff9160d000",
+        "size_bytes": 4096,
+        "path": "[vdso]",
+        "bytes_read": 4096,
+        "struct_hits": {
+          "ELF_MAGIC": 1,
+          "linux_version": 0,
+          "proc_path": 0,
+          "engine_name": 0,
+          "interpreter": 0,
+          "elf_interp": 0,
+          "usr_lib": 0
+        },
+        "marker_hits": 0,
+        "struct_total": 1
+      },
+      {
+        "start": "0xaaaad2967000",
+        "size_bytes": 581632,
+        "path": "[heap]",
+        "bytes_read": 581632,
+        "struct_hits": {
+          "ELF_MAGIC": 0,
+          "linux_version": 0,
+          "proc_path": 0,
+          "engine_name": 0,
+          "interpreter": 0,
+          "elf_interp": 0,
+          "usr_lib": 0
+        },
+        "marker_hits": 0,
+        "struct_total": 0
+      },
+      {
+        "start": "0xffff91583000",
+        "size_bytes": 274432,
+        "path": "",
+        "bytes_read": 274432,
+        "struct_hits": {
+          "ELF_MAGIC": 0,
+          "linux_version": 0,
+          "proc_path": 0,
+          "engine_name": 0,
+          "interpreter": 0,
+          "elf_interp": 0,
+          "usr_lib": 0
+        },
+        "marker_hits": 0,
+        "struct_total": 0
+      },
+      {
+        "start": "0xffff90c98000",
+        "size_bytes": 143360,
+        "path": "",
+        "bytes_read": 143360,
+        "struct_hits": {
+          "ELF_MAGIC": 0,
+          "linux_version": 0,
+          "proc_path": 0,
+          "engine_name": 0,
+          "interpreter": 0,
+          "elf_interp": 0,
+          "usr_lib": 0
+        },
+        "marker_hits": 1,
+        "struct_total": 0
+      },
+      {
+        "start": "0xffff90fe2000",
+        "size_bytes": 49152,
+        "path": "",
+        "bytes_read": 49152,
+        "struct_hits": {
+          "ELF_MAGIC": 0,
+          "linux_version": 0,
+          "proc_path": 0,
+          "engine_name": 0,
+          "interpreter": 0,
+          "elf_interp": 0,
+          "usr_lib": 0
+        },
+        "marker_hits": 0,
+        "struct_total": 0
+      },
+      {
+        "start": "0xffff915fe000",
+        "size_bytes": 16384,
+        "path": "",
+        "bytes_read": 16384,
+        "struct_hits": {
+          "ELF_MAGIC": 0,
+          "linux_version": 0,
+          "proc_path": 0,
+          "engine_name": 0,
+          "interpreter": 0,
+          "elf_interp": 0,
+          "usr_lib": 0
+        },
+        "marker_hits": 0,
+        "struct_total": 0
+      },
+      {
+        "start": "0xffff915fa000",
+        "size_bytes": 8192,
+        "path": "",
+        "bytes_read": 8192,
+        "struct_hits": {
+          "ELF_MAGIC": 0,
+          "linux_version": 0,
+          "proc_path": 0,
+          "engine_name": 0,
+          "interpreter": 0,
+          "elf_interp": 0,
+          "usr_lib": 0
+        },
+        "marker_hits": 0,
+        "struct_total": 0
+      }
+    ]
+  },
+  "write_scanner_cvm": {
+    "exit_code": 0,
+    "stdout": "written\n",
+    "stderr": "Warning: Permanently added '192.168.122.143' (ED25519) to the list of known hosts.\r\n\nAuthorized users only. All activities may be monitored and reported.\n"
+  },
+  "cvm_holder_pid": 2685846,
+  "scan_inside_cvm": {
+    "exit_code": 0,
+    "stdout": "rno_counts\": {\"5\": 1}, \"hits\": {\"CVMCANARY251c9dc55c484a9523cb79d3\": 4, \"HOSTCANARYdde9b31aaa4198e698b96463\": 0, \"DISKCANARY84b7848dfcfa24253666718c\": 0}, \"struct_hits\": {\"ELF_MAGIC\": 1, \"linux_version\": 0, \"proc_path\": 0, \"engine_name\": 0, \"interpreter\": 5, \"elf_interp\": 0, \"usr_lib\": 3}, \"largest_segment_bytes\": 1449984, \"candidate_bytes_total\": 3719168, \"coverage_ratio\": 0.997797, \"scanned_segments\": [{\"start\": \"0xffffafaae000\", \"size_bytes\": 1449984, \"path\": \"\", \"bytes_read\": 1449984, \"struct_hits\": {\"ELF_MAGIC\": 0, \"linux_version\": 0, \"proc_path\": 0, \"engine_name\": 0, \"interpreter\": 2, \"elf_interp\": 0, \"usr_lib\": 2}, \"marker_hits\": 1, \"struct_total\": 4}, {\"start\": \"0xffffae700000\", \"size_bytes\": 1048576, \"path\": \"\", \"bytes_read\": 1048576, \"struct_hits\": {\"ELF_MAGIC\": 0, \"linux_version\": 0, \"proc_path\": 0, \"engine_name\": 0, \"interpreter\": 1, \"elf_interp\": 0, \"usr_lib\": 1}, \"marker_hits\": 1, \"struct_total\": 2}, {\"start\": \"0xfffffdd43000\", \"size_bytes\": 135168, \"path\": \"[stack]\", \"bytes_read\": 135168, \"struct_hits\": {\"ELF_MAGIC\": 0, \"linux_version\": 0, \"proc_path\": 0, \"engine_name\": 0, \"interpreter\": 1, \"elf_interp\": 0, \"usr_lib\": 0}, \"marker_hits\": 1, \"struct_total\": 1}, {\"start\": \"0xffffb03d0000\", \"size_bytes\": 24576, \"path\": \"\", \"bytes_read\": 24576, \"struct_hits\": {\"ELF_MAGIC\": 0, \"linux_version\": 0, \"proc_path\": 0, \"engine_name\": 0, \"interpreter\": 1, \"elf_interp\": 0, \"usr_lib\": 0}, \"marker_hits\": 0, \"struct_total\": 1}, {\"start\": \"0xffffb03d8000\", \"size_bytes\": 4096, \"path\": \"[vdso]\", \"bytes_read\": 4096, \"struct_hits\": {\"ELF_MAGIC\": 1, \"linux_version\": 0, \"proc_path\": 0, \"engine_name\": 0, \"interpreter\": 0, \"elf_interp\": 0, \"usr_lib\": 0}, \"marker_hits\": 0, \"struct_total\": 1}, {\"start\": \"0xaaaac6b76000\", \"size_bytes\": 577536, \"path\": \"[heap]\", \"bytes_read\": 577536, \"struct_hits\": {\"ELF_MAGIC\": 0, \"linux_version\": 0, \"proc_path\": 0, \"engine_name\": 0, \"interpreter\": 0, \"elf_interp\": 0, \"usr_lib\": 0}, \"marker_hits\": 0, \"struct_total\": 0}, {\"start\": \"0xffffb0353000\", \"size_bytes\": 274432, \"path\": \"\", \"bytes_read\": 274432, \"struct_hits\": {\"ELF_MAGIC\": 0, \"linux_version\": 0, \"proc_path\": 0, \"engine_name\": 0, \"interpreter\": 0, \"elf_interp\": 0, \"usr_lib\": 0}, \"marker_hits\": 0, \"struct_total\": 0}, {\"start\": \"0xffffafa6a000\", \"size_bytes\": 139264, \"path\": \"\", \"bytes_read\": 139264, \"struct_hits\": {\"ELF_MAGIC\": 0, \"linux_version\": 0, \"proc_path\": 0, \"engine_name\": 0, \"interpreter\": 0, \"elf_interp\": 0, \"usr_lib\": 0}, \"marker_hits\": 1, \"struct_total\": 0}, {\"start\": \"0xffffafdb2000\", \"size_bytes\": 49152, \"path\": \"\", \"bytes_read\": 49152, \"struct_hits\": {\"ELF_MAGIC\": 0, \"linux_version\": 0, \"proc_path\": 0, \"engine_name\": 0, \"interpreter\": 0, \"elf_interp\": 0, \"usr_lib\": 0}, \"marker_hits\": 0, \"struct_total\": 0}, {\"start\": \"0xffffb03cd000\", \"size_bytes\": 8192, \"path\": \"\", \"bytes_read\": 8192, \"struct_hits\": {\"ELF_MAGIC\": 0, \"linux_version\": 0, \"proc_path\": 0, \"engine_name\": 0, \"interpreter\": 0, \"elf_interp\": 0, \"usr_lib\": 0}, \"marker_hits\": 0, \"struct_total\": 0}]}\n",
+    "stderr": "Warning: Permanently added '192.168.122.143' (ED25519) to the list of known hosts.\r\n\nAuthorized users only. All activities may be monitored and reported.\n"
+  },
+  "cvm_inner_scan": {
+    "pid": 2685846,
+    "segments_considered": 11,
+    "segments_readable": 10,
+    "segments_unreadable": 1,
+    "bytes_read": 3710976,
+    "errno_counts": {
+      "5": 1
+    },
+    "hits": {
+      "CVMCANARY251c9dc55c484a9523cb79d3": 4,
+      "HOSTCANARYdde9b31aaa4198e698b96463": 0,
+      "DISKCANARY84b7848dfcfa24253666718c": 0
+    },
+    "struct_hits": {
+      "ELF_MAGIC": 1,
+      "linux_version": 0,
+      "proc_path": 0,
+      "engine_name": 0,
+      "interpreter": 5,
+      "elf_interp": 0,
+      "usr_lib": 3
+    },
+    "largest_segment_bytes": 1449984,
+    "candidate_bytes_total": 3719168,
+    "coverage_ratio": 0.997797,
+    "scanned_segments": [
+      {
+        "start": "0xffffafaae000",
+        "size_bytes": 1449984,
+        "path": "",
+        "bytes_read": 1449984,
+        "struct_hits": {
+          "ELF_MAGIC": 0,
+          "linux_version": 0,
+          "proc_path": 0,
+          "engine_name": 0,
+          "interpreter": 2,
+          "elf_interp": 0,
+          "usr_lib": 2
+        },
+        "marker_hits": 1,
+        "struct_total": 4
+      },
+      {
+        "start": "0xffffae700000",
+        "size_bytes": 1048576,
+        "path": "",
+        "bytes_read": 1048576,
+        "struct_hits": {
+          "ELF_MAGIC": 0,
+          "linux_version": 0,
+          "proc_path": 0,
+          "engine_name": 0,
+          "interpreter": 1,
+          "elf_interp": 0,
+          "usr_lib": 1
+        },
+        "marker_hits": 1,
+        "struct_total": 2
+      },
+      {
+        "start": "0xfffffdd43000",
+        "size_bytes": 135168,
+        "path": "[stack]",
+        "bytes_read": 135168,
+        "struct_hits": {
+          "ELF_MAGIC": 0,
+          "linux_version": 0,
+          "proc_path": 0,
+          "engine_name": 0,
+          "interpreter": 1,
+          "elf_interp": 0,
+          "usr_lib": 0
+        },
+        "marker_hits": 1,
+        "struct_total": 1
+      },
+      {
+        "start": "0xffffb03d0000",
+        "size_bytes": 24576,
+        "path": "",
+        "bytes_read": 24576,
+        "struct_hits": {
+          "ELF_MAGIC": 0,
+          "linux_version": 0,
+          "proc_path": 0,
+          "engine_name": 0,
+          "interpreter": 1,
+          "elf_interp": 0,
+          "usr_lib": 0
+        },
+        "marker_hits": 0,
+        "struct_total": 1
+      },
+      {
+        "start": "0xffffb03d8000",
+        "size_bytes": 4096,
+        "path": "[vdso]",
+        "bytes_read": 4096,
+        "struct_hits": {
+          "ELF_MAGIC": 1,
+          "linux_version": 0,
+          "proc_path": 0,
+          "engine_name": 0,
+          "interpreter": 0,
+          "elf_interp": 0,
+          "usr_lib": 0
+        },
+        "marker_hits": 0,
+        "struct_total": 1
+      },
+      {
+        "start": "0xaaaac6b76000",
+        "size_bytes": 577536,
+        "path": "[heap]",
+        "bytes_read": 577536,
+        "struct_hits": {
+          "ELF_MAGIC": 0,
+          "linux_version": 0,
+          "proc_path": 0,
+          "engine_name": 0,
+          "interpreter": 0,
+          "elf_interp": 0,
+          "usr_lib": 0
+        },
+        "marker_hits": 0,
+        "struct_total": 0
+      },
+      {
+        "start": "0xffffb0353000",
+        "size_bytes": 274432,
+        "path": "",
+        "bytes_read": 274432,
+        "struct_hits": {
+          "ELF_MAGIC": 0,
+          "linux_version": 0,
+          "proc_path": 0,
+          "engine_name": 0,
+          "interpreter": 0,
+          "elf_interp": 0,
+          "usr_lib": 0
+        },
+        "marker_hits": 0,
+        "struct_total": 0
+      },
+      {
+        "start": "0xffffafa6a000",
+        "size_bytes": 139264,
+        "path": "",
+        "bytes_read": 139264,
+        "struct_hits": {
+          "ELF_MAGIC": 0,
+          "linux_version": 0,
+          "proc_path": 0,
+          "engine_name": 0,
+          "interpreter": 0,
+          "elf_interp": 0,
+          "usr_lib": 0
+        },
+        "marker_hits": 1,
+        "struct_total": 0
+      },
+      {
+        "start": "0xffffafdb2000",
+        "size_bytes": 49152,
+        "path": "",
+        "bytes_read": 49152,
+        "struct_hits": {
+          "ELF_MAGIC": 0,
+          "linux_version": 0,
+          "proc_path": 0,
+          "engine_name": 0,
+          "interpreter": 0,
+          "elf_interp": 0,
+          "usr_lib": 0
+        },
+        "marker_hits": 0,
+        "struct_total": 0
+      },
+      {
+        "start": "0xffffb03cd000",
+        "size_bytes": 8192,
+        "path": "",
+        "bytes_read": 8192,
+        "struct_hits": {
+          "ELF_MAGIC": 0,
+          "linux_version": 0,
+          "proc_path": 0,
+          "engine_name": 0,
+          "interpreter": 0,
+          "elf_interp": 0,
+          "usr_lib": 0
+        },
+        "marker_hits": 0,
+        "struct_total": 0
+      }
+    ]
+  },
+  "scan_guest": {
+    "exit_code": 0,
+    "stdout": "{\"pid\": 12344, \"segments_considered\": 641, \"segments_readable\": 3, \"segments_unreadable\": 0, \"bytes_read\": 140000624640, \"errno_counts\": {}, \"hits\": {\"CVMCANARY251c9dc55c484a9523cb79d3\": 0, \"HOSTCANARYdde9b31aaa4198e698b96463\": 0, \"DISKCANARY84b7848dfcfa24253666718c\": 0}, \"struct_hits\": {\"ELF_MAGIC\": 26, \"linux_version\": 1, \"proc_path\": 71, \"engine_name\": 54, \"interpreter\": 77, \"elf_interp\": 28, \"usr_lib\": 17}, \"largest_segment_bytes\": 47244640256, \"candidate_bytes_total\": 144145891328, \"coverage_ratio\": 0.971243, \"scanned_segments\": [{\"start\": \"0xfff4a3e00000\", \"size_bytes\": 47244640256, \"path\": \"\", \"bytes_read\": 47244640256, \"struct_hits\": {\"ELF_MAGIC\": 26, \"linux_version\": 1, \"proc_path\": 71, \"engine_name\": 54, \"interpreter\": 77, \"elf_interp\": 28, \"usr_lib\": 17}, \"marker_hits\": 0, \"struct_total\": 274}, {\"start\": \"0xffe9a3c00000\", \"size_bytes\": 47244640256, \"path\": \"\", \"bytes_read\": 47244640256, \"struct_hits\": {\"ELF_MAGIC\": 0, \"linux_version\": 0, \"proc_path\": 0, \"engine_name\": 0, \"interpreter\": 0, \"elf_interp\": 0, \"usr_lib\": 0}, \"marker_hits\": 0, \"struct_total\": 0}, {\"start\": \"0xffdea3a00000\", \"size_bytes\": 47244640256, \"path\": \"\", \"bytes_read\": 45511344128, \"struct_hits\": {\"ELF_MAGIC\": 0, \"linux_version\": 0, \"proc_path\": 0, \"engine_name\": 0, \"interpreter\": 0, \"elf_interp\": 0, \"usr_lib\": 0}, \"marker_hits\": 0, \"struct_total\": 0}]}\n",
+    "stderr": ""
+  },
+  "guest_scan": {
+    "pid": 12344,
+    "segments_considered": 641,
+    "segments_readable": 3,
+    "segments_unreadable": 0,
+    "bytes_read": 140000624640,
+    "errno_counts": {},
+    "hits": {
+      "CVMCANARY251c9dc55c484a9523cb79d3": 0,
+      "HOSTCANARYdde9b31aaa4198e698b96463": 0,
+      "DISKCANARY84b7848dfcfa24253666718c": 0
+    },
+    "struct_hits": {
+      "ELF_MAGIC": 26,
+      "linux_version": 1,
+      "proc_path": 71,
+      "engine_name": 54,
+      "interpreter": 77,
+      "elf_interp": 28,
+      "usr_lib": 17
+    },
+    "largest_segment_bytes": 47244640256,
+    "candidate_bytes_total": 144145891328,
+    "coverage_ratio": 0.971243,
+    "scanned_segments": [
+      {
+        "start": "0xfff4a3e00000",
+        "size_bytes": 47244640256,
+        "path": "",
+        "bytes_read": 47244640256,
+        "struct_hits": {
+          "ELF_MAGIC": 26,
+          "linux_version": 1,
+          "proc_path": 71,
+          "engine_name": 54,
+          "interpreter": 77,
+          "elf_interp": 28,
+          "usr_lib": 17
+        },
+        "marker_hits": 0,
+        "struct_total": 274
+      },
+      {
+        "start": "0xffe9a3c00000",
+        "size_bytes": 47244640256,
+        "path": "",
+        "bytes_read": 47244640256,
+        "struct_hits": {
+          "ELF_MAGIC": 0,
+          "linux_version": 0,
+          "proc_path": 0,
+          "engine_name": 0,
+          "interpreter": 0,
+          "elf_interp": 0,
+          "usr_lib": 0
+        },
+        "marker_hits": 0,
+        "struct_total": 0
+      },
+      {
+        "start": "0xffdea3a00000",
+        "size_bytes": 47244640256,
+        "path": "",
+        "bytes_read": 45511344128,
+        "struct_hits": {
+          "ELF_MAGIC": 0,
+          "linux_version": 0,
+          "proc_path": 0,
+          "engine_name": 0,
+          "interpreter": 0,
+          "elf_interp": 0,
+          "usr_lib": 0
+        },
+        "marker_hits": 0,
+        "struct_total": 0
+      }
+    ]
+  },
+  "cvm_holder_alive": "2685846     585",
+  "control_positive": true,
+  "cvm_marker_resident": true,
+  "guest_no_marker": true,
+  "disk_marker_hits_in_guest": 0,
+  "disk_io_plaintext_visible": false,
+  "guest_coverage_ratio": 0.971243,
+  "guest_read_succeeded": true,
+  "control_struct_hits": {
+    "ELF_MAGIC": 1,
+    "linux_version": 0,
+    "proc_path": 0,
+    "engine_name": 0,
+    "interpreter": 5,
+    "elf_interp": 0,
+    "usr_lib": 4
+  },
+  "guest_struct_hits": {
+    "ELF_MAGIC": 26,
+    "linux_version": 1,
+    "proc_path": 71,
+    "engine_name": 54,
+    "interpreter": 77,
+    "elf_interp": 28,
+    "usr_lib": 17
+  },
+  "control_struct_visible": true,
+  "guest_no_structural_plaintext": false,
+  "finished_ns": 1789728394323169700
+}

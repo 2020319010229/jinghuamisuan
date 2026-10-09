@@ -1,0 +1,44 @@
+{
+  "canary": "CDC-CANARY-7f3a9e21b4c8d56f0a1e2d3c4b5a6978",
+  "timestamp": "2026-09-24T12:01:37",
+  "control_pids": [
+    {
+      "pid": 504418,
+      "comm": "python3"
+    }
+  ],
+  "target_pids": [
+    {
+      "pid": 280990,
+      "comm": "qemu-system-x86"
+    }
+  ],
+  "running_as_root": true,
+  "guest_selfscan_hits": 24110,
+  "control": [
+    {
+      "pid": 504418,
+      "label": "positive_control",
+      "scanned_mb": 20.6,
+      "hits": {
+        "CDC-CANARY-7f3a9e21b4c8d56f0a1e2d3c4b5a6978": 24108
+      },
+      "regions": 46,
+      "error": null
+    }
+  ],
+  "target": [
+    {
+      "pid": 280990,
+      "label": "tdx_qemu",
+      "scanned_mb": 16659.8,
+      "hits": {
+        "CDC-CANARY-7f3a9e21b4c8d56f0a1e2d3c4b5a6978": 7
+      },
+      "regions": 498,
+      "error": null
+    }
+  ],
+  "verdict": "EXPOSED",
+  "detail": "宿主可从 QEMU 进程内存读到 Guest 明文，内存未受保护"
+}

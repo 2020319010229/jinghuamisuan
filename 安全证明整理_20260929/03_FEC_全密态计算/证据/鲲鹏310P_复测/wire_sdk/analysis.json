@@ -1,0 +1,192 @@
+{
+  "scope": "passive visibility of these exact gateway TCP flows only; no active attacker or bus claims",
+  "run_id": "5370e474eebb7cc63688cf05",
+  "captures": {
+    "host": {
+      "packets": 92,
+      "streams": [
+        {
+          "flow": [
+            "192.168.122.1",
+            "192.168.122.143",
+            38509,
+            8101
+          ],
+          "bytes": 314,
+          "sha256": "d2aaf55a20c009c36cde15aac7aa251a13d87910f4c85ff15ef2df0e686aeb80",
+          "gaps": 0,
+          "overlap_conflicts": 0,
+          "header_complete": true,
+          "body_length_matches": null,
+          "positive_control": true,
+          "prompt_marker_visible": false
+        },
+        {
+          "flow": [
+            "192.168.122.143",
+            "192.168.122.1",
+            8101,
+            38509
+          ],
+          "bytes": 4678,
+          "sha256": "64f46987f7abaef79fbb798c6e8d510465dc318540247971f7e75edf88a84244",
+          "gaps": 0,
+          "overlap_conflicts": 0,
+          "header_complete": true,
+          "body_length_matches": true,
+          "positive_control": false,
+          "prompt_marker_visible": false
+        },
+        {
+          "flow": [
+            "192.168.122.1",
+            "192.168.122.143",
+            47003,
+            8101
+          ],
+          "bytes": 1551,
+          "sha256": "2f45afd408dfa8afedaf4e60b37cb4713973f77d051da4c079c01e27e8d5ed04",
+          "gaps": 0,
+          "overlap_conflicts": 0,
+          "header_complete": true,
+          "body_length_matches": true,
+          "positive_control": true,
+          "prompt_marker_visible": false
+        },
+        {
+          "flow": [
+            "192.168.122.143",
+            "192.168.122.1",
+            8101,
+            47003
+          ],
+          "bytes": 1343,
+          "sha256": "001b30f43b258be8d478012070399b7e86d32d707dd8255234b659d56363db6f",
+          "gaps": 0,
+          "overlap_conflicts": 0,
+          "header_complete": true,
+          "body_length_matches": null,
+          "positive_control": false,
+          "prompt_marker_visible": false
+        }
+      ]
+    },
+    "cvm": {
+      "packets": 46,
+      "streams": [
+        {
+          "flow": [
+            "192.168.122.1",
+            "192.168.122.143",
+            38509,
+            8101
+          ],
+          "bytes": 314,
+          "sha256": "d2aaf55a20c009c36cde15aac7aa251a13d87910f4c85ff15ef2df0e686aeb80",
+          "gaps": 0,
+          "overlap_conflicts": 0,
+          "header_complete": true,
+          "body_length_matches": null,
+          "positive_control": true,
+          "prompt_marker_visible": false
+        },
+        {
+          "flow": [
+            "192.168.122.143",
+            "192.168.122.1",
+            8101,
+            38509
+          ],
+          "bytes": 4678,
+          "sha256": "64f46987f7abaef79fbb798c6e8d510465dc318540247971f7e75edf88a84244",
+          "gaps": 0,
+          "overlap_conflicts": 0,
+          "header_complete": true,
+          "body_length_matches": true,
+          "positive_control": false,
+          "prompt_marker_visible": false
+        },
+        {
+          "flow": [
+            "192.168.122.1",
+            "192.168.122.143",
+            47003,
+            8101
+          ],
+          "bytes": 1551,
+          "sha256": "2f45afd408dfa8afedaf4e60b37cb4713973f77d051da4c079c01e27e8d5ed04",
+          "gaps": 0,
+          "overlap_conflicts": 0,
+          "header_complete": true,
+          "body_length_matches": true,
+          "positive_control": true,
+          "prompt_marker_visible": false
+        },
+        {
+          "flow": [
+            "192.168.122.143",
+            "192.168.122.1",
+            8101,
+            47003
+          ],
+          "bytes": 1343,
+          "sha256": "001b30f43b258be8d478012070399b7e86d32d707dd8255234b659d56363db6f",
+          "gaps": 0,
+          "overlap_conflicts": 0,
+          "header_complete": true,
+          "body_length_matches": null,
+          "positive_control": false,
+          "prompt_marker_visible": false
+        }
+      ]
+    }
+  },
+  "tests": [
+    {
+      "name": "host_expected_directional_streams",
+      "passed": true
+    },
+    {
+      "name": "host_no_gaps_or_conflicting_retransmissions",
+      "passed": true
+    },
+    {
+      "name": "host_expected_control_headers",
+      "passed": true
+    },
+    {
+      "name": "host_no_synthetic_prompt_marker",
+      "passed": true
+    },
+    {
+      "name": "host_http_boundaries_complete",
+      "passed": true
+    },
+    {
+      "name": "cvm_expected_directional_streams",
+      "passed": true
+    },
+    {
+      "name": "cvm_no_gaps_or_conflicting_retransmissions",
+      "passed": true
+    },
+    {
+      "name": "cvm_expected_control_headers",
+      "passed": true
+    },
+    {
+      "name": "cvm_no_synthetic_prompt_marker",
+      "passed": true
+    },
+    {
+      "name": "cvm_http_boundaries_complete",
+      "passed": true
+    },
+    {
+      "name": "host_and_cvm_reassembled_flows_identical",
+      "passed": true
+    }
+  ],
+  "passed": 11,
+  "total": 11
+}

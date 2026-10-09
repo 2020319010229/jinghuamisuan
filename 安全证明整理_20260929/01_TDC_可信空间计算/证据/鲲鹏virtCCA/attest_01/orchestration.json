@@ -1,0 +1,8 @@
+{
+  "directory": "/tmp/otp-security-attestation-20260916.JjnmfY",
+  "execution": {
+    "exit_code": 0,
+    "stdout": "{\"passed\": 7, \"total\": 7}\n",
+    "stderr": ""
+  }
+}

@@ -1,0 +1,153 @@
+{
+  "run_id": "d20374ef8a310c754aa1",
+  "tests": [
+    {
+      "name": "fresh_attestation_initialization",
+      "passed": true
+    },
+    {
+      "name": "reference_stream_reached_32_token_limit",
+      "passed": true
+    },
+    {
+      "name": "cancel_api_accepted_own_session",
+      "passed": true
+    },
+    {
+      "name": "cancel_triggered_after_authenticated_delta",
+      "passed": true
+    },
+    {
+      "name": "stream_ended_without_normal_completion_or_error",
+      "passed": true
+    },
+    {
+      "name": "backend_early_stop_distinguished_from_natural_completion",
+      "passed": true
+    },
+    {
+      "name": "backend_idle_after_cancel",
+      "passed": true
+    },
+    {
+      "name": "recovery_authenticated_stream_completed",
+      "passed": true
+    },
+    {
+      "name": "backend_idle_after_recovery",
+      "passed": true
+    },
+    {
+      "name": "exactly_three_backend_requests",
+      "passed": true
+    },
+    {
+      "name": "own_test_key_removed",
+      "passed": true
+    }
+  ],
+  "passed": true,
+  "scope": "own-session cancellation, observed stream EOF, aggregate backend idle and recovery",
+  "backend_cancel_proven": true,
+  "limitations": "Cancel handler discards worker abort outcome; no device memory wiping or exact cancelled token count claim.",
+  "remote_attestation_enabled": true,
+  "metrics_before": {
+    "requests": 50,
+    "active": 0,
+    "queued": 0,
+    "batch_calls": 566,
+    "batch_rows": 594,
+    "scalar_decode_calls": 538
+  },
+  "reference": {
+    "delta_events": 32,
+    "done": true,
+    "reported_output_tokens": 32,
+    "max_new_tokens": 32,
+    "elapsed_ms": 16733.085494022816,
+    "decode_batch_calls": 31,
+    "decode_batch_rows": 31,
+    "scalar_decode_calls": 31
+  },
+  "metrics": [
+    {
+      "phase": "after_reference",
+      "monotonic": 705004.132913551,
+      "requests": 51,
+      "active": 0,
+      "queued": 0,
+      "batch_calls": 597,
+      "batch_rows": 625,
+      "scalar_decode_calls": 569
+    },
+    {
+      "phase": "after_cancel",
+      "monotonic": 705008.615492506,
+      "requests": 52,
+      "active": 0,
+      "queued": 0,
+      "batch_calls": 598,
+      "batch_rows": 626,
+      "scalar_decode_calls": 570
+    },
+    {
+      "phase": "after_recovery",
+      "monotonic": 705012.083901326,
+      "requests": 53,
+      "active": 0,
+      "queued": 0,
+      "batch_calls": 601,
+      "batch_rows": 629,
+      "scalar_decode_calls": 573
+    }
+  ],
+  "own_session_id": "security-cancel-d20374ef8a310c754aa1_b8b0c2077ba0e3a961241da7001f19a8",
+  "cancelled_stream": {
+    "delta_events": 1,
+    "delta_events_after_cancel_response": 0,
+    "decrypted_characters": 8,
+    "reported_output_tokens": null,
+    "token_count_note": "Delta events are not token counts; cancelled EOF has no usage.",
+    "termination": "eof_without_done",
+    "max_new_tokens": 32,
+    "first_delta_monotonic": 705008.186817935,
+    "cancel_response_monotonic": 705008.232568135,
+    "stream_end_monotonic": 705008.614849077,
+    "decode_batch_calls": 1,
+    "decode_batch_rows": 1,
+    "scalar_decode_calls": 1,
+    "idle_after_first_delta_ms": 428.6777409724891,
+    "decode_batches_after_cancel_response": 1
+  },
+  "metrics_before_cancel": {
+    "requests": 51,
+    "active": 1,
+    "queued": 0,
+    "batch_calls": 597,
+    "batch_rows": 625,
+    "scalar_decode_calls": 569
+  },
+  "metrics_after_cancel_response": {
+    "requests": 51,
+    "active": 1,
+    "queued": 0,
+    "batch_calls": 597,
+    "batch_rows": 625,
+    "scalar_decode_calls": 569
+  },
+  "cancel_calls": [
+    {
+      "phase": "first_delta",
+      "http_status": 200,
+      "app_code": 0,
+      "semantic_category": "accepted_without_worker_abort_detail",
+      "elapsed_ms": 45.734049985185266
+    }
+  ],
+  "recovery": {
+    "delta_events": 4,
+    "done": true,
+    "reported_output_tokens": 4
+  },
+  "backend_request_delta": 3
+}

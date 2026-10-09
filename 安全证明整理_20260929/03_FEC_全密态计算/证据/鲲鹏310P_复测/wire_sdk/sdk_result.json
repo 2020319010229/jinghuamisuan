@@ -1,0 +1,212 @@
+{
+  "run_id": "5370e474eebb7cc63688cf05",
+  "events": [
+    {
+      "name": "identity_verification_start",
+      "utc_ns": 1789727518184698727,
+      "monotonic_ns": 704796262905777
+    },
+    {
+      "name": "certificate_http_submit",
+      "utc_ns": 1789727518199743117,
+      "monotonic_ns": 704796277950067,
+      "body_bytes": 0,
+      "body_sha256": null
+    },
+    {
+      "name": "certificate_http_headers",
+      "utc_ns": 1789727518235930010,
+      "monotonic_ns": 704796314136840,
+      "http_status": 200
+    },
+    {
+      "name": "certificate_received",
+      "utc_ns": 1789727518236118143,
+      "monotonic_ns": 704796314324873,
+      "http_status": 200,
+      "bytes": 4510
+    },
+    {
+      "name": "identity_verification_end",
+      "utc_ns": 1789727518387089428,
+      "monotonic_ns": 704796465296528
+    },
+    {
+      "name": "prompt_encrypt_start",
+      "utc_ns": 1789727518387194279,
+      "monotonic_ns": 704796465400919
+    },
+    {
+      "name": "prompt_encrypt_end",
+      "utc_ns": 1789727518388021420,
+      "monotonic_ns": 704796466228120
+    },
+    {
+      "name": "generation_prepare_start",
+      "utc_ns": 1789727518388023370,
+      "monotonic_ns": 704796466229970
+    },
+    {
+      "name": "stream_iteration_start",
+      "utc_ns": 1789727518425010594,
+      "monotonic_ns": 704796503217364
+    },
+    {
+      "name": "generation_http_submit",
+      "utc_ns": 1789727518438715837,
+      "monotonic_ns": 704796516922907,
+      "body_bytes": 1204,
+      "body_sha256": "ecf5b77e94719dfb2009b4f618a2f257b93dfd19d0caf10fd1485bcd8b14739e"
+    },
+    {
+      "name": "generation_http_headers",
+      "utc_ns": 1789727518463754661,
+      "monotonic_ns": 704796541961411,
+      "http_status": 200
+    },
+    {
+      "name": "encrypted_delta_received",
+      "utc_ns": 1789727522956906798,
+      "monotonic_ns": 704801035113418,
+      "index": 0,
+      "wire_sha256": "89cc7f36eaf4041e18bbd865ba638ad77cd9b0e54328f66a3180256e5f63f017"
+    },
+    {
+      "name": "delta_decrypted",
+      "utc_ns": 1789727522957473305,
+      "monotonic_ns": 704801035679845,
+      "index": 0
+    },
+    {
+      "name": "encrypted_delta_received",
+      "utc_ns": 1789727523348633256,
+      "monotonic_ns": 704801426840146,
+      "index": 1,
+      "wire_sha256": "1bfd83be512d4b263d56fba8a42c9a2af4a871e3e8ebda81722521ef80d15216"
+    },
+    {
+      "name": "delta_decrypted",
+      "utc_ns": 1789727523349297235,
+      "monotonic_ns": 704801427504705,
+      "index": 1
+    },
+    {
+      "name": "encrypted_delta_received",
+      "utc_ns": 1789727523741417868,
+      "monotonic_ns": 704801819624738,
+      "index": 2,
+      "wire_sha256": "4d2c489cf0d784e74d3310bc6aedfc1ed7dc312b507bb113029d8b752c86b886"
+    },
+    {
+      "name": "delta_decrypted",
+      "utc_ns": 1789727523742004126,
+      "monotonic_ns": 704801820210706,
+      "index": 2
+    },
+    {
+      "name": "encrypted_delta_received",
+      "utc_ns": 1789727524146692187,
+      "monotonic_ns": 704802224898797,
+      "index": 3,
+      "wire_sha256": "8f67d4317e5dbc2a3539167e5eaec174d3ed6ba103a807756ddde2a56e4b21a4"
+    },
+    {
+      "name": "delta_decrypted",
+      "utc_ns": 1789727524147324275,
+      "monotonic_ns": 704802225530905,
+      "index": 3
+    },
+    {
+      "name": "done_received",
+      "utc_ns": 1789727524149600976,
+      "monotonic_ns": 704802227807556
+    },
+    {
+      "name": "client_closed",
+      "utc_ns": 1789727524365898782,
+      "monotonic_ns": 704802444105422
+    }
+  ],
+  "scope": "current SDK policy with fresh challenge; not independent complete TEE validation",
+  "policy": {
+    "remote_attestation_enabled": true,
+    "tee_type": "kunpeng",
+    "KUNPENG_ROOT_CERT": {
+      "configured": false,
+      "file_exists": false
+    },
+    "KUNPENG_SUB_CERT": {
+      "configured": false,
+      "file_exists": false
+    },
+    "KUNPENG_IMAGE_REF_JSON": {
+      "configured": false,
+      "file_exists": false
+    },
+    "KUNPENG_SOFTWARE_COMPONENTS_JSON": {
+      "configured": false,
+      "file_exists": false
+    },
+    "measurement_reference_configured": false,
+    "KUNPENG_REQUIRE_COSE": "0"
+  },
+  "sdk_hashes": {
+    "client.py": "c91ffba22ac2a12cd8f164027b94550f7f900ea07e8d0ca204a9d0543c5c782f",
+    "utils/kunpeng_attestation.py": "c83604c68e1ba22e4de6fb5c14eacd68a3b3fa7723255c9d9706ad62e485c9ea",
+    "utils/request_auth.py": "a68505bc0d47b6bf42e3f7543802005ce4311d0a218e2b9ec27fc3f9f191189c",
+    "utils/crypto_utils.py": "b0a44e7b2781c11a2b2ec71f24ad5a64373bfe0da083ddba4431a27f868db8a5",
+    "utils/gm_crypto.py": "91a880405ad8d29e978bc6d962192efe23fb424961ce773db959ddf1a6f34db2",
+    "http_auth.py": "095018917110f6d42728879af2572f1a36c7ace1501c632d13aa65cc57fb1f0b"
+  },
+  "auth_header_configured": false,
+  "wire_control_marker": "OTPSEC_SDK_HEADER_5370e474eebb7cc63688cf05",
+  "fresh_challenge_hex": "d16505acd152b75721879972e632c251ba4bea1fcf10c6b33a4a17684b03c7c8",
+  "public_attestation_response": {
+    "certificate_pem": "-----BEGIN CERTIFICATE-----\nMIIBgTCCASagAwIBAgIUY3ZBnQrv8BKz7Bz058oN7avB3K8wCgYIKoEcz1UBg3Uw\nFTETMBEGA1UEAwwKVERYIFNlcnZlcjAeFw0yNjA4MTkwOTE2MzZaFw0yNzA4MTkw\nOTE2MzZaMBUxEzARBgNVBAMMClREWCBTZXJ2ZXIwWjAUBggqgRzPVQGCLQYIKoEc\nz1UBgi0DQgAEWsYGQ1cfh6SRFqYuDcPBZqbZdyW4t9rOANTA3ro/drVgQZw8jxbi\nsEy/y4TsCd9NP8VLPHuUy0unQiB/a/puW6NTMFEwHQYDVR0OBBYEFGzjl2upjIg1\naKRmYRSnUWxRX3dkMB8GA1UdIwQYMBaAFGzjl2upjIg1aKRmYRSnUWxRX3dkMA8G\nA1UdEwEB/wQFMAMBAf8wCgYIKoEcz1UBg3UDSQAwRgIhAMIxcIScnNUPAzgQfPsS\nqtC8Nkla0mnKszwHzl52dGsKAiEApPdFueIJM3bpww7Y4rf8H+IwCk44zVmoBIGt\nU4+qEwY=\n-----END CERTIFICATE-----\n",
+    "kunpeng_token": "2QGPohmsylkDE9KERKEBOCOgWQKCqRkBCWAKWCA8BdMVyKS0kFsSIy1ZifqS25Bu5SF9cQoT9r2IXm6/0RkJXFgg4Xy7Fmw7b97R0Cbe33FSMDd62tZxmTAzzDrkjkgfDEgZAQBYIQGAZXPCbvdu4ko1wCAwe4Bh1Vnktvgf3rq5eTtrpoUrcBkJYUAZCVsZMAAZCV+GpQFwaXB1AAAAAAAAAAAAAAAAAAJYIEtrWb/n+IF+3E7YEq8r6n5kQSCl0nxTw7+KBkQncKVzBHAyMS41Mi4wAAAAAAAAAAAABUAGZ3NoYS0yNTalAXBpbXUAAAAAAAAAAAAAAAAAAlggVx0TsicPzb03lx6hH5gSgOiRGeIAyPfKSy3KEn/ry2cEcDIxLjUyLjAAAAAAAAAAAAAFQAZnc2hhLTI1NqUBcGltZl9hcAAAAAAAAAAAAAACWCC3ZEFQyJmfvYkVdQoMa2p3sbXH7j91n8O830QwLJFsCQRwMjEuNTIuMAAAAAAAAAAAAAVABmdzaGEtMjU2pQFwdGZfYmwyAAAAAAAAAAAAAAJYIJ3gidT6UZMBK2zJWwGza64ZCiQRtfhEvUcPz/dv0EHBBHAyMS41Mi4wAAAAAAAAAAAABUAGZ3NoYS0yNTalAXB1ZWZpAAAAAAAAAAAAAAAAAlgg4aJHG2pcb3O7LezqUr5e/rwBX4oAdjWFOSjCJd9Ql/0EcDIxLjUyLjAAAAAAAAAAAAAFQAZnc2hhLTI1NqUBcHRlZQAAAAAAAAAAAAAAAAACWCBI5rKTu+EqyetQVLn5Y7up7aZic4/K+0xMYh/tXlFDPQRwMS43AAAAAAAAAAAAAAAAAAVABmdzaGEtMjU2GQlgYBkJYmdzaGEtMjU2WIQB92YipguS1XLJRiCv7/Bd87667LbrLRvVaeORas+/Hj2DMjm8MGq7MNmsvZ4nd6OtUPT05Dkqrrh7PygDOt/RaooBjvV9DlMBjtzrYWye2pwmMxXIe3ZC+uSi1JzFuNO2WtDZzo2JL9Mn+m6iywyo4IlEu+gUrIBvFRUfYD1+d8SNivcZrNFZAm7ShEShATgjoFkB3VkB2qcKWEDfPRvMEIYbVQKeRQclLv/wnuXNVjzSxZ/zWPjoSuq9R9FlBazRUrdXIYeZcuYywlG6S+ofzxDGszpKF2hLA8fIGazLWEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGazNWIUEABzwFHDBOHQJU3HhrlVFMQlIC48Q/LmYOV3Ys7MhwHy39rEWyPaAUqzKRaB2OTfMGU1jqbrI738EVVLz9HxssiDIAJRX0AhvGv4nm1J8iRkyoVBje9IWPCGrXZNdz0zs8ligZOX3pyysiajFXDQYV7rPJVoeU1Fin0lu/n9sn7jlx9xuGazMZ3NoYS0yNTYZrNBnc2hhLTI1Nhmszlgge+EYOMIegYut+fObNrfVCN219H7qhQrQoqAIgzxBp5kZrM+EWCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFggAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABYIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFiEASlD7jwwFLovjX7Ur9mVNQlQgIsPSjCEwFVC+zdQLdybrvAFBX8GhopTOp3CdYTEIfO7VeSuc0TJh2f9JWJ6WLnNANH5c9J+dshmlBqnzbX7V3e8VNGZSvRy3P2JAl6uf35eB3XSEAofM78wH01pN7dSquHedAiy9R+cdgLdVZCk2WK3",
+    "kunpeng_dev_cert": "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUNyRENDQWcyZ0F3SUJBZ0lSRWt1S0dvN2J0UVo1NkpDQUVDMmRxbnN3Q2dZSUtvWkl6ajBFQXdRd1JqRUwKTUFrR0ExVUVCaE1DUTA0eER6QU5CZ05WQkFvVEJraDFZWGRsYVRFbU1DUUdBMVVFQXhNZFNIVmhkMlZwSUVOdgpiWEIxZEdsdVp5QkZRME1nUTBOQklFTkJJREV3SUJjTk1qWXdOREV5TURVd01ESXpXaGdQTWpBM05EQXpNamN3Ck5UQXdNak5hTURVeEN6QUpCZ05WQkFZVEFrTk9NUTh3RFFZRFZRUUtFd1pJZFdGM1pXa3hGVEFUQmdOVkJBTVQKRERaU01qWXpNVEU1TlRBNU1UQ0JtekFRQmdjcWhrak9QUUlCQmdVcmdRUUFJd09CaGdBRUFaTmRRcFRNVjErTQpNTElXK1VjdWNZOW1TdFBtUVlhTDAxWHEybkNpWEVGdmJRUXlrNjFGd1lsVHpuVGI2Nmo0c0NYQzRZbFY4U3BwCmh1d09QSmtoQi9WVEFKRFRrdDhaUFg4d290eEU3NDRKSjAycjhCQW5yRTJZNk5aemdEKzZnVHlBQWw0SFgyZk4KdmxOK1J5d2s1cnZwU1B1QjhHMVBteExUeHhuQitXMEFOTzJUbzRHbk1JR2tNQjhHQTFVZEl3UVlNQmFBRklneApOck5sNXVXVlFaNjhIQkU4RzEvak4yTHRNQjBHQTFVZERnUVdCQlJVOVZOL1BaVEppWmVncm5kMlowSXdCOFNyCmNqQUpCZ05WSFJNRUFqQUFNRWNHQTFVZElBUkFNRDR3UEFZTUt3WUJCQUdQVzRGSkFRUUhNQ3d3S2dZSUt3WUIKQlFVSEFnRVdIbWgwZEhCek9pOHZjM1Z3Y0c5eWRDNW9kV0YzWldrdVkyOXRMM0JyYVRBT0JnTlZIUThCQWY4RQpCQU1DQnNBd0NnWUlLb1pJemowRUF3UURnWXdBTUlHSUFrSUJ1MHRoZGRFekpReUQ3MU1sSC8vYnd3SGVTSytUCmN1Z3BNc3BrRS9xdCtpbENHS1g5dXI1UGpNYXlVbVBTNHlMajVvS294Y2lLMzhDaVlnUm5lNGE5UEc0Q1FnRTUKTUFMRjc2WERTaUJJYmR2M1ZpTWVSeG1UWGJrUjVWYTcvQVUvS2wvck54NGhJZk1URmFTM0Q4c0VQNmhaY1dIWQpweEFrZFJiMUVPa1BsMnE1ZGFVNFRRPT0KLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQ=="
+  },
+  "initialization": {
+    "status": 0,
+    "connected": true,
+    "dek_created": true
+  },
+  "synthetic_prompt": "OTPSEC_SDK_5370e474eebb7cc63688cf05 Reply OK.",
+  "session_id": "security-5370e474eebb7cc63688cf05_5194982513ce477002e9e7d032418bdf",
+  "done": {
+    "event": "done",
+    "request_id": "68de8a6d4724771ceaab102e",
+    "input_tokens": 37,
+    "output_tokens": 4,
+    "total_tokens": 41,
+    "encryption_generationdata_outputdata": "9JrPbgy5bRTTAec6x0j60kXjvl/pjuvwNbI3guafXQOQkWP++yZMY+mjStgyAv8=",
+    "encryption_generationdata_outputdata_len": 64,
+    "encrypted_reasoning": "",
+    "encrypted_reasoning_len": 0
+  },
+  "generation": {
+    "decrypted_delta_count": 4,
+    "done_received": true,
+    "synthetic_output": "Thinking Process:\n\n",
+    "passed": true
+  },
+  "test_dek_cleanup_return": 0,
+  "test_dek_absent_after_cleanup": true,
+  "capture": {
+    "packets_saved": 92,
+    "capture_error": null,
+    "socket_received_all_traffic": 175,
+    "socket_drops_all_traffic": 0,
+    "filter": {
+      "peer": "192.168.122.1",
+      "server": "192.168.122.143",
+      "client_ports": [
+        38509,
+        47003
+      ],
+      "server_port": 8101
+    },
+    "timestamp_source": "userspace receive time",
+    "pcap_sha256": "14c4f9642a0b41ffa8771a2262687b44074ae255fcd9fe161d4b28e2d5a727c5"
+  }
+}

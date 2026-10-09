@@ -1,0 +1,17 @@
+{
+  "packets_saved": 46,
+  "capture_error": null,
+  "socket_received_all_traffic": 240,
+  "socket_drops_all_traffic": 0,
+  "filter": {
+    "peer": "192.168.122.1",
+    "server": "192.168.122.143",
+    "client_ports": [
+      38509,
+      47003
+    ],
+    "server_port": 8101
+  },
+  "timestamp_source": "userspace receive time",
+  "pcap_sha256": "d85e35412411b309476f6f2bdfdd99d4b842f653724239f14cac8fd368d0e077"
+}

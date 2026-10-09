@@ -1,0 +1,349 @@
+{
+  "run_id": "7b3c8222b9fc4ff4a9fe3e8f23c46d11",
+  "scope": "host-client to CVM gateway 8000, not SDK 8101",
+  "started_ns": 1789727506007017720,
+  "events": [
+    {
+      "name": "health_connect_start",
+      "utc_ns": 1789727506395038999,
+      "monotonic_ns": 704784473245929
+    },
+    {
+      "name": "health_submit",
+      "utc_ns": 1789727506395363263,
+      "monotonic_ns": 704784473569883
+    },
+    {
+      "name": "health_response_headers",
+      "utc_ns": 1789727506396720671,
+      "monotonic_ns": 704784474927281
+    },
+    {
+      "name": "health_first_body_byte",
+      "utc_ns": 1789727506396766292,
+      "monotonic_ns": 704784474972972
+    },
+    {
+      "name": "health_response_complete",
+      "utc_ns": 1789727506396832823,
+      "monotonic_ns": 704784475039433
+    },
+    {
+      "name": "identity_fetch_start",
+      "utc_ns": 1789727506396877443,
+      "monotonic_ns": 704784475084023
+    },
+    {
+      "name": "public_key_connect_start",
+      "utc_ns": 1789727506396882664,
+      "monotonic_ns": 704784475089204
+    },
+    {
+      "name": "public_key_submit",
+      "utc_ns": 1789727506397157827,
+      "monotonic_ns": 704784475364507
+    },
+    {
+      "name": "public_key_response_headers",
+      "utc_ns": 1789727506398095510,
+      "monotonic_ns": 704784476302150
+    },
+    {
+      "name": "public_key_first_body_byte",
+      "utc_ns": 1789727506398120570,
+      "monotonic_ns": 704784476327100
+    },
+    {
+      "name": "public_key_response_complete",
+      "utc_ns": 1789727506398185031,
+      "monotonic_ns": 704784476391601
+    },
+    {
+      "name": "encrypt_start",
+      "utc_ns": 1789727506401956641,
+      "monotonic_ns": 704784480163491
+    },
+    {
+      "name": "encrypt_end",
+      "utc_ns": 1789727506402102553,
+      "monotonic_ns": 704784480309133
+    },
+    {
+      "name": "valid_connect_start",
+      "utc_ns": 1789727506402123553,
+      "monotonic_ns": 704784480330073
+    },
+    {
+      "name": "valid_submit",
+      "utc_ns": 1789727506402370807,
+      "monotonic_ns": 704784480577427
+    },
+    {
+      "name": "valid_response_headers",
+      "utc_ns": 1789727512736895229,
+      "monotonic_ns": 704790815101979
+    },
+    {
+      "name": "valid_first_body_byte",
+      "utc_ns": 1789727512737003180,
+      "monotonic_ns": 704790815209770
+    },
+    {
+      "name": "valid_response_complete",
+      "utc_ns": 1789727512737050431,
+      "monotonic_ns": 704790815257021
+    },
+    {
+      "name": "decrypt_start",
+      "utc_ns": 1789727512737095001,
+      "monotonic_ns": 704790815301532
+    },
+    {
+      "name": "decrypt_end",
+      "utc_ns": 1789727512737154982,
+      "monotonic_ns": 704790815361522
+    },
+    {
+      "name": "replay_connect_start",
+      "utc_ns": 1789727512737189813,
+      "monotonic_ns": 704790815396343
+    },
+    {
+      "name": "replay_submit",
+      "utc_ns": 1789727512737345735,
+      "monotonic_ns": 704790815552345
+    },
+    {
+      "name": "replay_response_headers",
+      "utc_ns": 1789727512738261067,
+      "monotonic_ns": 704790816467627
+    },
+    {
+      "name": "replay_first_body_byte",
+      "utc_ns": 1789727512738283737,
+      "monotonic_ns": 704790816490407
+    },
+    {
+      "name": "replay_response_complete",
+      "utc_ns": 1789727512738337808,
+      "monotonic_ns": 704790816544368
+    },
+    {
+      "name": "tamper_connect_start",
+      "utc_ns": 1789727512738423399,
+      "monotonic_ns": 704790816629959
+    },
+    {
+      "name": "tamper_submit",
+      "utc_ns": 1789727512738544611,
+      "monotonic_ns": 704790816751251
+    },
+    {
+      "name": "tamper_response_headers",
+      "utc_ns": 1789727512739325371,
+      "monotonic_ns": 704790817531961
+    },
+    {
+      "name": "tamper_first_body_byte",
+      "utc_ns": 1789727512739347112,
+      "monotonic_ns": 704790817553742
+    },
+    {
+      "name": "tamper_response_complete",
+      "utc_ns": 1789727512739397292,
+      "monotonic_ns": 704790817603822
+    },
+    {
+      "name": "health_after_connect_start",
+      "utc_ns": 1789727512739420543,
+      "monotonic_ns": 704790817627043
+    },
+    {
+      "name": "health_after_submit",
+      "utc_ns": 1789727512739523264,
+      "monotonic_ns": 704790817729904
+    },
+    {
+      "name": "health_after_response_headers",
+      "utc_ns": 1789727512740049541,
+      "monotonic_ns": 704790818256101
+    },
+    {
+      "name": "health_after_first_body_byte",
+      "utc_ns": 1789727512740065461,
+      "monotonic_ns": 704790818272031
+    },
+    {
+      "name": "health_after_response_complete",
+      "utc_ns": 1789727512740091141,
+      "monotonic_ns": 704790818297661
+    },
+    {
+      "name": "experiment_end",
+      "utc_ns": 1789727512740116032,
+      "monotonic_ns": 704790818322562
+    }
+  ],
+  "http": [
+    {
+      "name": "health",
+      "method": "GET",
+      "path": "/healthz",
+      "client_port": 44789,
+      "status": 200,
+      "request_body": null,
+      "response_body": "{\"status\":\"ok\",\"tee\":\"Kunpeng virtCCA\",\"backend\":{\"status\":\"ok\",\"mode\":\"shannon_rns_otp\",\"devices\":2,\"replicas\":1,\"backend_capacity\":2,\"inflight_requests\":0,\"total_request_capacity\":2,\"ready_request_slots\":2}}",
+      "response_sha256": "92e400773a01e4598cc4694cbc7573a1d808953e717b1473d300807af7655533"
+    },
+    {
+      "name": "public_key",
+      "method": "GET",
+      "path": "/v1/tee/public-key",
+      "client_port": 56563,
+      "status": 200,
+      "request_body": null,
+      "response_body": "{\"version\":\"otp35b-kunpeng-v1\",\"algorithm\":\"X25519+HKDF-SHA256+AES-256-GCM\",\"public_key\":\"dQOo3ogiQI/6h7FTAH7glWzJJgfZoBWBl8FxjVycbEQ=\"}",
+      "response_sha256": "6e770af36835a06d42b72649d0f87ba738af30a2c08d0c1f2f4d8fbc84ea14ef"
+    },
+    {
+      "name": "valid",
+      "method": "POST",
+      "path": "/v1/encrypted/chat/completions",
+      "client_port": 37841,
+      "status": 200,
+      "request_body": {
+        "version": "otp35b-kunpeng-v1",
+        "nonce": "lKVT7wKmMXiPxMdO",
+        "ciphertext": "OwjWMKM+7/ztk1e0aLiFbq9S5hcXkwm1fnrheAJuSg7tQ1L+zLMfsDry3GBQhZelkVn3Ku+x7rNZZGk8u0AogSod3lEx9l12blFYJaImtSJd8Jf9pMbrUljdptMNID91WrE93gT74kFXzFRwwbk4cRfjP6t1LOwk8gUO0MytzeXTD01ltc2ZLE2t9Z5QeyZMhVaikvaBLRVA2IWfj0OqmiX0hkXejs7Hq+uyPieqz0HcMX/JrD6AvVY78IIdIhKVBApP0PRkCVwNanVBdsJvnGSV",
+        "client_public_key": "+PWuXPoUfqmfnCjG2oJ25gmIULtk8cizgyjTK0/v40A="
+      },
+      "response_body": "{\"version\":\"otp35b-kunpeng-v1\",\"nonce\":\"3574ukFA17b+wIQp\",\"ciphertext\":\"K9XtvR2vJHWRih5BipsT7MD0CU4ftHYJJNg++RDk0BOITqo7g9nTOrFh82J9VpXbvkRAOaAarbgP10b1tDH1KMlB3B76yqMnqS92pQD2QmX3D5IKc2F+OgU46lL+/xz1I3Um+UClmqlzsfW42uOYVVrMkcpE93zL4POPsG6Htd45DbklHQ3bIQwluR53qw9pxe2fkkfQQ5ojGh/fVCmhAxLn1Su+X4HDHcF/9cktH6tbPMFtVU8QDqkWtgcuDaIEtp1cXhw47fI+i3DBIsHIn3bQ0zGzKf1UEsdrmFmYbJ25b3aXESeI9EzhxcNhn9T6G7WpidfXJf82Ue9EUsC+Qp0BtTc16t4FqzYlc6mOLQWvB3eIPfHcN9PfDSGVJsiCxXu2guBz4n8zoSWt21Ilu1y7chqx6iJUadeKw8pQQ8z2Pqe+34rVBrzVnMOieH0h8u12n7Nbx4mvPlQNblh9DeAWBJ6NYnHmeMWz9ed08pjyriQahmQko+iScwwyOuwGjfltqx4smIxyHpVW2hIisvsjlOgDoryGC/uusdqKqINq1hGwewcDU9LpbnsdbQU2OSNotUnfNAhrjwW35cuUtAvzmXYSOGgCjGl1YT9E3MpPC3Aa+1Cp3fCFuujXzc9AiQQ=\"}",
+      "response_sha256": "1682783ff4a09736fcb6b54b956c71c2870e6b31347d4100e2720b6b810b5fee"
+    },
+    {
+      "name": "replay",
+      "method": "POST",
+      "path": "/v1/encrypted/chat/completions",
+      "client_port": 40025,
+      "status": 400,
+      "request_body": {
+        "version": "otp35b-kunpeng-v1",
+        "nonce": "lKVT7wKmMXiPxMdO",
+        "ciphertext": "OwjWMKM+7/ztk1e0aLiFbq9S5hcXkwm1fnrheAJuSg7tQ1L+zLMfsDry3GBQhZelkVn3Ku+x7rNZZGk8u0AogSod3lEx9l12blFYJaImtSJd8Jf9pMbrUljdptMNID91WrE93gT74kFXzFRwwbk4cRfjP6t1LOwk8gUO0MytzeXTD01ltc2ZLE2t9Z5QeyZMhVaikvaBLRVA2IWfj0OqmiX0hkXejs7Hq+uyPieqz0HcMX/JrD6AvVY78IIdIhKVBApP0PRkCVwNanVBdsJvnGSV",
+        "client_public_key": "+PWuXPoUfqmfnCjG2oJ25gmIULtk8cizgyjTK0/v40A="
+      },
+      "response_body": "{\"error\":{\"message\":\"replayed encrypted request\",\"type\":\"invalid_request_error\"}}",
+      "response_sha256": "7605b3dad65764b735c761bd3c0820057f675922e144d512c99da0acee436544"
+    },
+    {
+      "name": "tamper",
+      "method": "POST",
+      "path": "/v1/encrypted/chat/completions",
+      "client_port": 49323,
+      "status": 400,
+      "request_body": {
+        "version": "otp35b-kunpeng-v1",
+        "nonce": "qbgXcrSa3nwFLix/",
+        "ciphertext": "WRKmjJ2fxhW2FY58YrjthKSn69sjIPoLCU6DjmmVyKqOeGFi8x4ZyT3NLY2xOcaPY3IzD3xwo8tcHFNCH21KDrIPSUL3y6yHbJ07xkVj1xYF7gLzT+L3BjFH/SYepOrBgX0xu7v1/hDiZhAfYkepCjDWUGCwx/mLRsaLeAl1O6G9uCjXeFiW6I2Z6uJ0b7d3qv2mwJmMk6+Bs9UP5pWorG3Q7HPk33SIqahd5zQsN9cMjNNjEIJULWzL6l04Zj5v/y0sVZLiNFqasCQuJ7HqE14W",
+        "client_public_key": "+PWuXPoUfqmfnCjG2oJ25gmIULtk8cizgyjTK0/v40A="
+      },
+      "response_body": "{\"error\":{\"message\":\"\",\"type\":\"invalid_request_error\"}}",
+      "response_sha256": "af423a04ae83683a41346d433395e2a3bbb511bbf5e4d423b5779630d9983450"
+    },
+    {
+      "name": "health_after",
+      "method": "GET",
+      "path": "/healthz",
+      "client_port": 58817,
+      "status": 200,
+      "request_body": null,
+      "response_body": "{\"status\":\"ok\",\"tee\":\"Kunpeng virtCCA\",\"backend\":{\"status\":\"ok\",\"mode\":\"shannon_rns_otp\",\"devices\":2,\"replicas\":1,\"backend_capacity\":2,\"inflight_requests\":0,\"total_request_capacity\":2,\"ready_request_slots\":2}}",
+      "response_sha256": "92e400773a01e4598cc4694cbc7573a1d808953e717b1473d300807af7655533"
+    }
+  ],
+  "tests": [
+    {
+      "name": "healthy_idle_before",
+      "passed": true
+    },
+    {
+      "name": "encrypted_inference_authenticated_response",
+      "passed": true
+    },
+    {
+      "name": "wire_response_envelope_only",
+      "passed": true
+    },
+    {
+      "name": "exact_replay_rejected",
+      "passed": true
+    },
+    {
+      "name": "fresh_ciphertext_tamper_rejected",
+      "passed": true
+    },
+    {
+      "name": "healthy_idle_after",
+      "passed": true
+    }
+  ],
+  "synthetic_prompt_marker": "OTPSEC_PROMPT_7b3c8222b9fc4ff4a9fe3e8f23c46d11",
+  "wire_control_marker": "OTPSEC_HEADER_7b3c8222b9fc4ff4a9fe3e8f23c46d11",
+  "identity_limit": "Public key fetched over HTTP, no attestation or trusted key binding.",
+  "synthetic_decrypted_response": {
+    "id": "chatcmpl-87c4c648938b474fb0ec760de64fe144",
+    "object": "chat.completion",
+    "created": 1789727503,
+    "model": "qwen3.5-35b-a3b-otp-c",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "Thinking Process:\n\n"
+        },
+        "finish_reason": "length"
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 47,
+      "completion_tokens": 4,
+      "total_tokens": 51
+    },
+    "otp": {
+      "mode": "shannon_rns_otp",
+      "ttft_ms": 5140.7,
+      "tpot_ms": 391.7,
+      "continuous_batch": true,
+      "backend_replica": 0
+    },
+    "completion_token_ids": [
+      90700,
+      8340,
+      25,
+      271
+    ]
+  },
+  "capture": {
+    "packets_saved": 129,
+    "capture_error": null,
+    "socket_received_all_traffic": 213,
+    "socket_drops_all_traffic": 0,
+    "filter": {
+      "peer": "192.168.122.1",
+      "server": "192.168.122.143",
+      "client_ports": [
+        37841,
+        40025,
+        44789,
+        49323,
+        56563,
+        58817
+      ],
+      "server_port": 8000
+    },
+    "timestamp_source": "userspace receive time",
+    "pcap_sha256": "882bf05694a3e6b7e5ba236c35fa69f6e80489c720a97a43c0e407ef3b150de6"
+  },
+  "finished_ns": 1789727512765925676
+}

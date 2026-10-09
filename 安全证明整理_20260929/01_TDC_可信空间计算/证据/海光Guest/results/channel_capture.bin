@@ -1,0 +1,12 @@
+
+--- HOST->GUEST (18 bytes) ---
+{"type": "hello"}
+
+--- GUEST->HOST (92 bytes) ---
+{"type": "pubkey", "pub": "PDXlQ2P4Ad/OXYC2uuzBz+TAAyTrFwTSquupH1mv3Cc=", "model": "model"}
+
+--- HOST->GUEST (202 bytes) ---
+{"type": "req", "epk": "g4snboqn+xjER6q6HC8qGTp9kFZuSHy/P0uacEF4cFY=", "nonce": "CnNBXu3MxfL5FWH4", "ct": "K+yqe8xwP2LhSkNYVu/nBUODB6Iih6+Ug7ofE+VlsL44Qxp9iBTYuXSH4+1LOfDqmmNKUO6ZwVRvgM243AD6/24shg=="}
+
+--- GUEST->HOST (597 bytes) ---
+{"type": "resp", "nonce": "3QI9kMrFE84koiX0", "ct": "iTjNW7O0b+Wj9Yudgv8z7R4m0LzqwXu+Swe9FMmslkP/qXY/ZbbCjFGnorrU2sqp/zzNZOK7eCvDPgbNAOtzAh+oTQRLgu+CMz9xZj59w+H95AU/gmoOsWtfJuTQze2PC81FihtrZKa4Vsb6thDUIEqHMiNQNCB5/WDRXR3oQ1bpZbDdjSPlwScMQTdD96bPt0IyvD7g0CkGPqKNOt+der6/raXrPbx2Ikez+pl9yOUebvGRrCFTPerSEJwqLNOHeOe0OUdLOh6O+Q+MRB6mVOYjM33HUntShCXU57fae3jmSAplsy76FhtDKwy1EjCpC22ziOc21lkbVN3lZ2Uve5daLK3M6wZvVyxOj+nYspU32Ktozp643YA9UaSmPtBxuddWq1DAgoaiMI67eSfU1yp/Of/82NwRur9b+mOyJeU/tTJvx8DqwlBJx5Qh7RbyoZnJWlvcsOslRMNu+Zm4DA==", "stats": {"prompt_tokens": 38, "gen_tokens": 62, "latency_s": 8.97}}

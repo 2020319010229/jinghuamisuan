@@ -1,0 +1,40 @@
+{
+  "info": {
+    "tag": "cvm_cc_on",
+    "torch": "2.14.0+cu130",
+    "cuda": "13.0",
+    "device": "NVIDIA B200",
+    "total_mem_gb": 177.4,
+    "sm_count": 148,
+    "capability": "10.0",
+    "timestamp": "2026-09-23T08:30:12"
+  },
+  "transfer": {
+    "payload_mb": 256,
+    "iters": 20,
+    "h2d_gb_s": 9.25,
+    "d2h_gb_s": 12.16
+  },
+  "d2d": {
+    "payload_mb": 512,
+    "d2d_gb_s": 5805.96
+  },
+  "matmul_bf16": {
+    "n": 8192,
+    "dtype": "bfloat16",
+    "iters": 30,
+    "tflops": 1607.17,
+    "ms_per_matmul": 0.684
+  },
+  "matmul_fp16": {
+    "n": 8192,
+    "dtype": "float16",
+    "iters": 30,
+    "tflops": 1532.28,
+    "ms_per_matmul": 0.718
+  },
+  "mem_after": {
+    "allocated_gb": 0.03,
+    "reserved_gb": 1.25
+  }
+}

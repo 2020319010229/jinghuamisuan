@@ -1,0 +1,52 @@
+{
+  "started_ns": 1789727649003300200,
+  "passed": true,
+  "scope": "one encrypted request; marker search across CVM and host logs, temp files and crash dumps, with a planted positive control",
+  "marker_prefix": "OTPRESIDUE2b8c…",
+  "plant_control_cvm": {
+    "exit_code": 0,
+    "stdout": "planted\n",
+    "stderr": "Warning: Permanently added '192.168.122.143' (ED25519) to the list of known hosts.\r\n\nAuthorized users only. All activities may be monitored and reported.\n"
+  },
+  "plant_control_host": {
+    "exit_code": 0,
+    "stdout": "planted\n",
+    "stderr": ""
+  },
+  "encrypted_request": {
+    "exit_code": 0,
+    "stdout": "{\n  \"id\": \"chatcmpl-6e71fd5a1377420d8b195f3d148cba2b\",\n  \"object\": \"chat.completion\",\n  \"created\": 1789727653,\n  \"model\": \"qwen3.5-35b-a3b-otp-c\",\n  \"choices\": [\n    {\n      \"index\": 0,\n      \"message\": {\n        \"role\": \"assistant\",\n        \"content\": \"Thinking Process:\\n\\n1.  **Analyze the Request:**\\n    *\"\n      },\n      \"finish_reason\": \"length\"\n    }\n  ],\n  \"usage\": {\n    \"prompt_tokens\": 43,\n    \"completion_tokens\": 16,\n    \"total_tokens\": 59\n  },\n  \"otp\": {\n    \"mode\": \"shannon_rns_otp\",\n    \"ttft_ms\": 5021.4,\n    \"tpot_ms\": 411.6,\n    \"continuous_batch\": true,\n    \"backend_replica\": 0\n  },\n  \"completion_token_ids\": [\n    90700,\n    8340,\n    25,\n    271,\n    16,\n    13,\n    220,\n    2972,\n    2014,\n    53983,\n    279,\n    5952,\n    64700,\n    198,\n    262,\n    348\n  ]\n}\n",
+    "stderr": "Warning: Permanently added '192.168.122.143' (ED25519) to the list of known hosts.\r\n\nAuthorized users only. All activities may be monitored and reported.\n"
+  },
+  "request_elapsed_ms": 11672.0,
+  "request_ok": true,
+  "search_cvm": {
+    "exit_code": 0,
+    "stdout": "/tmp/otp-security-residue-control.txt\n---DOCKER---\notp-c35-cb:0\ncvm-server:0\n---DUMPS---\n|/usr/lib/systemd/systemd-coredump %P %u %g %s %t %c %h\n",
+    "stderr": "Warning: Permanently added '192.168.122.143' (ED25519) to the list of known hosts.\r\n\nAuthorized users only. All activities may be monitored and reported.\n"
+  },
+  "search_host": {
+    "exit_code": 0,
+    "stdout": "/tmp/otp-security-residue-control.txt\n---DOCKER---\n---DUMPS---\n|/usr/lib/systemd/systemd-coredump %P %u %g %s %t %c %h %d\n",
+    "stderr": ""
+  },
+  "cvm": {
+    "files_with_marker": [],
+    "control_file_found": true,
+    "docker_log_marker_counts": {
+      "otp-c35-cb": 0,
+      "cvm-server": 0
+    },
+    "raw_tail": "/tmp/otp-security-residue-control.txt\n---DOCKER---\notp-c35-cb:0\ncvm-server:0\n---DUMPS---\n|/usr/lib/systemd/systemd-coredump %P %u %g %s %t %c %h"
+  },
+  "host": {
+    "files_with_marker": [],
+    "control_file_found": true,
+    "docker_log_marker_counts": {},
+    "raw_tail": "/tmp/otp-security-residue-control.txt\n---DOCKER---\n---DUMPS---\n|/usr/lib/systemd/systemd-coredump %P %u %g %s %t %c %h %d"
+  },
+  "search_controls_positive": true,
+  "no_marker_in_files": true,
+  "no_marker_in_container_logs": true,
+  "finished_ns": 1789727667130074700
+}

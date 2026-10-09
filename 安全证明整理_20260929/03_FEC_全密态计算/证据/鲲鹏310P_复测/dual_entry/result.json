@@ -1,0 +1,95 @@
+{
+  "started_ns": 1789727563634350800,
+  "passed": true,
+  "scope": "same OTP engine via plaintext and encrypted entry on :8000; unique prompt per round; alternating order",
+  "max_tokens": 24,
+  "rounds": [
+    {
+      "round": 1,
+      "prompt_sha256": "91843db94fd2ff777f475db41d40b98f2d881e8349797f4166d61cd2d19382f7",
+      "order": [
+        "encrypted",
+        "plaintext"
+      ],
+      "match": true,
+      "encrypted": {
+        "usage": {
+          "prompt_tokens": 35,
+          "completion_tokens": 24
+        },
+        "sha256": "cfe8f2eee63438c3ddc0894f622dc53e2a898abc7c01d69445d2da5476a7b792",
+        "chars": 73,
+        "elapsed_ms": 14671.0
+      },
+      "plaintext": {
+        "usage": {
+          "prompt_tokens": 35,
+          "completion_tokens": 24
+        },
+        "sha256": "cfe8f2eee63438c3ddc0894f622dc53e2a898abc7c01d69445d2da5476a7b792",
+        "chars": 73,
+        "elapsed_ms": 14063.0
+      },
+      "sample": "Thinking Process:\n\n1.  **Analyze the Request:**\n    *   Input: \"sample-04"
+    },
+    {
+      "round": 2,
+      "prompt_sha256": "72f1fcecb307e14c95d41e99a80b87569fc6a141c2ebdb8785dec78c58bf48a7",
+      "order": [
+        "plaintext",
+        "encrypted"
+      ],
+      "match": true,
+      "encrypted": {
+        "usage": {
+          "prompt_tokens": 33,
+          "completion_tokens": 24
+        },
+        "sha256": "654cf9d9073a99e29898158d52c0faaa603cd4bd4a3e2cb93566f357e9c69faf",
+        "chars": 75,
+        "elapsed_ms": 13547.0
+      },
+      "plaintext": {
+        "usage": {
+          "prompt_tokens": 33,
+          "completion_tokens": 24
+        },
+        "sha256": "654cf9d9073a99e29898158d52c0faaa603cd4bd4a3e2cb93566f357e9c69faf",
+        "chars": 75,
+        "elapsed_ms": 13750.0
+      },
+      "sample": "Thinking Process:\n\n1.  **Analyze the Request:**\n    *   Input: \"sample-b7be"
+    },
+    {
+      "round": 3,
+      "prompt_sha256": "7c6bd2908914ae7e258757136c94c64e7acd27986f1197dfffc6f97bf454e322",
+      "order": [
+        "encrypted",
+        "plaintext"
+      ],
+      "match": true,
+      "encrypted": {
+        "usage": {
+          "prompt_tokens": 34,
+          "completion_tokens": 24
+        },
+        "sha256": "f0e89b0db286673a5527e60b1af69b9d7ef90fd683ef77ebb7368fd8a88ff08c",
+        "chars": 73,
+        "elapsed_ms": 13734.0
+      },
+      "plaintext": {
+        "usage": {
+          "prompt_tokens": 34,
+          "completion_tokens": 24
+        },
+        "sha256": "f0e89b0db286673a5527e60b1af69b9d7ef90fd683ef77ebb7368fd8a88ff08c",
+        "chars": 73,
+        "elapsed_ms": 14094.0
+      },
+      "sample": "Thinking Process:\n\n1.  **Analyze the Request:**\n    *   Input: \"sample-3c"
+    }
+  ],
+  "unique_prompts": true,
+  "all_entries_match": true,
+  "finished_ns": 1789727647754289900
+}

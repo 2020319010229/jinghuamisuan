@@ -1,0 +1,10 @@
+{
+  "started_ns": 1789727490880502600,
+  "directory": "/tmp/otp-security-sdk-20260916.qZOyWk",
+  "execution": {
+    "exit_code": 0,
+    "stdout": "/tmp/tmpovzg26kd.der.pem: OK\n{\"initialization\": {\"status\": 0, \"connected\": true, \"dek_created\": true}, \"generation\": {\"decrypted_delta_count\": 4, \"done_received\": true, \"synthetic_output\": \"Okay, the user\", \"passed\": true}, \"blocked\": null, \"error_type\": null}\n",
+    "stderr": ""
+  },
+  "finished_ns": 1789727498859276900
+}

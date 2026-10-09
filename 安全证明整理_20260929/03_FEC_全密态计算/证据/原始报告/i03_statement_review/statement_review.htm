@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>I-03 安全表述复核清单 · 2026-09-18</title>
+<style>
+ *{box-sizing:border-box}
+ body{margin:0;background:#fff;color:#1b1b1b;font:15px/1.8 "Segoe UI","Microsoft YaHei",system-ui,sans-serif}
+ .wrap{max-width:1020px;margin:0 auto;padding:32px 26px 90px}
+ h1{font-size:23px;margin:0 0 6px}
+ .sub{color:#666;font-size:13.4px;margin-bottom:22px}
+ h2{font-size:18px;margin:32px 0 12px;padding-bottom:6px;border-bottom:2px solid #1b1b1b}
+ table{border-collapse:collapse;width:100%;margin:14px 0;font-size:13.5px}
+ th,td{border:1px solid #d8d8d8;padding:8px 10px;text-align:left;vertical-align:top}
+ th{background:#f3f5f7;font-weight:600}
+ code{background:#f1f2f4;padding:1px 5px;border-radius:3px;font:12.6px Consolas,monospace}
+ .lead{background:#eef5ff;border-left:4px solid #2a6fb5;padding:13px 16px;margin:18px 0;border-radius:0 5px 5px 0}
+ .over{color:#a51d2d;font-weight:600}
+ .cond{color:#a06000;font-weight:600}
+ .ok{color:#0a6b33;font-weight:600}
+ .out{color:#5a5a5a;font-weight:600}
+ blockquote{margin:6px 0;padding:6px 12px;border-left:3px solid #c9ced3;background:#fafbfc;color:#333;font-size:13.4px}
+ @media print{.wrap{max-width:none;padding:0} body{font-size:12pt}}
+</style>
+</head>
+<body><div class="wrap">
+
+<h1>I-03 安全表述复核清单</h1>
+<div class="sub">2026-09-18 · 复核对象：《全栈密态计算技术矩阵-修改版-v8》（6 页，SHA256 <code>65be121d…</code>）· 依据本轮实测证据</div>
+
+<div class="lead">
+<p>计划书 I-03 要求检查对外材料"是否存在将隔离保护表述为加密保护、将平台能力表述为动态实测等问题"。本次机器筛查命中 7 处、人工补充 1 处，共 <strong>8 条</strong>需要修订或补充前提说明。</p>
+<p>需要说明的是：这些表述不必然是错的，多数是<strong>缺少适用前提</strong>——例如 CDC 页描述的是 NVIDIA 平台，而本轮验证的是鲲鹏加昇腾，两者不能互相代入。</p>
+</div>
+
+<h2>一、逐条复核</h2>
+
+<table>
+<tr><th style="width:15%">位置</th><th style="width:26%">原表述</th><th style="width:30%">本轮证据</th><th style="width:11%">判定</th><th style="width:18%">建议</th></tr>
+
+<tr>
+<td>P3 创新概述</td>
+<td>FEC「提供<strong>信息论安全</strong>防护能力」</td>
+<td>掩码由操作系统 CSPRNG（<code>getrandom</code>）产生，非物理真随机源。实测 4096 个掩码全唯一、模域均匀、用后清零</td>
+<td class="over">超出证据</td>
+<td>改为「按计算安全模型提供一次一密掩码保护」，或补注「信息论安全以真随机源为前提，当前实现使用 CSPRNG」</td>
+</tr>
+
+<tr>
+<td>P6 FEC 方案</td>
+<td>「用数学保证保障数据的<strong>全链路密态</strong>」</td>
+<td>链路实为三段：客户端到 CVM 为 AES-GCM 传输加密；<strong>CVM 可信域内为明文</strong>（分词、embedding、非线性、解盲）；CVM 到 NPU 为 RNS 密态。抓包与残留测试证明域外无明文</td>
+<td class="over">易误读</td>
+<td>改为「数据在离开可信域前完成密态转换，加速卡侧只处理密态数据」，避免让人理解为可信域内也无明文</td>
+</tr>
+
+<tr>
+<td>P5 CDC 方案</td>
+<td>「GPU-TEE 机密安全域」「显存硬件隔离」「链路加密」</td>
+<td>该页对应 NVIDIA 高端显卡平台。本轮实测当前部署的 Ascend 310P3：<code>rootkey</code>、<code>tls-cert</code>、<code>work-mode</code> 均不支持查询，<code>key-manage</code> 服务 Stop，无 GPU-CC 能力</td>
+<td class="cond">需标前提</td>
+<td>该页显著标注适用硬件；对外演示若使用鲲鹏+昇腾环境，须说明<strong>该环境不具备 CDC 能力</strong>，不可用现场环境演示 CDC</td>
+</tr>
+
+<tr>
+<td>P4 TDC 方案</td>
+<td>「租户级硬件隔离，<strong>一租户一机密域</strong>」</td>
+<td>实测为单租户部署。已验证宿主机与 CVM 内非特权用户两类非授权侧均无法访问设备与 guest 运行时内存；<strong>跨租户越权未实测</strong>（无第二租户）</td>
+<td class="cond">部分支撑</td>
+<td>保留表述，但在证明材料中注明"跨租户隔离尚未做多租户实测"，不将单租户结果表述为多租户验证结论</td>
+</tr>
+
+<tr>
+<td>P3 / P4 TDC</td>
+<td>「<strong>性能几乎无损</strong>」</td>
+<td>本轮为安全验证，未做 TDC 性能测试</td>
+<td class="out">不在范围</td>
+<td>计划书第一节已明确性能主张不属于安全证明范围。安全报告不为该表述背书，需另行性能测试支撑</td>
+</tr>
+
+<tr>
+<td>P6 FEC</td>
+<td>「比全同态加密快 <strong>10000 余倍</strong>」</td>
+<td>同上，未在本轮验证</td>
+<td class="out">不在范围</td>
+<td>同上；如对外使用需附独立性能测试报告与对比口径</td>
+</tr>
+
+<tr>
+<td>P6 FEC</td>
+<td>「<strong>全谱系适配</strong>，彻底消除芯片依赖」</td>
+<td>本轮仅在昇腾 310P 完成密态接口验证（96/96）。FEC-08 要求各声明支持的平台分别测试，未测平台不判通过</td>
+<td class="cond">超出已验证范围</td>
+<td>改为「已在昇腾 310P 完成验证，GPU/DCU/TPU 适配按平台分别验证后发布」</td>
+</tr>
+
+<tr>
+<td>P5 CDC</td>
+<td>「链路加密」（CPU—GPU）</td>
+<td>即便在支持平台上，计划书也要求：普通网卡抓包不能证明 PCIe 总线加密；未做独立总线观测时只能表述为"平台能力与状态证据已验证"</td>
+<td class="cond">需限定</td>
+<td>不表述为"已直接抓取并观察到总线密文"；本环境无 PCIe 分析仪，相关主张保持待补证</td>
+</tr>
+</table>
+
+<h2>二、机器筛查未命中但已确认无问题的项</h2>
+<p>筛查规则中的「绝对化安全表述」（无法破解／绝对安全／无法还原等）与「认证合规主张」（通过某某认证／等保／密评）在本 PPT 中<strong>命中 0 处</strong>。这与我们既有的风险认知一致——尤其是不宣称"加速卡无法还原明文"这一点，符合 OTP 盲化的实际威胁边界。</p>
+
+<h2>三、处理建议</h2>
+<ul>
+<li>对外材料修订优先级：<strong>P3 信息论表述</strong>与 <strong>P6 全链路密态</strong>最需要调整，二者直接关系到安全主张是否超出证据。</li>
+<li><strong>CDC 页必须标注适用硬件。</strong>当前演示环境不具备 GPU-CC，若在本环境演示 CDC 会构成"把平台能力表述为实测"的典型问题。</li>
+<li>性能类表述与安全证明分离，安全报告不引用、不背书。</li>
+<li>本清单只复核了《全栈密态计算技术矩阵 v8》。其他对外材料（启动会报告等）未纳入本轮，需要时按同一规则复核。</li>
+</ul>
+
+<p style="margin-top:22px;color:#666;font-size:12.6px">筛查脚本 <code>screen_statements.py</code>、原始输出 <code>ppt_v8_screening.txt</code>、源文件摘要 <code>source_pptx.sha256</code> 同目录留存。本清单为表述与证据的对应关系复核，不改变任何技术结论。</p>
+
+</div></body></html>

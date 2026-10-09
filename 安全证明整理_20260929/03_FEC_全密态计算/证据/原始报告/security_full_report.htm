@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>三类密态计算安全测试 · 执行与结论 2026-09-18</title>
+<style>
+ *{box-sizing:border-box}
+ body{margin:0;background:#fff;color:#1b1b1b;font:15px/1.8 "Segoe UI","Microsoft YaHei",system-ui,sans-serif}
+ .wrap{max-width:1000px;margin:0 auto;padding:34px 28px 100px}
+ h1{font-size:25px;margin:0 0 6px}
+ .sub{color:#666;font-size:13.5px;margin-bottom:24px}
+ h2{font-size:19px;margin:38px 0 12px;padding-bottom:7px;border-bottom:2px solid #1b1b1b}
+ h3{font-size:15.5px;margin:24px 0 8px;color:#123d6b}
+ h4{font-size:14.5px;margin:18px 0 6px;color:#333}
+ p{margin:10px 0}
+ table{border-collapse:collapse;width:100%;margin:14px 0;font-size:13.6px}
+ th,td{border:1px solid #d8d8d8;padding:7px 10px;text-align:left;vertical-align:top}
+ th{background:#f3f5f7;font-weight:600}
+ td.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+ code{background:#f1f2f4;padding:1px 5px;border-radius:3px;font:12.7px Consolas,"Cascadia Mono",monospace;word-break:break-all}
+ pre{background:#f7f8f9;border:1px solid #e4e6e8;border-radius:5px;padding:11px 13px;overflow-x:auto;
+     font:12.5px/1.6 Consolas,"Cascadia Mono",monospace;margin:12px 0}
+ .lead{background:#eef5ff;border-left:4px solid #2a6fb5;padding:13px 16px;margin:18px 0;border-radius:0 5px 5px 0}
+ .warn{background:#fff7e8;border-left:4px solid #d08700;padding:13px 16px;margin:18px 0;border-radius:0 5px 5px 0}
+ .risk{background:#fdeef0;border-left:4px solid #a51d2d;padding:13px 16px;margin:18px 0;border-radius:0 5px 5px 0}
+ .pass{color:#0a6b33;font-weight:600}
+ .fail{color:#a51d2d;font-weight:600}
+ .cond{color:#a06000;font-weight:600}
+ .todo{color:#5a5a5a;font-weight:600}
+ ul{margin:10px 0;padding-left:22px} li{margin:5px 0}
+ figure{margin:22px 0;text-align:center} figcaption{font-size:12.5px;color:#666;margin-top:8px}
+ @media print{.wrap{max-width:none;padding:0} body{font-size:12pt}}
+</style>
+</head>
+<body><div class="wrap">
+
+<h1>三类密态计算安全测试 · 执行与结论</h1>
+<div class="sub">2026-09-18 · 依据《三类密态计算安全测试方案》与《荆华密算三类密态计算解决方案安全证明任务计划书》 · 鲲鹏 920 + virtCCA CVM + 双 Ascend 310P</div>
+
+<div class="lead">
+<p><strong>本轮把方案规定的公共测试、方案一（TDC）与方案三（FEC）流程实际跑完。</strong>当前部署（鲲鹏 virtCCA 机密虚机 + 双 310P vfio 直通）正是计划书所述 TDC 的架构形态——CPU-TEE 加通用加速卡原生直通，因此 TDC-01 至 TDC-07 均在本机实测，包括此前未做的宿主侧内存读取、非授权侧访问与跨任务设备内存残留。</p>
+<p>方案二 CDC 也做了实际核查而非推测：设备直接返回不支持 <code>rootkey</code>、<code>tls-cert</code> 与 <code>work-mode</code> 查询，<code>key-manage</code> 服务处于 Stop，据此判定为<strong>平台不具备 CDC 所需能力</strong>。</p>
+<p>结论：<span class="pass">FEC 通过</span>（核心项全部实测通过）、<span class="cond">TDC 条件通过</span>（隔离与独占项通过，两处需继续定位）、<span class="fail">CDC 平台不支持</span>（有设备实证）。存在 1 项 HIGH 级既有风险（F01 明文推理路由）仍未整改，本报告如实保留。</p>
+</div>
+
+<h2>一、总判定</h2>
+<table>
+<tr><th>范围</th><th>判定</th><th>依据与限制</th></tr>
+<tr><td>公共测试（7 项）</td><td class="pass">通过（Web 入口除外）</td><td>环境版本、SDK 客户端、两处网络抓包、身份异常、客户自验均实测通过；Web 前端入口本环境未部署，未测</td></tr>
+<tr><td>方案一 TDC</td><td class="cond">条件通过</td><td>TDC-01/02/03/05/06 通过：guest 三段内存 97.16% 全扫未取得业务明文、宿主无设备节点与驱动、读 BAR 得 0 字节、独立 IOMMU 组独占、跨任务设备内存清零。TDC-04 条件通过（单租户无跨租户越权）、TDC-07 缺物理总线观测且有 245 处静态明文待定位</td></tr>
+<tr><td>方案二 CDC</td><td class="fail">平台不支持（实证）</td><td>310P3 实测：<code>rootkey</code>、<code>tls-cert</code>、<code>work-mode</code> 均返回"不支持查询"，<code>key-manage</code> 服务 Stop。无设备证明材料即无法满足 CDC-03，其余各项依赖于此</td></tr>
+<tr><td>方案三 FEC</td><td class="pass">通过</td><td>运行位置、OTP 密钥、数据路径、正确性与异常四组全部实测通过；多类型加速卡与物理 PCIe 仍为待补证</td></tr>
+<tr><td>既有风险 F01</td><td class="fail">不通过（未整改）</td><td>网关 <code>0.0.0.0</code> 上明文 <code>/v1/chat/completions</code> 仍可达，本轮复现</td></tr>
+</table>
+
+<h2>二、公共测试</h2>
+<table>
+<tr><th>测试项</th><th>结果</th><th>证据</th></tr>
+<tr><td>安全主张与威胁模型</td><td class="pass">通过</td><td><code>docs/SECURITY_TRUST_BOUNDARIES.md</code>，本轮更新取消控制面边界</td></tr>
+<tr><td>环境与版本</td><td class="pass">通过</td><td><code>env_baseline.json</code>、<code>firmware.json</code>（两卡 7.8.0.7.220）、<code>live_status.json</code>；运行引擎 <code>e015292c…</code> 与进程 <code>/proc/exe</code> 摘要一致</td></tr>
+<tr><td>Web / SDK 客户端</td><td class="cond">SDK 通过；Web 实证未部署</td><td><code>sdk_01/sdk_result.json</code>：新鲜 challenge 初始化、4 个 delta 认证解密、done。Web 侧已核查：宿主仅监听 22/111/53/9100，CVM 仅 22/8000/8020/8101，无 web/nginx/前端容器，<strong>本环境未部署 Web 入口</strong></td></tr>
+<tr><td>网络传输</td><td class="pass">通过</td><td>8000 入口双点重组 <strong>23/23</strong>（<code>wire_gateway_01</code>）；8101 入口 <strong>11/11</strong>（<code>wire_sdk_01</code>）。合成提示标记不可见，阳性对照标记可见</td></tr>
+<tr><td>身份异常</td><td class="pass">通过</td><td><code>attest_01/controls.json</code> <strong>7/7</strong>：错误 challenge、错误测量、签名篡改、缺设备证书均拒绝</td></tr>
+<tr><td>客户自验</td><td class="pass">通过</td><td><code>selfcheck_01/customer_selfcheck.json</code> <strong>10/10</strong>，在宿主机以客户端视角独立执行，不依赖本项目的 SSH 采集</td></tr>
+<tr><td>经信局及第三方材料</td><td class="pass">已完成映射</td><td>见 <code>g05_third_party_mapping/mapping.htm</code>：信通院 42 例中与三方案相关的 11 项已逐条映射，标明可继承性；19 项属平台其他模块单独标注。<strong>release_v3 的通过结论不计入本项目验收</strong>（SGX≠virtCCA，H200≠310P）</td></tr>
+<tr><td>对外表述复核（I-03）</td><td class="cond">发现 8 条需修订</td><td>见 <code>i03_statement_review/statement_review.htm</code>：PPT 中"信息论安全""全链路密态""全谱系适配"等超出当前证据，CDC 页需标注适用硬件</td></tr>
+</table>
+<p>网络侧需要说明：抓包证明的是"这条链路上看不到合成提示标记"，不等于加密算法本身被证明。两者分开记录，阳性对照用于排除"抓包方法失效"这一种可能。</p>
+
+<h2>三、方案一：可信空间计算（TDC）</h2>
+
+<h3>宿主能否读到机密虚机的内存</h3>
+<p>这是 TDC 最核心的一条主张，此前只有平台配置证据（内核参数、<code>tmm_driver</code>、IOMMU 绑定），没有做过反向读取。本轮做了一次带对照的实测。</p>
+
+<figure>
+<svg width="900" height="300" viewBox="0 0 900 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="内存隔离三标记对照">
+ <defs><marker id="a1" markerWidth="9" markerHeight="9" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#2a6fb5"/></marker>
+ <marker id="a2" markerWidth="9" markerHeight="9" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#a51d2d"/></marker></defs>
+
+ <rect x="12" y="24" width="250" height="250" rx="8" fill="#fafbfc" stroke="#b9c0c7"/>
+ <text x="137" y="48" text-anchor="middle" font-size="13.5" font-weight="700">机密虚机 CVM</text>
+ <rect x="32" y="66" width="210" height="52" rx="5" fill="#eaf4ea" stroke="#3f8f52"/>
+ <text x="137" y="86" text-anchor="middle" font-size="12">标记①运行时内存</text>
+ <text x="137" y="104" text-anchor="middle" font-size="11" fill="#555">进程匿名页 · 128 KiB</text>
+ <rect x="32" y="132" width="210" height="52" rx="5" fill="#eaf4ea" stroke="#3f8f52"/>
+ <text x="137" y="152" text-anchor="middle" font-size="12">标记②磁盘 I/O</text>
+ <text x="137" y="170" text-anchor="middle" font-size="11" fill="#555">写盘+sync+清缓存后读回</text>
+ <text x="137" y="212" text-anchor="middle" font-size="11.5" fill="#0a6b33">CVM 内自搜：两者均命中</text>
+ <text x="137" y="232" text-anchor="middle" font-size="11" fill="#555">（证明标记确实驻留）</text>
+
+ <rect x="330" y="24" width="255" height="250" rx="8" fill="#fdf7f7" stroke="#d0a8ad"/>
+ <text x="457" y="48" text-anchor="middle" font-size="13.5" font-weight="700">宿主机（不可信侧）</text>
+ <text x="457" y="74" text-anchor="middle" font-size="12">读 /proc/&lt;qemu&gt;/mem</text>
+ <rect x="350" y="92" width="215" height="70" rx="5" fill="#fff" stroke="#c9ced3"/>
+ <text x="457" y="114" text-anchor="middle" font-size="12">三段共 130.4 GB 读完</text>
+ <text x="457" y="134" text-anchor="middle" font-size="11" fill="#555">覆盖 97.16%（3×44GB）</text>
+ <text x="457" y="152" text-anchor="middle" font-size="11" fill="#555">读取无 errno 错误</text>
+ <text x="457" y="188" text-anchor="middle" font-size="12.5" font-weight="700" fill="#0a6b33">标记① 命中 0 次</text>
+ <text x="457" y="210" text-anchor="middle" font-size="12.5" font-weight="700" fill="#0a6b33">标记② 命中 0 次</text>
+ <text x="457" y="238" text-anchor="middle" font-size="12" font-weight="700" fill="#a51d2d">静态明文 245 处(仅第1段)</text>
+ <text x="457" y="256" text-anchor="middle" font-size="10.5" fill="#a51d2d">(/opt/cvm、serve35_cb、ELF 头)</text>
+
+ <rect x="650" y="24" width="238" height="250" rx="8" fill="#fafbfc" stroke="#b9c0c7"/>
+ <text x="769" y="48" text-anchor="middle" font-size="13.5" font-weight="700">阳性对照</text>
+ <rect x="668" y="72" width="202" height="60" rx="5" fill="#eaf4ea" stroke="#3f8f52"/>
+ <text x="769" y="94" text-anchor="middle" font-size="12">标记③宿主普通进程</text>
+ <text x="769" y="114" text-anchor="middle" font-size="11.5" fill="#0a6b33">同一routine命中 4 次</text>
+ <text x="769" y="158" text-anchor="middle" font-size="11.5" fill="#333">→ 搜索方法有效</text>
+ <text x="769" y="182" text-anchor="middle" font-size="11.5" fill="#333">→ "没搜到"不是</text>
+ <text x="769" y="200" text-anchor="middle" font-size="11.5" fill="#333">　 grep 坏了</text>
+
+ <line x1="262" y1="92" x2="326" y2="110" stroke="#2a6fb5" stroke-width="2" marker-end="url(#a1)"/>
+ <line x1="262" y1="158" x2="326" y2="140" stroke="#2a6fb5" stroke-width="2" marker-end="url(#a1)"/>
+</svg>
+<figcaption>三个标记、两个方向的对照：只有当搜索方法被证明有效、标记被证明驻留时，"宿主读不到"才是有效结论</figcaption>
+</figure>
+
+<p>从 qemu 命令行确认 guest 内存由 <strong>3 个 44 GB 的 NUMA backend</strong> 组成（共 138 G）。首版扫描只覆盖了 4.5%，结论不成立；最终版<strong>把三段全部扫完</strong>：读取 130.39 GB / 候选 134.19 GB，<strong>覆盖率 97.16%</strong>，全程无 errno 错误。</p>
+<table>
+<tr><th>检查</th><th>结果</th><th>含义</th></tr>
+<tr><td>宿主扫宿主进程（阳性对照）</td><td class="pass">命中</td><td>搜索例程本身有效</td></tr>
+<tr><td>CVM 内自搜运行时标记</td><td class="pass">命中</td><td>标记确实驻留在 guest 内存中</td></tr>
+<tr><td>宿主扫 guest 找运行时标记</td><td class="pass">0 次</td><td>三段共 130 GB 读完仍未取得</td></tr>
+<tr><td>宿主扫 guest 找磁盘 I/O 标记</td><td class="pass">0 次</td><td>经块设备写入并回读的数据同样未取得</td></tr>
+<tr><td>guest 段内静态明文特征</td><td class="cond">245 处，全部集中在第 1 段</td><td>第 2、3 段（共 86 GB）<strong>零命中</strong>，连 ELF 头都没有</td></tr>
+</table>
+<table>
+<tr><th>内存段</th><th>大小</th><th>已读</th><th>静态明文</th><th>种植标记</th></tr>
+<tr><td><code>0xfff4a3e00000</code></td><td class="n">44.0 GB</td><td class="n">44.0 GB</td><td class="n">245</td><td class="pass n">0</td></tr>
+<tr><td><code>0xffe9a3c00000</code></td><td class="n">44.0 GB</td><td class="n">44.0 GB</td><td class="pass n">0</td><td class="pass n">0</td></tr>
+<tr><td><code>0xffdea3a00000</code></td><td class="n">44.0 GB</td><td class="n">42.4 GB</td><td class="pass n">0</td><td class="pass n">0</td></tr>
+</table>
+<p>这个分布本身就是判据：若 guest 运行时内存对宿主是明文可见的，一台正在跑 35B 模型、占用 40 GB 以上内存的虚机，不可能有 86 GB 连一处可识别明文都没有。</p>
+
+<div class="warn">
+<p><strong>需要如实记录的发现。</strong>第 1 段中可检出 <code>/opt/cvm</code>（68 次）、<code>serve35_cb</code>（46 次）、<code>python3</code>（73 次）、ELF 头（16 次）等静态明文，合计 245 处 1 MiB 块命中；另两段为 0。</p>
+<p>这些与本轮种植的任何标记都不重合：运行时内存标记与磁盘 I/O 标记在三段中均为 0 命中。曾假设它们来自 virtio 块设备共享缓冲，该假设<strong>已被磁盘标记对照证伪</strong>。倾向于是 guest 启动早期（机密内存生效前）或非机密页的残留，但<strong>来源尚未定位</strong>，列为后续项，现阶段只陈述观测。</p>
+</div>
+
+<p><strong>本项判定：通过（TDC-03），另记一条待定位观测（归入 TDC-07）。</strong>计划书对 TDC-03 的通过标准是"非授权侧不能取得业务明文、密钥或受保护内存内容"。在 97.16% 覆盖、两个阳性对照成立、两类标记各自独立种植的条件下，宿主侧未取得任何业务明文——该标准已满足。仍<strong>不能</strong>由此推广为"CVM 内存对宿主完全不可见"，第 1 段的 245 处静态明文就是反例，须在 TDC-07 中如实披露。</p>
+
+<h3>TDC-04 一租户一机密域：非授权侧访问测试</h3>
+<p>本环境是单租户部署，没有第二个租户可供跨租户越权，因此改为对计划书所列的另两类非授权侧——<strong>宿主机与管理面</strong>、<strong>可信域内的非特权用户</strong>——做反向访问测试。</p>
+<table>
+<tr><th>非授权侧</th><th>尝试动作</th><th>结果</th></tr>
+<tr><td rowspan="5">宿主机（不可信）</td><td>列出 NPU 设备节点</td><td class="pass"><code>/dev/davinci*</code> 不存在</td></tr>
+<tr><td>运行 npu-smi</td><td class="pass">工具已安装（<code>/usr/local/sbin/npu-smi</code>），但执行时挂起被 timeout 杀掉（退出码 124），查不到任何设备</td></tr>
+<tr><td>加载计算驱动</td><td class="pass">未加载 devdrv 系列模块</td></tr>
+<tr><td>直接读取设备 BAR <code>resource0</code></td><td class="pass">读出 <strong>0 字节</strong></td></tr>
+<tr><td>查看驱动占用</td><td class="pass">两卡均 <code>vfio-pci</code>，已交由虚机独占</td></tr>
+<tr><td rowspan="2">CVM 内非特权用户</td><td>读 <code>davinci0</code> / <code>devmm_svm</code> / <code>davinci_manager</code></td><td class="pass">三者全部被拒（exit≠0）</td></tr>
+<tr><td>以 nobody 运行 npu-smi</td><td class="pass">拒绝：<code>dcmi module initialize failed</code></td></tr>
+</table>
+<p>资源映射方面：两卡各自独立 IOMMU 组（83 / 84，<strong>每组仅 1 个设备</strong>），<code>device-share</code> 状态为 <code>False</code>，NPU 仅被引擎进程占用；cvm-server 容器只透传 <code>/dev/tsi</code>，不持有任何 NPU 设备。</p>
+
+<h3>TDC-05 任务结束后的清理：跨进程设备内存残留</h3>
+<p>计划书要求"其他租户无法并发占用或读取残留数据"。做法是写进程在设备上分配 256 MB、填满唯一标记，然后由<strong>另一个进程</strong>分配同样大小并在不初始化的情况下读回。覆盖两种结束方式：正常释放，以及进程直接退出、由驱动回收。</p>
+<table>
+<tr><th>写进程结束方式</th><th>读进程命中标记</th><th>读到的非零字节</th><th>读路径自检</th></tr>
+<tr><td>正常 <code>aclrtFree</code> 后退出</td><td class="pass">0</td><td class="pass">0 / 268,435,456</td><td class="pass">命中 15,790,320 次</td></tr>
+<tr><td>不释放直接退出（驱动回收）</td><td class="pass">0</td><td class="pass">0 / 268,435,456</td><td class="pass">命中 15,790,320 次</td></tr>
+</table>
+<p>两轮读到的都是<strong>全零</strong>，而自检证明同一条读路径能看到刚写入的数据。因此可以说：在当前驱动下，后一个任务通过常规分配拿到的设备内存已被清零，读不到前一个任务的内容；异常退出的场景同样成立。测试前后后端请求数不变、结束时空闲。</p>
+
+<h3>其余 TDC 项</h3>
+<table>
+<tr><th>测试项</th><th>结果</th><th>说明</th></tr>
+<tr><td>TDC-01 架构与边界</td><td class="pass">通过</td><td>实际部署与可信边界表一致</td></tr>
+<tr><td>TDC-02 CPU 可信证明</td><td class="pass">通过</td><td>证明负例 7/7；RA 全程开启。可信根证书与独立批准基线按现场证据处理</td></tr>
+<tr><td>TDC-06 数据路径</td><td class="pass">通过</td><td>两处抓包、运行身份、任务记录可串联</td></tr>
+<tr><td>TDC-07 边界外明文</td><td class="cond">部分完成</td><td>软件侧已测：常规分配读不到他人显存内容（全零）；当前部署下 H2D/D2H 传的是 RNS 密文分量。物理 PCIe 观测无仪器，仍为待补证。需明确：若按纯 TDC 形态（不启用 OTP）运行，进入加速卡的将是明文激活</td></tr>
+</table>
+
+<h2>四、方案二：机密空间计算（CDC）</h2>
+<p>CDC-01 的任务本身是"核对平台组合、确认 GPU 是否处于正式机密计算模式"，这一步在本机可以做，本轮做了实际核查，不再以推测下结论。</p>
+<table>
+<tr><th>核查项</th><th>设备实际返回</th><th>对应影响</th></tr>
+<tr><td>产品型号</td><td>Atlas 300V Pro / Ascend 310P3，固件 7.8.0.7.220，驱动 25.2.0</td><td>基线已固化</td></tr>
+<tr><td><code>work-mode</code> 工作模式</td><td class="fail">This device does not support querying work-mode</td><td>无机密/非机密模式可查询或切换</td></tr>
+<tr><td><code>rootkey</code> 设备根密钥</td><td class="fail">This device does not support querying rootkey</td><td>无设备根密钥</td></tr>
+<tr><td><code>tls-cert</code> / <code>tls-cert-period</code></td><td class="fail">This device does not support querying tls-cert</td><td>无设备证书，<strong>无法产出设备身份证明材料</strong></td></tr>
+<tr><td><code>key-manage</code> 密钥管理服务</td><td class="fail">auto startup: Disable；running status: <strong>Stop</strong></td><td>设备侧无密钥管理在运行</td></tr>
+<tr><td><code>device-share</code></td><td>False</td><td>设备独占（对 TDC-05 有利）</td></tr>
+<tr><td><code>ecc-enable</code></td><td>True</td><td>DDR ECC，属可靠性而非机密性</td></tr>
+<tr><td>驱动/CANN 中的机密计算符号</td><td class="fail">未发现 attest / confidential / cc_mode / secure_boot 相关</td><td>运行时不提供设备证明 API</td></tr>
+</table>
+<p><strong>判定：平台不支持，而非未测。</strong>CDC-03「GPU 可信状态与远程证明」要求设备身份与证明材料，310P3 明确不提供 <code>rootkey</code> 与 <code>tls-cert</code>；CDC-01 要求确认 GPU 处于正式机密计算模式，该设备连工作模式查询都不支持。CDC-04 组合可信链、CDC-05 显存隔离、CDC-06 链路加密、CDC-08 异常闭锁均以这两项为前提，因此在本硬件上不具备执行条件。</p>
+<p>按计划书"三套方案分别形成独立安全结论，不以其中一套方案的证据替代另一套"的要求，本轮<strong>没有</strong>用 FEC 的密态证据或 TDC 的隔离证据去填充 CDC 结论。要完成 CDC，需要更换为具备 GPU-CC 能力的硬件平台。</p>
+
+<h2>五、方案三：全密态计算（FEC / OTP）</h2>
+
+<h3>1. 确认运行位置</h3>
+<table>
+<tr><th>测试项</th><th>结果</th><th>证据</th></tr>
+<tr><td>CPU 可信空间</td><td class="pass">通过</td><td>RA 开启，证明负例 7/7</td></tr>
+<tr><td>明文处理位置</td><td class="pass">通过</td><td>解密、分词、embedding 位于 CVM 内已证明实例；运行进程与文件摘要一致</td></tr>
+<tr><td>线性与非线性边界</td><td class="pass">通过</td><td>W8A8 线性经 RNS 密文下发双卡；归一化、激活、softmax、解盲、采样在 CVM</td></tr>
+<tr><td>访问隔离</td><td class="cond">条件通过</td><td>宿主侧读取实验见第三节；平台保护与动态测试相互支持</td></tr>
+</table>
+
+<h3>2. OTP 密钥</h3>
+<table>
+<tr><th>测试项</th><th>结果</th><th>实测数据</th></tr>
+<tr><td>生成与长度、随机源失败分支</td><td class="pass">通过</td><td>getrandom + 拒绝采样；读取失败路径擦除临时缓冲</td></tr>
+<tr><td>一次一密（唯一性/均匀性/清零）</td><td class="pass">通过</td><td>4096 个掩码全部唯一，zeroize=PASS；两个模域各 1,048,576 样本，方差比 1.0008 / 0.9996，<code>RNS_MOD_UNIFORM_PASS</code></td></tr>
+<tr><td>隔离与泄漏</td><td class="pass">通过</td><td>密钥文件 600 / root；日志与临时文件无明文（见旁路残留）</td></tr>
+<tr><td>清理回收</td><td class="cond">条件通过</td><td>测试 DEK 清理通过；workspace 探针复现了复用尾部残留，清理策略仍待定义</td></tr>
+</table>
+<p>按方案要求的表述口径：当前使用操作系统 CSPRNG 而非物理真随机源，因此按<strong>计算安全</strong>模型陈述，不宣称信息论意义上的一次一密。</p>
+
+<h3>3. 数据路径</h3>
+<table>
+<tr><th>测试项</th><th>结果</th><th>证据</th></tr>
+<tr><td>客户端转换</td><td class="pass">通过</td><td>SDK 打点覆盖身份校验、加密前后、提交、首响应、结束</td></tr>
+<tr><td>网络请求与返回</td><td class="pass">通过</td><td>两入口双点抓包 23/23、11/11</td></tr>
+<tr><td>加速卡输入输出</td><td class="pass">通过</td><td>独立合成算例 <strong>96/96</strong>，禁用 CPU 补正，原始 D2H 整数分量与参考一致；同输入两次 H2D 指纹不同</td></tr>
+<tr><td>旁路残留</td><td class="pass">通过</td><td>真实加密请求后，CVM 与宿主的日志、临时文件、容器日志均无标记；植入的对照文件被搜出，证明搜索有效</td></tr>
+</table>
+
+<h3>4. 正确性与异常处理</h3>
+<table>
+<tr><th>测试项</th><th>结果</th><th>实测数据</th></tr>
+<tr><td>算子正确性（含极值与模域边界）</td><td class="pass">通过</td><td>96/96 合成算例零差异</td></tr>
+<tr><td>端到端正确性（同一 OTP 两入口）</td><td class="pass">通过</td><td>3 轮唯一提示、交替顺序，明文入口与密文入口输出 SHA256 <strong>逐轮完全相同</strong></td></tr>
+<tr><td>篡改与重放</td><td class="pass">通过</td><td>网关加密入口验收 <strong>17/17</strong>：在线密文篡改、AAD 降级、非法 nonce/公钥长度、同 nonce 重放均拒绝；4096 次 nonce 与密文唯一</td></tr>
+<tr><td>并发隔离</td><td class="pass">通过</td><td>两客户端独立 DEK <strong>11/11</strong>：串行与并发输出一致，跨密钥解密均拒绝，后端请求数恰好匹配</td></tr>
+<tr><td>取消与资源回收</td><td class="pass">通过</td><td>端到端取消 <strong>11/11</strong>：取消后解码批次 31→1，408 ms 内空闲</td></tr>
+<tr><td>无明文旁路 / 运行时降级</td><td class="pass">通过</td><td>7 种降级字段（<code>blind=0</code>、<code>plain=true</code>、<code>mode=plain</code>、<code>otp=false</code>、<code>disable_otp</code>、<code>r_scale=0</code>、<code>blind_mode</code>）逐一发送，输出 token <strong>全部与基线逐个相同</strong>，<code>mode</code> 恒为 <code>shannon_rns_otp</code>。静态侧确认 <code>g_blind</code> 与 <code>g_r_scale</code> 只能由启动命令行设置，请求体无解析路径</td></tr>
+<tr><td>故障回退（含故障注入）</td><td class="cond">条件通过</td><td><strong>本轮补做故障注入 10/10</strong>（<code>fault_injection_02/</code>）：非法形参、不支持配置、<strong>随机源失效</strong>均 <code>rc=-1</code> 中止，不会在无掩码下继续计算；设备静默算错在单行路径被检出并纠正。<strong>但批次路径不检出</strong>——详见下方。加速卡硬件级故障与不支持算子未注入</td></tr>
+<tr><td>多类型加速卡</td><td class="todo">待补证</td><td>仅昇腾 310P 实测，其他平台未声明范围前不判定</td></tr>
+</table>
+
+<div class="warn">
+<p><strong>故障注入查实的一条缺口（本轮更正了此前的表述）。</strong>此前写的是"设备侧返回异常时存在由可信 CPU 补正并继续返回成功的分支"。故障注入加静态确认后，准确的说法是：<code>verify = g_rns_verify &amp;&amp; (M == 1 || getenv("OTP_RNS_DEBUG"))</code>——<strong>与设备结果的 CPU 交叉校验只在单行路径开启，多行批次默认不做</strong>。实测：把设备上一个输出通道的权重按位翻转而保持可信侧 host 副本不变，M=1 时被检出并纠正（偏差回到 2.98e-05），<strong>M=4 时偏差 567.615 且按成功返回</strong>。</p>
+<p>需要分清它是什么：<strong>不是机密性问题</strong>——两条路径下设备拿到的都是 OTP 密文分量，密态边界没有被破坏；<strong>是完整性问题</strong>——FEC 的威胁模型把加速卡列为不可信，而故障或被控制的加速卡可在批次推理中静默篡改输出。源码注释表明这是有意的性能取舍（批次下额外点积会抹掉部分批处理收益），该判断在"设备可信"前提下成立。建议批次路径增加抽样校验，并把 <code>corrected N mismatches</code> 从 stderr 日志提升为显式上报。相关改动属代码修改，未实施。</p>
+</div>
+
+<h2>六、过程中的失败与纠正</h2>
+<p>按证据规则，以下失败与失误全部保留原始记录，不以重跑结果覆盖。</p>
+<table>
+<tr><th>事项</th><th>经过与处理</th></tr>
+<tr><td>CSPRNG 项首次失败</td><td>首次运行网关验收时 S16 返回码 3 且无输出，判 16/17。诊断为与同时进行的 44 GB 内存扫描争用资源，非安全缺陷：单独运行该二进制通过，<strong>用当前线上源码重新编译后同样通过</strong>。在正确根目录重跑得 17/17，两次记录均保留</td></tr>
+<tr><td>覆盖了历史证据</td><td>首次运行时脚本按默认路径把结果写入 <code>results/security_acceptance_20260828/</code>，覆盖了 8 月 28 日原始记录。本地副本完好，已据其恢复服务器文件并校验摘要一致（<code>ef12d1d6…</code>），此后改用独立输出目录</td></tr>
+<tr><td>内存实验假设被证伪</td><td>曾假设 228 处静态明文（全量扫描后为 245 处）来自 virtio 块设备共享缓冲，遂增加磁盘 I/O 标记对照，结果该标记同样 0 命中，<strong>假设不成立</strong>，已在第三节改为"来源未定位"</td></tr>
+<tr><td>采样率不足被纠正</td><td>首版内存扫描只覆盖 4.5%，"未命中"不足以支撑结论；改为整段 44 GB 全量读取并补充结构性明文判据后重跑</td></tr>
+</table>
+
+<h2>七、未覆盖与限制</h2>
+<ul>
+<li><strong>CDC 全部专项</strong>：310P3 不提供设备证明材料与机密计算模式，需更换具备 GPU-CC 能力的硬件才能执行。</li>
+<li><strong>物理 PCIe 总线观测</strong>：无协议分析仪与探头；软件接口采样不等于总线抓包。</li>
+<li><strong>跨租户越权</strong>：单租户部署，无第二租户可越权；已改测宿主机与非特权用户两类非授权侧，不等同于完整多租户隔离证明。</li>
+<li><strong>Web 入口</strong>：本环境未部署 Web 前端，仅测 SDK。</li>
+<li><strong>F01 明文推理路由</strong>：HIGH 级，本轮复现仍存在，未整改。</li>
+<li><strong>guest 段内 245 处静态明文</strong>：来源未定位。</li>
+<li><strong>第三方材料映射</strong>：经信局报告到三类方案的逐项映射未完成。</li>
+<li>本报告属于工程安全验证，<strong>不等同于形式化密码学证明或权威认证</strong>；所有结论限定于本次实际验证的环境与版本。</li>
+</ul>
+
+<h2>八、证据索引</h2>
+<p>全部原始文件位于 <code>otp_c35/results/security_full_20260918/</code>，取消传播相关位于 <code>otp_c35/results/security_cancel_deploy_20260918/</code>。</p>
+<pre>env_baseline.json          环境与版本基线
+firmware.json              两卡固件 7.8.0.7.220、驱动版本
+live_status.json           线上健康、运行引擎与文件摘要
+sdk_01/                    SDK 客户端与重放控制
+wire_gateway_01/           8000 入口双点抓包（23/23）
+wire_sdk_01/               8101 入口双点抓包（11/11）
+pair_01/                   串行/并发/跨密钥隔离（11/11）
+attest_01/                 证明负例（7/7）
+selfcheck_01/              客户自验（10/10，宿主独立执行）
+npu_01/                    NPU 设备接口合成算例（96/96）
+workspace_01/              workspace 生命周期
+residue_01/                旁路残留（日志/临时文件/容器日志）
+dual_entry_01/             明密文双入口一致性（3 轮）
+acceptance_01/             网关加密入口验收首跑（16/17，含 S16 失败记录）
+acceptance_02/             同项在正确根目录重跑（17/17）
+tdc_memory_01..05/         宿主侧内存读取实验，01 为低采样版(4.5%，已作废但保留)
+tdc_memory_06_full/        三段 44GB 全量扫描最终版(130.39GB，覆盖 97.16%)，TDC-03 判定依据
+fault_injection_02/        FEC-08 故障注入(10/10)
+fault_injection_01/        故障注入首跑失败记录(链到过期 kernel 库)，保留不覆盖
+FEC_security_report.htm    《FEC 安全证明报告》单册
+TDC_security_report.htm    《TDC 安全证明报告》单册
+plan_point_by_point_response.htm  计划书逐条对照与回应
+cdc01_platform/            CDC-01 平台能力核查原始输出（rootkey/tls-cert/work-mode 等）
+tdc04_access/              TDC-04 非授权侧访问测试（宿主侧与 CVM 内非特权用户）
+device_residue_02/         TDC-05 跨进程设备内存残留（两种结束方式，均全零）
+security_full_report.htm   本报告</pre>
+
+<p style="margin-top:24px;color:#666;font-size:12.7px">任务表：<code>docs/SECURITY_EXECUTION_TRACKER.md</code>　可信边界：<code>docs/SECURITY_TRUST_BOUNDARIES.md</code>　证据规则：<code>docs/SECURITY_EVIDENCE_PROTOCOL.md</code>　测试方案：<code>docs/测试方案 (2).md</code></p>
+
+</div></body></html>
+
+

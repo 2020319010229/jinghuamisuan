@@ -1,0 +1,76 @@
+CDC 宿主内存取证 · 原始实验日志（2026-09-24, b200 机器 gpuhost）
+=====================================================================
+
+【实验一 memtest3：SSH 途径传入的 canary】
+canary = CDC-CANARY-7f3a9e21b4c8d56f0a1e2d3c4b5a6978
+放置方式：宿主通过 SSH 在 Guest 内启动
+  python3 /tmp/canary_guest.py CDC-CANARY-7f3a9e21b4c8d56f0a1e2d3c4b5a6978
+（canary 同时出现在命令行中，经 SSH 加密信道传输；sudo 自扫命令同样含 canary）
+
+--- Guest 内自扫（实验有效性前提）---
+SELFSCAN pid=30282 scanned=20.3MB hits=24110
+SELFSCAN_TOTAL=24110
+
+--- 宿主正控制（扫描方法有效性）---
+pid=504418 scanned=20.6MB hits={'CDC-CANARY-7f3a9e21b4c8d56f0a1e2d3c4b5a6978': 24108}
+
+--- 宿主 root 扫 QEMU（pid 280990, TDX CVM）---
+pid=280990 scanned=16659.8MB regions=498
+hits={'CDC-CANARY-7f3a9e21b4c8d56f0a1e2d3c4b5a6978': 7}
+
+初判 EXPOSED —— 但命中数(7)与 Guest 驻留量(24110)相差 3 个数量级，
+且 canary 曾经过 SSH/命令行/sudo 审计等 I/O 途径，不能直接归因于内存保护失效。
+→ 进入实验二定位。
+
+---------------------------------------------------------------------
+
+【实验二 memtest4-步骤6：定位上述命中的内存位置】
+QEMU pid=280990, 定位器 locate_hits.py
+
+== MAP: 70527be00000-70567be00000 rw-p 00000000 00:00 0
+   hits in region: 13
+   first hit at 0x7052d5dab8c4
+   hex: 6f6f74203b20434f4d4d414e443d2f7573722f62696e2f707974686f6e3320
+         2f746d702f73656c667363616e2e7079204344432d43414e4152592d376633
+         61396532316234633864353666306131653264336334623561363937382063616e61
+   asc: oot ; COMMAND=/usr/bin/python3 /tmp/selfscan.py
+        CDC-CANARY-7f3a9e21b4c8d56f0a1e2d3c4b5a6978 cana
+scanned regions=497  total hits=13
+
+判读：
+  命中区域 70527be00000-70567be00000 是 16GB 匿名大映射 = QEMU 的
+  guest RAM 后端。TDX 下 guest 私有页已从 QEMU 视图丢弃（RamDiscardManager），
+  QEMU 仍可读的是 guest 主动置为 shared 的物理页 —— 即 virtio 设备 DMA 路径。
+  命中内容为 sudo 审计日志行（COMMAND=/usr/bin/python3 /tmp/selfscan.py ...），
+  即测试命令自身经 journald 落盘 → virtio-blk DMA 共享缓冲的足迹。
+  结论：泄漏渠道是 I/O 设备路径（设计内共享），非 TDX 私有内存失效。
+
+---------------------------------------------------------------------
+
+【实验三 memtest4-步骤1~5：纯内存 canary（定论实验）】
+canary：Guest 内部用 os.urandom 生成（形式 PURE-<48hex>），明文从不离开
+  Guest 私有内存：不出现在任何命令行（命令行走 SSH）、不写盘
+  （needle 存 /dev/shm=tmpfs；宿主取 needle 走 SSH 加密信道）。
+  生成时只打印 sha256（e3873d8ff48449e486856a5bf2115e9bee901d05ab965d8c2f174bbc9abd60f1）
+
+--- Guest 内自扫（needle 从 /dev/shm 读取，不进命令行）---
+SELFSCAN pid=30585 scanned=27.0MB hits=24102
+SELFSCAN_TOTAL=24102
+
+--- 宿主正控制 ---
+pid=504853 scanned=20.6MB hits={'PURE-b68b40a0...': 24105}  → 扫描方法有效
+
+--- 宿主 root 扫 QEMU（16.66GB, 498 区域）---
+pid=280990 scanned=16659.8MB regions=498 hits={}
+判读：PROTECTED
+  正控制命中(24105)而被测目标未命中(0)：在扫描覆盖范围内，
+  宿主无法从 QEMU 进程内存读到 Guest 私有内存中的明文。
+
+=====================================================================
+总结论：
+  1) TDX 私有内存保护有效（纯内存 canary：Guest 内 24102 份 ↔ 宿主 16.66GB 全扫 0 命中）
+  2) guest 经模拟设备（virtio-blk/net 等）主动共享的 DMA 路径宿主可见（设计内），
+     实测捕获到 sudo 审计日志行在共享缓冲中的明文足迹 —— 报告中如实披露
+  3) 对照：海光 TDC（无 CSV 内存加密）F2 项为 EXPOSED —— guest 进程堆中的
+     prompt 本身可被宿主直接读出；b200 CDC 上同类数据（纯内存 canary）为 0 命中。
+     两平台差异由此实验定量坐实。

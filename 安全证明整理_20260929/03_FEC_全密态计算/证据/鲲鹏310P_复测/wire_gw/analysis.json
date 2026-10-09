@@ -1,0 +1,496 @@
+{
+  "scope": "passive visibility of these exact gateway TCP flows only; no active attacker or bus claims",
+  "run_id": "7b3c8222b9fc4ff4a9fe3e8f23c46d11",
+  "captures": {
+    "host": {
+      "packets": 129,
+      "streams": [
+        {
+          "flow": [
+            "192.168.122.1",
+            "192.168.122.143",
+            44789,
+            8000
+          ],
+          "bytes": 164,
+          "sha256": "36bc0f6f3c5230ab2d1e0532c6eb4d745220d64954ed99c814adfa3676383a85",
+          "gaps": 0,
+          "overlap_conflicts": 0,
+          "header_complete": true,
+          "body_length_matches": null,
+          "positive_control": true,
+          "prompt_marker_visible": false
+        },
+        {
+          "flow": [
+            "192.168.122.143",
+            "192.168.122.1",
+            8000,
+            44789
+          ],
+          "bytes": 399,
+          "sha256": "5a37f7c64e2d25be83eb2934d1cc3d28cd0b252ba153ce9f6e363d9bea8d3a48",
+          "gaps": 0,
+          "overlap_conflicts": 0,
+          "header_complete": true,
+          "body_length_matches": true,
+          "positive_control": false,
+          "prompt_marker_visible": false
+        },
+        {
+          "flow": [
+            "192.168.122.1",
+            "192.168.122.143",
+            56563,
+            8000
+          ],
+          "bytes": 174,
+          "sha256": "e4280864c2c0c8faf540c6c57c4544df533a6eec3a2c2a326e54df5632559d55",
+          "gaps": 0,
+          "overlap_conflicts": 0,
+          "header_complete": true,
+          "body_length_matches": null,
+          "positive_control": true,
+          "prompt_marker_visible": false
+        },
+        {
+          "flow": [
+            "192.168.122.143",
+            "192.168.122.1",
+            8000,
+            56563
+          ],
+          "bytes": 326,
+          "sha256": "da053ec7c1a3f49c8088557eee82a9745063caba3abbb24186ce006dd9ab5bb1",
+          "gaps": 0,
+          "overlap_conflicts": 0,
+          "header_complete": true,
+          "body_length_matches": true,
+          "positive_control": false,
+          "prompt_marker_visible": false
+        },
+        {
+          "flow": [
+            "192.168.122.1",
+            "192.168.122.143",
+            37841,
+            8000
+          ],
+          "bytes": 661,
+          "sha256": "57c52194ab736e3c66fb6fda3aa47748e0f0f1199384c5abb0da868563e09dad",
+          "gaps": 0,
+          "overlap_conflicts": 0,
+          "header_complete": true,
+          "body_length_matches": true,
+          "positive_control": true,
+          "prompt_marker_visible": false
+        },
+        {
+          "flow": [
+            "192.168.122.143",
+            "192.168.122.1",
+            8000,
+            37841
+          ],
+          "bytes": 908,
+          "sha256": "7e9d15801a25237b98ccd94bc7a7733f10e5e14eb82956b0e42baf3d917b3267",
+          "gaps": 0,
+          "overlap_conflicts": 0,
+          "header_complete": true,
+          "body_length_matches": true,
+          "positive_control": false,
+          "prompt_marker_visible": false
+        },
+        {
+          "flow": [
+            "192.168.122.1",
+            "192.168.122.143",
+            40025,
+            8000
+          ],
+          "bytes": 661,
+          "sha256": "57c52194ab736e3c66fb6fda3aa47748e0f0f1199384c5abb0da868563e09dad",
+          "gaps": 0,
+          "overlap_conflicts": 0,
+          "header_complete": true,
+          "body_length_matches": true,
+          "positive_control": true,
+          "prompt_marker_visible": false
+        },
+        {
+          "flow": [
+            "192.168.122.143",
+            "192.168.122.1",
+            8000,
+            40025
+          ],
+          "bytes": 279,
+          "sha256": "81a17818694256cd3c9b4fd7698334aa00d057345897f4e1df47d4ce316b7b91",
+          "gaps": 0,
+          "overlap_conflicts": 0,
+          "header_complete": true,
+          "body_length_matches": true,
+          "positive_control": false,
+          "prompt_marker_visible": false
+        },
+        {
+          "flow": [
+            "192.168.122.1",
+            "192.168.122.143",
+            49323,
+            8000
+          ],
+          "bytes": 661,
+          "sha256": "43a581afee9d704b66528e7f4d13ab5096f6b6dc2ea30e1dfbed366413956926",
+          "gaps": 0,
+          "overlap_conflicts": 0,
+          "header_complete": true,
+          "body_length_matches": true,
+          "positive_control": true,
+          "prompt_marker_visible": false
+        },
+        {
+          "flow": [
+            "192.168.122.143",
+            "192.168.122.1",
+            8000,
+            49323
+          ],
+          "bytes": 253,
+          "sha256": "9fa25342889c34b3e8b5a4528c8334794d17d6b2422aa67ada0b47d80b83bcbe",
+          "gaps": 0,
+          "overlap_conflicts": 0,
+          "header_complete": true,
+          "body_length_matches": true,
+          "positive_control": false,
+          "prompt_marker_visible": false
+        },
+        {
+          "flow": [
+            "192.168.122.1",
+            "192.168.122.143",
+            58817,
+            8000
+          ],
+          "bytes": 164,
+          "sha256": "36bc0f6f3c5230ab2d1e0532c6eb4d745220d64954ed99c814adfa3676383a85",
+          "gaps": 0,
+          "overlap_conflicts": 0,
+          "header_complete": true,
+          "body_length_matches": null,
+          "positive_control": true,
+          "prompt_marker_visible": false
+        },
+        {
+          "flow": [
+            "192.168.122.143",
+            "192.168.122.1",
+            8000,
+            58817
+          ],
+          "bytes": 399,
+          "sha256": "0f200767c9b6720fe7438b000726cbc3371774ea394fec4dee83c6c793bd64f9",
+          "gaps": 0,
+          "overlap_conflicts": 0,
+          "header_complete": true,
+          "body_length_matches": true,
+          "positive_control": false,
+          "prompt_marker_visible": false
+        }
+      ]
+    },
+    "cvm": {
+      "packets": 67,
+      "streams": [
+        {
+          "flow": [
+            "192.168.122.1",
+            "192.168.122.143",
+            44789,
+            8000
+          ],
+          "bytes": 164,
+          "sha256": "36bc0f6f3c5230ab2d1e0532c6eb4d745220d64954ed99c814adfa3676383a85",
+          "gaps": 0,
+          "overlap_conflicts": 0,
+          "header_complete": true,
+          "body_length_matches": null,
+          "positive_control": true,
+          "prompt_marker_visible": false
+        },
+        {
+          "flow": [
+            "192.168.122.143",
+            "192.168.122.1",
+            8000,
+            44789
+          ],
+          "bytes": 399,
+          "sha256": "5a37f7c64e2d25be83eb2934d1cc3d28cd0b252ba153ce9f6e363d9bea8d3a48",
+          "gaps": 0,
+          "overlap_conflicts": 0,
+          "header_complete": true,
+          "body_length_matches": true,
+          "positive_control": false,
+          "prompt_marker_visible": false
+        },
+        {
+          "flow": [
+            "192.168.122.1",
+            "192.168.122.143",
+            56563,
+            8000
+          ],
+          "bytes": 174,
+          "sha256": "e4280864c2c0c8faf540c6c57c4544df533a6eec3a2c2a326e54df5632559d55",
+          "gaps": 0,
+          "overlap_conflicts": 0,
+          "header_complete": true,
+          "body_length_matches": null,
+          "positive_control": true,
+          "prompt_marker_visible": false
+        },
+        {
+          "flow": [
+            "192.168.122.143",
+            "192.168.122.1",
+            8000,
+            56563
+          ],
+          "bytes": 326,
+          "sha256": "da053ec7c1a3f49c8088557eee82a9745063caba3abbb24186ce006dd9ab5bb1",
+          "gaps": 0,
+          "overlap_conflicts": 0,
+          "header_complete": true,
+          "body_length_matches": true,
+          "positive_control": false,
+          "prompt_marker_visible": false
+        },
+        {
+          "flow": [
+            "192.168.122.1",
+            "192.168.122.143",
+            37841,
+            8000
+          ],
+          "bytes": 661,
+          "sha256": "57c52194ab736e3c66fb6fda3aa47748e0f0f1199384c5abb0da868563e09dad",
+          "gaps": 0,
+          "overlap_conflicts": 0,
+          "header_complete": true,
+          "body_length_matches": true,
+          "positive_control": true,
+          "prompt_marker_visible": false
+        },
+        {
+          "flow": [
+            "192.168.122.143",
+            "192.168.122.1",
+            8000,
+            37841
+          ],
+          "bytes": 908,
+          "sha256": "7e9d15801a25237b98ccd94bc7a7733f10e5e14eb82956b0e42baf3d917b3267",
+          "gaps": 0,
+          "overlap_conflicts": 0,
+          "header_complete": true,
+          "body_length_matches": true,
+          "positive_control": false,
+          "prompt_marker_visible": false
+        },
+        {
+          "flow": [
+            "192.168.122.1",
+            "192.168.122.143",
+            40025,
+            8000
+          ],
+          "bytes": 661,
+          "sha256": "57c52194ab736e3c66fb6fda3aa47748e0f0f1199384c5abb0da868563e09dad",
+          "gaps": 0,
+          "overlap_conflicts": 0,
+          "header_complete": true,
+          "body_length_matches": true,
+          "positive_control": true,
+          "prompt_marker_visible": false
+        },
+        {
+          "flow": [
+            "192.168.122.143",
+            "192.168.122.1",
+            8000,
+            40025
+          ],
+          "bytes": 279,
+          "sha256": "81a17818694256cd3c9b4fd7698334aa00d057345897f4e1df47d4ce316b7b91",
+          "gaps": 0,
+          "overlap_conflicts": 0,
+          "header_complete": true,
+          "body_length_matches": true,
+          "positive_control": false,
+          "prompt_marker_visible": false
+        },
+        {
+          "flow": [
+            "192.168.122.1",
+            "192.168.122.143",
+            49323,
+            8000
+          ],
+          "bytes": 661,
+          "sha256": "43a581afee9d704b66528e7f4d13ab5096f6b6dc2ea30e1dfbed366413956926",
+          "gaps": 0,
+          "overlap_conflicts": 0,
+          "header_complete": true,
+          "body_length_matches": true,
+          "positive_control": true,
+          "prompt_marker_visible": false
+        },
+        {
+          "flow": [
+            "192.168.122.143",
+            "192.168.122.1",
+            8000,
+            49323
+          ],
+          "bytes": 253,
+          "sha256": "9fa25342889c34b3e8b5a4528c8334794d17d6b2422aa67ada0b47d80b83bcbe",
+          "gaps": 0,
+          "overlap_conflicts": 0,
+          "header_complete": true,
+          "body_length_matches": true,
+          "positive_control": false,
+          "prompt_marker_visible": false
+        },
+        {
+          "flow": [
+            "192.168.122.1",
+            "192.168.122.143",
+            58817,
+            8000
+          ],
+          "bytes": 164,
+          "sha256": "36bc0f6f3c5230ab2d1e0532c6eb4d745220d64954ed99c814adfa3676383a85",
+          "gaps": 0,
+          "overlap_conflicts": 0,
+          "header_complete": true,
+          "body_length_matches": null,
+          "positive_control": true,
+          "prompt_marker_visible": false
+        },
+        {
+          "flow": [
+            "192.168.122.143",
+            "192.168.122.1",
+            8000,
+            58817
+          ],
+          "bytes": 399,
+          "sha256": "0f200767c9b6720fe7438b000726cbc3371774ea394fec4dee83c6c793bd64f9",
+          "gaps": 0,
+          "overlap_conflicts": 0,
+          "header_complete": true,
+          "body_length_matches": true,
+          "positive_control": false,
+          "prompt_marker_visible": false
+        }
+      ]
+    }
+  },
+  "tests": [
+    {
+      "name": "host_expected_directional_streams",
+      "passed": true
+    },
+    {
+      "name": "host_no_gaps_or_conflicting_retransmissions",
+      "passed": true
+    },
+    {
+      "name": "host_expected_control_headers",
+      "passed": true
+    },
+    {
+      "name": "host_no_synthetic_prompt_marker",
+      "passed": true
+    },
+    {
+      "name": "host_http_boundaries_complete",
+      "passed": true
+    },
+    {
+      "name": "host_health_response_matches_client",
+      "passed": true
+    },
+    {
+      "name": "host_public_key_response_matches_client",
+      "passed": true
+    },
+    {
+      "name": "host_valid_response_matches_client",
+      "passed": true
+    },
+    {
+      "name": "host_replay_response_matches_client",
+      "passed": true
+    },
+    {
+      "name": "host_tamper_response_matches_client",
+      "passed": true
+    },
+    {
+      "name": "host_health_after_response_matches_client",
+      "passed": true
+    },
+    {
+      "name": "cvm_expected_directional_streams",
+      "passed": true
+    },
+    {
+      "name": "cvm_no_gaps_or_conflicting_retransmissions",
+      "passed": true
+    },
+    {
+      "name": "cvm_expected_control_headers",
+      "passed": true
+    },
+    {
+      "name": "cvm_no_synthetic_prompt_marker",
+      "passed": true
+    },
+    {
+      "name": "cvm_http_boundaries_complete",
+      "passed": true
+    },
+    {
+      "name": "cvm_health_response_matches_client",
+      "passed": true
+    },
+    {
+      "name": "cvm_public_key_response_matches_client",
+      "passed": true
+    },
+    {
+      "name": "cvm_valid_response_matches_client",
+      "passed": true
+    },
+    {
+      "name": "cvm_replay_response_matches_client",
+      "passed": true
+    },
+    {
+      "name": "cvm_tamper_response_matches_client",
+      "passed": true
+    },
+    {
+      "name": "cvm_health_after_response_matches_client",
+      "passed": true
+    },
+    {
+      "name": "host_and_cvm_reassembled_flows_identical",
+      "passed": true
+    }
+  ],
+  "passed": 23,
+  "total": 23
+}
